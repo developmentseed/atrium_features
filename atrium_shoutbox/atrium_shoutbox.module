@@ -63,8 +63,8 @@ function atrium_shoutbox_menu() {
       'title' => 'Shoutbox',
       'description' => 'A simple shoutbox feature',
       'page callback' => 'atrium_shoutbox_page',
-      'access callback' => 'spaces_feature_access',
-      'access arguments' => array('atrium_shoutbox'),
+      'access callback' => 'spaces_access_feature',
+      'access arguments' => array('view', 'atrium_shoutbox'),
       'type' => MENU_NORMAL_ITEM,
       'menu_name' => 'features',
     );
