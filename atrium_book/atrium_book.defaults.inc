@@ -59,6 +59,9 @@ function _atrium_book_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
+  else if ($module == "system" && $api == "strongarm") {
+    return array("version" => 1);
+  }
 }
 
 /**
@@ -157,4 +160,112 @@ function _atrium_book_user_default_permissions() {
   );
 
   return $permissions;
+}
+
+/**
+ * Helper to implementation of hook_strongarm().
+ */
+function _atrium_book_strongarm() {
+  $export = array();
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'atrium_update_type_book';
+  $strongarm->value = 1;
+
+  $export['atrium_update_type_book'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'comment_book';
+  $strongarm->value = '0';
+
+  $export['comment_book'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'feedapi_settings_book';
+  $strongarm->value = array(
+    'enabled' => 0,
+    'upload_method' => 'url',
+    'refresh_on_create' => 0,
+    'update_existing' => 1,
+    'refresh_time' => '1800',
+    'items_delete' => '0',
+    'parsers' => array(
+      'parser_ical' => array(
+        'enabled' => 0,
+        'weight' => '0',
+      ),
+    ),
+    'processors' => array(
+      'feedapi_node' => array(
+        'enabled' => 0,
+        'weight' => '0',
+        'content_type' => 'blog',
+        'input_format' => '4',
+        'node_date' => 'feed',
+        'x_dedupe' => '0',
+      ),
+      'feedapi_inherit' => array(
+        'enabled' => 0,
+        'weight' => '0',
+        'inherit_og' => 1,
+        'inherit_taxonomy' => 1,
+        'inherit_author' => 1,
+      ),
+    ),
+  );
+
+  $export['feedapi_settings_book'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_options_book';
+  $strongarm->value = array(
+    '0' => 'status',
+    '1' => 'revision',
+  );
+
+  $export['node_options_book'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_content_type_book';
+  $strongarm->value = array(
+    '0' => 'thread',
+    '1' => 'nodetype',
+    '2' => 'author',
+  );
+
+  $export['notifications_content_type_book'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'og_content_type_usage_book';
+  $strongarm->value = 'group_post_standard';
+
+  $export['og_content_type_usage_book'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_diff_inline_book';
+  $strongarm->value = 1;
+
+  $export['show_diff_inline_book'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_preview_changes_book';
+  $strongarm->value = 0;
+
+  $export['show_preview_changes_book'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_book';
+  $strongarm->value = '1';
+
+  $export['upload_book'] = $strongarm;
+  return $export;
 }

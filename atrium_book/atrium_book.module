@@ -37,40 +37,6 @@ function atrium_book_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_strongarm().
- */
-function atrium_book_strongarm() {
-  // Book
-  $conf['book_allowed_types'] = array('book');
-
-  $conf['node_options_book'] = array('status', 'revision');
-  $conf['notifications_content_type_book'] = array('thread', 'grouptype', 'nodetype', 'author');
-  $conf['og_notifications_content_types'][] = 'book';
-  $conf['upload_book'] = TRUE;
-
-  // Comments
-  $conf['comment_book'] = COMMENT_NODE_DISABLED;
-
-  // FeedAPI
-  $conf['feedapi_settings_book'] = array('enabled' => FALSE);
-
-  // Disable Diff button
-  $conf["show_preview_changes_book"] = FALSE;
-  $conf["show_diff_inline_book"] = TRUE;
-
-  // Make archivable
-  $conf['atrium_archivable'] = array('book');
-
-  // Enable for recent activity views
-  $conf['atrium_update_type_book'] = TRUE;
-
-  // Pathauto (optional) settings
-  $conf["pathauto_node_book_pattern"] = "[space-og-path]/book/[title-raw]";
-
-  return $conf;
-}
-
-/**
  * Implementation of hook_menu().
  */
 function atrium_book_menu() {
@@ -82,7 +48,8 @@ function atrium_book_menu() {
     'access callback' => 'spaces_access_feature',
     'access arguments' => array('view', 'atrium_book'),
     'type' => MENU_NORMAL_ITEM,
-    'menu_name' => 'features'
+    'menu_name' => 'features',
+    'file' => 'atrium_book.pages.inc',
   );
   $items['documents/overview'] = array(
     'title' => 'Overview',
@@ -92,34 +59,16 @@ function atrium_book_menu() {
     'access arguments' => array('view', 'atrium_book'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
+    'file' => 'atrium_book.pages.inc',
+  );
+  $items['features/atrium_book'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('atrium_book_settings'),
+    'access callback' => 'spaces_access_admin',
+    'access arguments' => array(),
+    'type' => MENU_CALLBACK,
+    'file' => 'atrium_book.pages.inc',
   );
   return $items;
-}
-
-/**
- * Page callback for book feature.
- */
-function atrium_book_overview() {
-  context_set('spaces', 'feature', 'book');
-  $space = spaces_get_space();
-  if (!empty($space->settings['atrium_book'])) {
-    $nid = $space->settings['atrium_book'];
-    if (is_numeric($nid) && $node = node_load($nid)) {
-      menu_set_active_item("node/{$node->nid}");
-      return node_view($node, FALSE, TRUE, TRUE);
-    }
-  }
-  return views_embed_view('atrium_book', 'page_1');
-}
-
-/**
- * Implementation of hook_spaces_settings().
- */
-function atrium_book_spaces_settings() {
-  return array(
-    'atrium_book' => array(
-      'class' => 'atrium_book_space_setting',
-      'file' => drupal_get_path('module', 'atrium_book') .'/atrium_book.spaces.inc',
-    ),
-  );
 }

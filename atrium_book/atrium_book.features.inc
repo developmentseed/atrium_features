@@ -46,6 +46,15 @@ function atrium_book_user_default_permissions() {
 }
 
 /**
+ * Implementation of hook_strongarm().
+ */
+function atrium_book_strongarm() {
+  module_load_include('inc', 'atrium_book', 'atrium_book.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_book_strongarm', $args);
+}
+
+/**
  * Implementation of hook_views_default_views().
  */
 function atrium_book_views_default_views() {
