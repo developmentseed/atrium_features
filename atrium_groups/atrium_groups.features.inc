@@ -46,6 +46,15 @@ function atrium_groups_spaces_presets() {
 }
 
 /**
+ * Implementation of hook_strongarm().
+ */
+function atrium_groups_strongarm() {
+  module_load_include('inc', 'atrium_groups', 'atrium_groups.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_groups_strongarm', $args);
+}
+
+/**
  * Implementation of hook_user_default_permissions().
  */
 function atrium_groups_user_default_permissions() {

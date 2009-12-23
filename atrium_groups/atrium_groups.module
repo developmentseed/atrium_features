@@ -17,35 +17,9 @@ function atrium_groups_enable() {
 /**
  * Implementation of hook_strongarm().
  */
+/*
 function atrium_groups_strongarm() {
   $conf = array();
-
-  // @TODO: See if there are any serious consequences if this is not set
-  // during a cache-clear page load...
-  $conf['og_content_type_usage_group'] = 'group';
-
-  // Nodetype settings
-  $type = 'group';
-
-  $conf['node_options_'. $type] = array('status');
-  $conf["notifications_content_type_$type"] = array();
-  $conf['upload_'. $type] = FALSE;
-
-  // Disable comments
-  $conf['comment_'. $type] = COMMENT_NODE_DISABLED;
-
-  // Disable FeedAPI
-  $conf['feedapi_settings_'. $type] = array('enabled' => FALSE);
-
-  // Disable Diff button
-  $conf["show_preview_changes_{$type}"] = FALSE;
-  $conf["show_diff_inline_{$type}"] = FALSE;
-
-  // Disable from recent activity views
-  $conf['atrium_update_type_'. $type] = FALSE;
-
-  // Atrium archivable types
-  $conf['atrium_archivable'] = array('group');
 
   // Views: disable views that we are 'overriding'
   $views_defaults = variable_get('views_defaults', array());
@@ -74,6 +48,7 @@ function atrium_groups_strongarm() {
 
   return $conf;
 }
+*/
 
 /**
  * Implementation of hook_views_api().
