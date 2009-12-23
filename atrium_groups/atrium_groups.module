@@ -6,21 +6,15 @@ include_once('atrium_groups.features.inc');
  * Implementation of hook_enable().
  */
 function atrium_groups_enable() {
-  variable_set('spaces_preset_og', 'atrium_og_private');
-
-  // Disable other presets
   ctools_export_set_status('spaces_presets', 'og_private', TRUE);
   ctools_export_set_status('spaces_presets', 'og_controlled', TRUE);
   ctools_export_set_status('spaces_presets', 'og_public', TRUE);
 }
 
 /**
- * Implementation of hook_strongarm().
+ * Implementation of hook_init().
  */
-/*
-function atrium_groups_strongarm() {
-  $conf = array();
-
+function atrium_groups_init() {
   // Views: disable views that we are 'overriding'
   $views_defaults = variable_get('views_defaults', array());
   $disabled = array(
@@ -45,10 +39,7 @@ function atrium_groups_strongarm() {
   if ($set) {
     variable_set('views_defaults', $views_defaults);
   }
-
-  return $conf;
 }
-*/
 
 /**
  * Implementation of hook_views_api().
