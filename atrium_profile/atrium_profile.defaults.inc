@@ -242,6 +242,18 @@ function _atrium_profile_content_default_fields() {
 }
 
 /**
+ * Helper to implementation of hook_ctools_plugin_api().
+ */
+function _atrium_profile_ctools_plugin_api() {
+  $args = func_get_args();
+  $module = array_shift($args);
+  $api = array_shift($args);
+  if ($module == "system" && $api == "strongarm") {
+    return array("version" => 1);
+  }
+}
+
+/**
  * Helper to implementation of hook_user_default_permissions().
  */
 function _atrium_profile_user_default_permissions() {
@@ -278,4 +290,92 @@ function _atrium_profile_user_default_permissions() {
   );
 
   return $permissions;
+}
+
+/**
+ * Helper to implementation of hook_strongarm().
+ */
+function _atrium_profile_strongarm() {
+  $export = array();
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'atrium_update_type_profile';
+  $strongarm->value = FALSE;
+
+  $export['atrium_update_type_profile'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'comment_profile';
+  $strongarm->value = 0;
+
+  $export['comment_profile'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'content_profile_profile';
+  $strongarm->value = array(
+    'weight' => '0',
+    'user_display' => 'full',
+    'edit_link' => 0,
+    'edit_tab' => 'sub',
+    'add_link' => 0,
+  );
+
+  $export['content_profile_profile'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'content_profile_use_profile';
+  $strongarm->value = 1;
+
+  $export['content_profile_use_profile'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'feedapi_settings_profile';
+  $strongarm->value = array(
+    'enabled' => FALSE,
+  );
+
+  $export['feedapi_settings_profile'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_options_profile';
+  $strongarm->value = array(
+    '0' => 'status',
+  );
+
+  $export['node_options_profile'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_content_type_profile';
+  $strongarm->value = array();
+
+  $export['notifications_content_type_profile'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_diff_inline_profile';
+  $strongarm->value = FALSE;
+
+  $export['show_diff_inline_profile'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_preview_changes_profile';
+  $strongarm->value = FALSE;
+
+  $export['show_preview_changes_profile'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_profile';
+  $strongarm->value = FALSE;
+
+  $export['upload_profile'] = $strongarm;
+  return $export;
 }
