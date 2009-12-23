@@ -10,32 +10,26 @@ function _atrium_members_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'spaces-feature-members';
   $context->description = '';
-  $context->tag = '';
+  $context->tag = 'Members';
   $context->conditions = array(
     'views' => array(
       'values' => array(
-        '0' => 'atrium_members',
+        'atrium_members' => 'atrium_members',
       ),
-      'options' => array(),
     ),
   );
   $context->reactions = array(
-    'menu' => 'members',
-    'theme_section' => array(
-      'title' => 'Members',
-      'subtitle' => '',
-      'class' => '',
-    ),
     'block' => array(
       'blocks' => array(
         'views--exp-atrium_members-default' => array(
           'module' => 'views',
           'delta' => '-exp-atrium_members-default',
           'region' => 'right',
-          'weight' => '-10',
+          'weight' => 0,
         ),
       ),
     ),
+    'menu' => 'members',
   );
 
   $export['spaces-feature-members'] = $context;

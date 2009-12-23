@@ -10,13 +10,12 @@ function _atrium_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'atrium-section-taxonomy';
   $context->description = '';
-  $context->tag = '';
+  $context->tag = 'Intranet';
   $context->conditions = array(
     'views' => array(
       'values' => array(
-        '0' => 'atrium_taxonomy',
+        'atrium_taxonomy' => 'atrium_taxonomy',
       ),
-      'options' => array(),
     ),
   );
   $context->reactions = array(
@@ -25,11 +24,8 @@ function _atrium_context_default_contexts() {
         'views-atrium_taxonomy-block_1' => array(
           'module' => 'views',
           'delta' => 'atrium_taxonomy-block_1',
-          'weight' => 20,
           'region' => 'right',
-          'status' => '0',
-          'label' => 'atrium_taxonomy: Archive block',
-          'type' => 'context_ui',
+          'weight' => 0,
         ),
       ),
     ),

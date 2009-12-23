@@ -10,13 +10,15 @@ function _atrium_casetracker_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'atrium-casetracker-project';
   $context->description = '';
-  $context->tag = '';
+  $context->tag = 'Casetracker';
   $context->conditions = array(
     'node' => array(
       'values' => array(
-        '0' => 'casetracker_basic_project',
+        'casetracker_basic_project' => 'casetracker_basic_project',
       ),
-      'options' => array(),
+      'options' => array(
+        'node_form' => 1,
+      ),
     ),
   );
   $context->reactions = array(
@@ -25,11 +27,8 @@ function _atrium_casetracker_context_default_contexts() {
         'views-atrium_casetracker-block_1' => array(
           'module' => 'views',
           'delta' => 'atrium_casetracker-block_1',
-          'weight' => 50,
           'region' => 'content',
-          'status' => '0',
-          'label' => 'atrium_casetracker: Project cases (newest)',
-          'type' => 'context_ui',
+          'weight' => 0,
         ),
       ),
     ),
@@ -41,56 +40,48 @@ function _atrium_casetracker_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'spaces-feature-casetracker';
   $context->description = '';
-  $context->tag = '';
+  $context->tag = 'Casetracker';
   $context->conditions = array(
     'node' => array(
       'values' => array(
-        '0' => 'casetracker_basic_project',
-        '1' => 'casetracker_basic_case',
+        'casetracker_basic_project' => 'casetracker_basic_project',
+        'casetracker_basic_case' => 'casetracker_basic_case',
       ),
-      'options' => array(),
+      'options' => array(
+        'node_form' => 1,
+      ),
     ),
     'views' => array(
       'values' => array(
-        '0' => 'atrium_casetracker',
-        '1' => 'atrium_casetracker_projects',
+        'atrium_casetracker' => 'atrium_casetracker',
+        'atrium_casetracker_projects' => 'atrium_casetracker_projects',
       ),
-      'options' => array(),
     ),
   );
   $context->reactions = array(
-    'menu' => 'casetracker',
     'block' => array(
       'blocks' => array(
         'atrium_casetracker-book' => array(
           'module' => 'atrium_casetracker',
           'delta' => 'book',
-          'weight' => 50,
           'region' => 'right',
-          'status' => '0',
-          'label' => 'Atrium: Case Tracker book',
-          'type' => 'context_ui',
+          'weight' => 0,
         ),
         'atrium_casetracker-filters' => array(
           'module' => 'atrium_casetracker',
           'delta' => 'filters',
-          'weight' => 51,
           'region' => 'right',
-          'status' => '0',
-          'label' => 'Atrium: Case Tracker filter',
-          'type' => 'context_ui',
+          'weight' => 1,
         ),
         'views-atrium_casetracker-block_2' => array(
           'module' => 'views',
           'delta' => 'atrium_casetracker-block_2',
-          'weight' => 52,
           'region' => 'right',
-          'status' => '0',
-          'label' => 'atrium_casetracker: My cases',
-          'type' => 'context_ui',
+          'weight' => 2,
         ),
       ),
     ),
+    'menu' => 'casetracker',
   );
 
   $export['spaces-feature-casetracker'] = $context;

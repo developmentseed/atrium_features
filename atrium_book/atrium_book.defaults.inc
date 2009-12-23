@@ -10,42 +10,36 @@ function _atrium_book_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'spaces-feature-book';
   $context->description = '';
-  $context->tag = '';
+  $context->tag = 'Book';
   $context->conditions = array(
     'node' => array(
       'values' => array(
-        '0' => 'book',
+        'book' => 'book',
       ),
-      'options' => array(),
+      'options' => array(
+        'node_form' => 1,
+      ),
     ),
     'views' => array(
       'values' => array(
-        '0' => 'atrium_book',
+        'atrium_book' => 'atrium_book',
       ),
-      'options' => array(),
     ),
   );
   $context->reactions = array(
-    'menu' => 'documents',
     'block' => array(
       'blocks' => array(
         'diff-inline' => array(
           'module' => 'diff',
           'delta' => 'inline',
-          'weight' => 20,
           'region' => 'right',
-          'status' => '0',
-          'label' => 'Diff: inline diff revisions',
-          'type' => 'context_ui',
+          'weight' => 0,
         ),
         'atrium-book' => array(
           'module' => 'atrium',
           'delta' => 'book',
-          'weight' => 21,
           'region' => 'right',
-          'status' => '0',
-          'label' => 'Atrium: Book',
-          'type' => 'context_ui',
+          'weight' => 1,
         ),
       ),
     ),

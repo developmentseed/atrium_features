@@ -10,13 +10,12 @@ function _atrium_intranet_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'atrium-intranet-global';
   $context->description = '';
-  $context->tag = '';
+  $context->tag = 'Intranet';
   $context->conditions = array(
     'sitewide' => array(
       'values' => array(
-        '0' => '1',
+        '1' => 1,
       ),
-      'options' => array(),
     ),
   );
   $context->reactions = array(
@@ -25,47 +24,32 @@ function _atrium_intranet_context_default_contexts() {
         'atrium_intranet-account' => array(
           'module' => 'atrium_intranet',
           'delta' => 'account',
-          'weight' => -47,
           'region' => 'header',
-          'status' => '0',
-          'label' => 'Atrium Intranet: User account',
-          'type' => 'context_ui',
+          'weight' => 0,
         ),
         'atrium_intranet-help' => array(
           'module' => 'atrium_intranet',
           'delta' => 'help',
-          'weight' => 48,
           'region' => 'header',
-          'status' => '0',
-          'label' => 'Atrium Intranet: Help',
-          'type' => 'context_ui',
+          'weight' => 1,
         ),
         'atrium_intranet-spacelinks' => array(
           'module' => 'atrium_intranet',
           'delta' => 'spacelinks',
-          'weight' => 47,
           'region' => 'space_tools',
-          'status' => '0',
-          'label' => 'Atrium Intranet: Space links',
-          'type' => 'context_ui',
+          'weight' => 0,
         ),
         'atrium_intranet-create' => array(
           'module' => 'atrium_intranet',
           'delta' => 'create',
-          'weight' => 48,
           'region' => 'space_tools',
-          'status' => '0',
-          'label' => 'Atrium Intranet: Create content',
-          'type' => 'context_ui',
+          'weight' => 1,
         ),
         'xref-create' => array(
           'module' => 'xref',
           'delta' => 'create',
-          'weight' => 47,
           'region' => 'page_tools',
-          'status' => '0',
-          'label' => 'Crossref: Create referrer',
-          'type' => 'context_ui',
+          'weight' => 0,
         ),
       ),
     ),
@@ -77,14 +61,9 @@ function _atrium_intranet_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'theme-layout-custom';
   $context->description = '';
-  $context->tag = '';
+  $context->tag = 'Theme';
   $context->conditions = array();
-  $context->reactions = array(
-    'theme_regiontoggle' => array(
-      '0' => 'right',
-      '1' => 'content',
-    ),
-  );
+  $context->reactions = array();
 
   $export['theme-layout-custom'] = $context;
   return $export;

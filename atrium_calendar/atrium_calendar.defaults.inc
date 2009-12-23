@@ -140,59 +140,39 @@ function _atrium_calendar_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'spaces-feature-calendar';
   $context->description = '';
-  $context->tag = '';
+  $context->tag = 'Calendar';
   $context->conditions = array(
     'node' => array(
       'values' => array(
-        '0' => 'event',
-        '1' => 'feed_ical',
-        '2' => 'feed_ical_item',
+        'event' => 'event',
+        'feed_ical' => 'feed_ical',
+        'feed_ical_item' => 'feed_ical_item',
       ),
-      'options' => array(),
+      'options' => array(
+        'node_form' => 1,
+      ),
     ),
     'views' => array(
       'values' => array(
-        '0' => 'atrium_calendar',
-        '1' => 'atrium_calendar_feed_items',
-        '2' => 'atrium_calendar_feeds',
-        '3' => 'atrium_calendar_upcoming',
+        'atrium_calendar' => 'atrium_calendar',
+        'atrium_calendar_feed_items' => 'atrium_calendar_feed_items',
+        'atrium_calendar_feeds' => 'atrium_calendar_feeds',
+        'atrium_calendar_upcoming' => 'atrium_calendar_upcoming',
       ),
-      'options' => array(),
     ),
   );
   $context->reactions = array(
-    'menu' => 'calendar',
     'block' => array(
       'blocks' => array(
         'atrium_calendar-mini' => array(
           'module' => 'atrium_calendar',
           'delta' => 'mini',
-          'weight' => 20,
           'region' => 'right',
-          'status' => '0',
-          'label' => 'Atrium calendar: Mini calendar',
-          'type' => 'context_ui',
-        ),
-        'views-atrium_calendar_upcoming-block_1' => array(
-          'module' => 'views',
-          'delta' => 'atrium_calendar_upcoming-block_1',
-          'weight' => 21,
-          'region' => 'right',
-          'status' => '0',
-          'label' => 'atrium_calendar_upcoming: Block',
-          'type' => 'context_ui',
-        ),
-        'views-3d47b44f26df08825145e8a74a809061' => array(
-          'module' => 'views',
-          'delta' => '3d47b44f26df08825145e8a74a809061',
-          'weight' => 20,
-          'region' => 'content',
-          'status' => '0',
-          'label' => 'atrium_calendar_feed_items: Block',
-          'type' => 'context_ui',
+          'weight' => 0,
         ),
       ),
     ),
+    'menu' => 'calendar',
   );
 
   $export['spaces-feature-calendar'] = $context;

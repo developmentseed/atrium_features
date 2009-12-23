@@ -10,13 +10,12 @@ function _atrium_groups_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'atrium-groups-global';
   $context->description = '';
-  $context->tag = '';
+  $context->tag = 'Groups';
   $context->conditions = array(
     'sitewide' => array(
       'values' => array(
-        '0' => '1',
+        '1' => 1,
       ),
-      'options' => array(),
     ),
   );
   $context->reactions = array(
@@ -25,11 +24,8 @@ function _atrium_groups_context_default_contexts() {
         'views-atrium_groups-block_1' => array(
           'module' => 'views',
           'delta' => 'atrium_groups-block_1',
-          'weight' => 0,
           'region' => 'header',
-          'status' => '0',
-          'label' => 'atrium_groups: Block',
-          'type' => 'context_ui',
+          'weight' => 0,
         ),
       ),
     ),
@@ -41,22 +37,16 @@ function _atrium_groups_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'spaces-feature-groups';
   $context->description = '';
-  $context->tag = '';
+  $context->tag = 'Groups';
   $context->conditions = array(
     'views' => array(
       'values' => array(
-        '0' => 'atrium_groups',
+        'atrium_groups' => 'atrium_groups',
       ),
-      'options' => array(),
     ),
   );
   $context->reactions = array(
     'menu' => 'groups',
-    'theme_section' => array(
-      'title' => 'Groups',
-      'subtitle' => '',
-      'class' => '',
-    ),
   );
 
   $export['spaces-feature-groups'] = $context;

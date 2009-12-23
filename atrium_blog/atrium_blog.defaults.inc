@@ -83,36 +83,34 @@ function _atrium_blog_context_default_contexts() {
   $context->api_version = 3;
   $context->name = 'spaces-feature-blog';
   $context->description = '';
-  $context->tag = '';
+  $context->tag = 'Blog';
   $context->conditions = array(
     'node' => array(
       'values' => array(
-        '0' => 'blog',
+        'blog' => 'blog',
       ),
-      'options' => array(),
+      'options' => array(
+        'node_form' => 1,
+      ),
     ),
     'views' => array(
       'values' => array(
-        '0' => 'atrium_blog',
+        'atrium_blog' => 'atrium_blog',
       ),
-      'options' => array(),
     ),
   );
   $context->reactions = array(
-    'menu' => 'blog',
     'block' => array(
       'blocks' => array(
         'views-atrium_blog_comments-block_1' => array(
           'module' => 'views',
           'delta' => 'atrium_blog_comments-block_1',
-          'weight' => 20,
           'region' => 'right',
-          'status' => '0',
-          'label' => 'atrium_blog_comments: Recent comments',
-          'type' => 'context_ui',
+          'weight' => 0,
         ),
       ),
     ),
+    'menu' => 'blog',
   );
 
   $export['spaces-feature-blog'] = $context;
