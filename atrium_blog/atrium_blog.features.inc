@@ -55,6 +55,15 @@ function atrium_blog_user_default_permissions() {
 }
 
 /**
+ * Implementation of hook_strongarm().
+ */
+function atrium_blog_strongarm() {
+  module_load_include('inc', 'atrium_blog', 'atrium_blog.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_blog_strongarm', $args);
+}
+
+/**
  * Implementation of hook_views_default_views().
  */
 function atrium_blog_views_default_views() {
