@@ -510,6 +510,16 @@ function _atrium_intranet_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'book_allowed_types';
+  $strongarm->value = array(
+    '0' => 'book',
+    '1' => 'casetracker_basic_project',
+  );
+
+  $export['book_allowed_types'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'date_format_field_date_long';
   $strongarm->value = 'g:ia D M j, Y';
 
@@ -667,6 +677,21 @@ function _atrium_intranet_strongarm() {
   );
 
   $export['notifications_ui_user'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'og_notifications_content_types';
+  $strongarm->value = array(
+    'blog' => 'blog',
+    '0' => 'book',
+    '1' => 'event',
+    '2' => 'feed_ical',
+    '3' => 'feed_ical_item',
+    '4' => 'casetracker_basic_case',
+    '5' => 'casetracker_basic_project',
+  );
+
+  $export['og_notifications_content_types'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
