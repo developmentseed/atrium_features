@@ -13,18 +13,6 @@ function atrium_members_enable() {
 }
 
 /**
- * Implementation of hook_strongarm().
- */
-function atrium_members_strongarm() {
-  $conf = array();
-
-  // Seed variables
-  $conf['seed_imagecache_user_picture'] = 'user-s';
-
-  return $conf;
-}
-
-/**
  * Implementation of hook_views_api().
  */
 function atrium_members_views_api() {
