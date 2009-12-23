@@ -6,16 +6,12 @@ include_once('atrium_groups.features.inc');
  * Implementation of hook_enable().
  */
 function atrium_groups_enable() {
-  // Spaces presets
-  $default_presets = variable_get('spaces_default_presets', array());
-  $default_presets['og'] = 'atrium_og_private';
-  variable_set('spaces_default_presets', $default_presets);
+  variable_set('spaces_preset_og', 'atrium_og_private');
 
   // Disable other presets
-  include_once(drupal_get_path('module', 'spaces') .'/spaces_admin.inc');
-  spaces_preset_disable('og', 'private');
-  spaces_preset_disable('og', 'controlled');
-  spaces_preset_disable('og', 'public');
+  ctools_export_set_status('spaces_presets', 'og_private', TRUE);
+  ctools_export_set_status('spaces_presets', 'og_controlled', TRUE);
+  ctools_export_set_status('spaces_presets', 'og_public', TRUE);
 }
 
 /**
