@@ -4,44 +4,75 @@
  * Helper to implementation of hook_context_default_contexts().
  */
 function _atrium_groups_context_default_contexts() {
-  $items = array();
-
-  $items[] = array(
-    'namespace' => 'atrium',
-    'attribute' => 'groups',
-    'value' => 'global',
-    'description' => '',
+  $export = array();
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'atrium-groups-global';
+  $context->description = '';
+  $context->tag = '';
+  $context->conditions = array(
     'sitewide' => array(
-      '0' => '1',
+      'values' => array(
+        '0' => '1',
+      ),
+      'options' => array(),
     ),
+  );
+  $context->reactions = array(
     'block' => array(
-      'views_atrium_groups-block_1' => array(
-        'module' => 'views',
-        'delta' => 'atrium_groups-block_1',
-        'weight' => 0,
-        'region' => 'header',
-        'status' => '0',
-        'label' => 'atrium_groups: Block',
-        'type' => 'context_ui',
+      'blocks' => array(
+        'views-atrium_groups-block_1' => array(
+          'module' => 'views',
+          'delta' => 'atrium_groups-block_1',
+          'weight' => 0,
+          'region' => 'header',
+          'status' => '0',
+          'label' => 'atrium_groups: Block',
+          'type' => 'context_ui',
+        ),
       ),
     ),
   );
-  $items[] = array(
-    'namespace' => 'spaces',
-    'attribute' => 'feature',
-    'value' => 'groups',
-    'menu' => 'groups',
+
+  $export['atrium-groups-global'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'spaces-feature-groups';
+  $context->description = '';
+  $context->tag = '';
+  $context->conditions = array(
     'views' => array(
-      '0' => 'atrium_groups',
+      'values' => array(
+        '0' => 'atrium_groups',
+      ),
+      'options' => array(),
     ),
+  );
+  $context->reactions = array(
+    'menu' => 'groups',
     'theme_section' => array(
       'title' => 'Groups',
       'subtitle' => '',
       'class' => '',
     ),
-    'block' => array(),
   );
-  return $items;
+
+  $export['spaces-feature-groups'] = $context;
+  return $export;
+}
+
+/**
+ * Helper to implementation of hook_ctools_plugin_api().
+ */
+function _atrium_groups_ctools_plugin_api() {
+  $args = func_get_args();
+  $module = array_shift($args);
+  $api = array_shift($args);
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
 }
 
 /**

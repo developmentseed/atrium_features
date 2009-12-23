@@ -4,31 +4,54 @@
  * Helper to implementation of hook_context_default_contexts().
  */
 function _atrium_members_context_default_contexts() {
-  $items = array();
-
-  $items[] = array(
-    'namespace' => 'spaces',
-    'attribute' => 'feature',
-    'value' => 'members',
-    'menu' => 'members',
+  $export = array();
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'spaces-feature-members';
+  $context->description = '';
+  $context->tag = '';
+  $context->conditions = array(
     'views' => array(
-      '0' => 'atrium_members',
+      'values' => array(
+        '0' => 'atrium_members',
+      ),
+      'options' => array(),
     ),
+  );
+  $context->reactions = array(
+    'menu' => 'members',
     'theme_section' => array(
       'title' => 'Members',
       'subtitle' => '',
       'class' => '',
     ),
     'block' => array(
-      'views_-exp-atrium_members-default' => array(
-        'module' => 'views',
-        'delta' => '-exp-atrium_members-default',
-        'region' => 'right',
-        'weight' => '-10',
+      'blocks' => array(
+        'views--exp-atrium_members-default' => array(
+          'module' => 'views',
+          'delta' => '-exp-atrium_members-default',
+          'region' => 'right',
+          'weight' => '-10',
+        ),
       ),
     ),
   );
-  return $items;
+
+  $export['spaces-feature-members'] = $context;
+  return $export;
+}
+
+/**
+ * Helper to implementation of hook_ctools_plugin_api().
+ */
+function _atrium_members_ctools_plugin_api() {
+  $args = func_get_args();
+  $module = array_shift($args);
+  $api = array_shift($args);
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
 }
 
 /**
@@ -173,8 +196,8 @@ function _atrium_members_user_default_permissions() {
   $permissions[] = array(
     'name' => 'view imagecache user-m',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -183,8 +206,8 @@ function _atrium_members_user_default_permissions() {
   $permissions[] = array(
     'name' => 'view imagecache user-s',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );

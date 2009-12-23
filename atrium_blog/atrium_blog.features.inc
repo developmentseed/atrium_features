@@ -19,6 +19,15 @@ function atrium_blog_context_default_contexts() {
 }
 
 /**
+ * Implementation of hook_ctools_plugin_api().
+ */
+function atrium_blog_ctools_plugin_api() {
+  module_load_include('inc', 'atrium_blog', 'atrium_blog.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_blog_ctools_plugin_api', $args);
+}
+
+/**
  * Implementation of hook_menu_default_items().
  */
 function atrium_blog_menu_default_items() {

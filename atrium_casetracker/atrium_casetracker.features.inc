@@ -10,6 +10,15 @@ function atrium_casetracker_context_default_contexts() {
 }
 
 /**
+ * Implementation of hook_ctools_plugin_api().
+ */
+function atrium_casetracker_ctools_plugin_api() {
+  module_load_include('inc', 'atrium_casetracker', 'atrium_casetracker.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_casetracker_ctools_plugin_api', $args);
+}
+
+/**
  * Implementation of hook_menu_default_items().
  */
 function atrium_casetracker_menu_default_items() {

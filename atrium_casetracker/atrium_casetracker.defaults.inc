@@ -4,73 +4,109 @@
  * Helper to implementation of hook_context_default_contexts().
  */
 function _atrium_casetracker_context_default_contexts() {
-  $items = array();
-
-  $items[] = array(
-    'namespace' => 'atrium',
-    'attribute' => 'casetracker',
-    'value' => 'project',
-    'description' => '',
+  $export = array();
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'atrium-casetracker-project';
+  $context->description = '';
+  $context->tag = '';
+  $context->conditions = array(
     'node' => array(
-      '0' => 'casetracker_basic_project',
+      'values' => array(
+        '0' => 'casetracker_basic_project',
+      ),
+      'options' => array(),
     ),
+  );
+  $context->reactions = array(
     'block' => array(
-      'views_atrium_casetracker-block_1' => array(
-        'module' => 'views',
-        'delta' => 'atrium_casetracker-block_1',
-        'weight' => 50,
-        'region' => 'content',
-        'status' => '0',
-        'label' => 'atrium_casetracker: Project cases (newest)',
-        'type' => 'context_ui',
+      'blocks' => array(
+        'views-atrium_casetracker-block_1' => array(
+          'module' => 'views',
+          'delta' => 'atrium_casetracker-block_1',
+          'weight' => 50,
+          'region' => 'content',
+          'status' => '0',
+          'label' => 'atrium_casetracker: Project cases (newest)',
+          'type' => 'context_ui',
+        ),
       ),
     ),
   );
-  $items[] = array(
-    'namespace' => 'spaces',
-    'attribute' => 'feature',
-    'value' => 'casetracker',
-    'description' => '',
-    'menu' => 'casetracker',
+
+  $export['atrium-casetracker-project'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'spaces-feature-casetracker';
+  $context->description = '';
+  $context->tag = '';
+  $context->conditions = array(
     'node' => array(
-      '0' => 'casetracker_basic_project',
-      '1' => 'casetracker_basic_case',
+      'values' => array(
+        '0' => 'casetracker_basic_project',
+        '1' => 'casetracker_basic_case',
+      ),
+      'options' => array(),
     ),
     'views' => array(
-      '0' => 'atrium_casetracker',
-      '1' => 'atrium_casetracker_projects',
+      'values' => array(
+        '0' => 'atrium_casetracker',
+        '1' => 'atrium_casetracker_projects',
+      ),
+      'options' => array(),
     ),
+  );
+  $context->reactions = array(
+    'menu' => 'casetracker',
     'block' => array(
-      'atrium_casetracker_book' => array(
-        'module' => 'atrium_casetracker',
-        'delta' => 'book',
-        'weight' => 50,
-        'region' => 'right',
-        'status' => '0',
-        'label' => 'Atrium: Case Tracker book',
-        'type' => 'context_ui',
-      ),
-      'atrium_casetracker_filters' => array(
-        'module' => 'atrium_casetracker',
-        'delta' => 'filters',
-        'weight' => 51,
-        'region' => 'right',
-        'status' => '0',
-        'label' => 'Atrium: Case Tracker filter',
-        'type' => 'context_ui',
-      ),
-      'views_atrium_casetracker-block_2' => array(
-        'module' => 'views',
-        'delta' => 'atrium_casetracker-block_2',
-        'weight' => 52,
-        'region' => 'right',
-        'status' => '0',
-        'label' => 'atrium_casetracker: My cases',
-        'type' => 'context_ui',
+      'blocks' => array(
+        'atrium_casetracker-book' => array(
+          'module' => 'atrium_casetracker',
+          'delta' => 'book',
+          'weight' => 50,
+          'region' => 'right',
+          'status' => '0',
+          'label' => 'Atrium: Case Tracker book',
+          'type' => 'context_ui',
+        ),
+        'atrium_casetracker-filters' => array(
+          'module' => 'atrium_casetracker',
+          'delta' => 'filters',
+          'weight' => 51,
+          'region' => 'right',
+          'status' => '0',
+          'label' => 'Atrium: Case Tracker filter',
+          'type' => 'context_ui',
+        ),
+        'views-atrium_casetracker-block_2' => array(
+          'module' => 'views',
+          'delta' => 'atrium_casetracker-block_2',
+          'weight' => 52,
+          'region' => 'right',
+          'status' => '0',
+          'label' => 'atrium_casetracker: My cases',
+          'type' => 'context_ui',
+        ),
       ),
     ),
   );
-  return $items;
+
+  $export['spaces-feature-casetracker'] = $context;
+  return $export;
+}
+
+/**
+ * Helper to implementation of hook_ctools_plugin_api().
+ */
+function _atrium_casetracker_ctools_plugin_api() {
+  $args = func_get_args();
+  $module = array_shift($args);
+  $api = array_shift($args);
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
 }
 
 /**
@@ -105,8 +141,8 @@ function _atrium_casetracker_user_default_permissions() {
   $permissions[] = array(
     'name' => 'access case tracker',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -115,8 +151,8 @@ function _atrium_casetracker_user_default_permissions() {
   $permissions[] = array(
     'name' => 'create cases',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -134,8 +170,8 @@ function _atrium_casetracker_user_default_permissions() {
   $permissions[] = array(
     'name' => 'edit own cases',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );

@@ -134,56 +134,81 @@ function _atrium_calendar_content_default_fields() {
  * Helper to implementation of hook_context_default_contexts().
  */
 function _atrium_calendar_context_default_contexts() {
-  $items = array();
-
-  $items[] = array(
-    'namespace' => 'spaces',
-    'attribute' => 'feature',
-    'value' => 'calendar',
-    'description' => '',
+  $export = array();
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'spaces-feature-calendar';
+  $context->description = '';
+  $context->tag = '';
+  $context->conditions = array(
     'node' => array(
-      '0' => 'event',
-      '1' => 'feed_ical',
-      '2' => 'feed_ical_item',
+      'values' => array(
+        '0' => 'event',
+        '1' => 'feed_ical',
+        '2' => 'feed_ical_item',
+      ),
+      'options' => array(),
     ),
     'views' => array(
-      '0' => 'atrium_calendar',
-      '1' => 'atrium_calendar_feed_items',
-      '2' => 'atrium_calendar_feeds',
-      '3' => 'atrium_calendar_upcoming',
+      'values' => array(
+        '0' => 'atrium_calendar',
+        '1' => 'atrium_calendar_feed_items',
+        '2' => 'atrium_calendar_feeds',
+        '3' => 'atrium_calendar_upcoming',
+      ),
+      'options' => array(),
     ),
+  );
+  $context->reactions = array(
     'menu' => 'calendar',
     'block' => array(
-      'atrium_calendar_mini' => array(
-        'module' => 'atrium_calendar',
-        'delta' => 'mini',
-        'weight' => 20,
-        'region' => 'right',
-        'status' => '0',
-        'label' => 'Atrium calendar: Mini calendar',
-        'type' => 'context_ui',
-      ),
-      'views_atrium_calendar_upcoming-block_1' => array(
-        'module' => 'views',
-        'delta' => 'atrium_calendar_upcoming-block_1',
-        'weight' => 21,
-        'region' => 'right',
-        'status' => '0',
-        'label' => 'atrium_calendar_upcoming: Block',
-        'type' => 'context_ui',
-      ),
-      'views_3d47b44f26df08825145e8a74a809061' => array(
-        'module' => 'views',
-        'delta' => '3d47b44f26df08825145e8a74a809061',
-        'weight' => 20,
-        'region' => 'content',
-        'status' => '0',
-        'label' => 'atrium_calendar_feed_items: Block',
-        'type' => 'context_ui',
+      'blocks' => array(
+        'atrium_calendar-mini' => array(
+          'module' => 'atrium_calendar',
+          'delta' => 'mini',
+          'weight' => 20,
+          'region' => 'right',
+          'status' => '0',
+          'label' => 'Atrium calendar: Mini calendar',
+          'type' => 'context_ui',
+        ),
+        'views-atrium_calendar_upcoming-block_1' => array(
+          'module' => 'views',
+          'delta' => 'atrium_calendar_upcoming-block_1',
+          'weight' => 21,
+          'region' => 'right',
+          'status' => '0',
+          'label' => 'atrium_calendar_upcoming: Block',
+          'type' => 'context_ui',
+        ),
+        'views-3d47b44f26df08825145e8a74a809061' => array(
+          'module' => 'views',
+          'delta' => '3d47b44f26df08825145e8a74a809061',
+          'weight' => 20,
+          'region' => 'content',
+          'status' => '0',
+          'label' => 'atrium_calendar_feed_items: Block',
+          'type' => 'context_ui',
+        ),
       ),
     ),
   );
-  return $items;
+
+  $export['spaces-feature-calendar'] = $context;
+  return $export;
+}
+
+/**
+ * Helper to implementation of hook_ctools_plugin_api().
+ */
+function _atrium_calendar_ctools_plugin_api() {
+  $args = func_get_args();
+  $module = array_shift($args);
+  $api = array_shift($args);
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
 }
 
 /**
@@ -218,8 +243,8 @@ function _atrium_calendar_user_default_permissions() {
   $permissions[] = array(
     'name' => 'create event content',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -261,8 +286,8 @@ function _atrium_calendar_user_default_permissions() {
   $permissions[] = array(
     'name' => 'delete own event content',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -289,8 +314,8 @@ function _atrium_calendar_user_default_permissions() {
   $permissions[] = array(
     'name' => 'edit own event content',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );

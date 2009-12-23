@@ -10,6 +10,15 @@ function atrium_members_context_default_contexts() {
 }
 
 /**
+ * Implementation of hook_ctools_plugin_api().
+ */
+function atrium_members_ctools_plugin_api() {
+  module_load_include('inc', 'atrium_members', 'atrium_members.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_members_ctools_plugin_api', $args);
+}
+
+/**
  * Implementation of hook_imagecache_default_presets().
  */
 function atrium_members_imagecache_default_presets() {

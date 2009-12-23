@@ -715,7 +715,6 @@ function _atrium_groups_views_default_views() {
     t('Block: My groups (header)'),
     t('View more'),
     t('Block: My groups (sidebar)'),
-    t('more'),
     t('Page: My groups'),
     t('Page: Group directory'),
     t('Directory'),

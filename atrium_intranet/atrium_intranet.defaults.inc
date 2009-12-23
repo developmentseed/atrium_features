@@ -4,73 +4,102 @@
  * Helper to implementation of hook_context_default_contexts().
  */
 function _atrium_intranet_context_default_contexts() {
-  $items = array();
-
-  $items[] = array(
-    'namespace' => 'atrium',
-    'attribute' => 'intranet',
-    'value' => 'global',
-    'description' => '',
-    'sitewide' => '1',
+  $export = array();
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'atrium-intranet-global';
+  $context->description = '';
+  $context->tag = '';
+  $context->conditions = array(
+    'sitewide' => array(
+      'values' => array(
+        '0' => '1',
+      ),
+      'options' => array(),
+    ),
+  );
+  $context->reactions = array(
     'block' => array(
-      'atrium_intranet_account' => array(
-        'module' => 'atrium_intranet',
-        'delta' => 'account',
-        'weight' => -47,
-        'region' => 'header',
-        'status' => '0',
-        'label' => 'Atrium Intranet: User account',
-        'type' => 'context_ui',
-      ),
-      'atrium_intranet_help' => array(
-        'module' => 'atrium_intranet',
-        'delta' => 'help',
-        'weight' => 48,
-        'region' => 'header',
-        'status' => '0',
-        'label' => 'Atrium Intranet: Help',
-        'type' => 'context_ui',
-      ),
-      'atrium_intranet_spacelinks' => array(
-        'module' => 'atrium_intranet',
-        'delta' => 'spacelinks',
-        'weight' => 47,
-        'region' => 'space_tools',
-        'status' => '0',
-        'label' => 'Atrium Intranet: Space links',
-        'type' => 'context_ui',
-      ),
-      'atrium_intranet_create' => array(
-        'module' => 'atrium_intranet',
-        'delta' => 'create',
-        'weight' => 48,
-        'region' => 'space_tools',
-        'status' => '0',
-        'label' => 'Atrium Intranet: Create content',
-        'type' => 'context_ui',
-      ),
-      'xref_create' => array(
-        'module' => 'xref',
-        'delta' => 'create',
-        'weight' => 47,
-        'region' => 'page_tools',
-        'status' => '0',
-        'label' => 'Crossref: Create referrer',
-        'type' => 'context_ui',
+      'blocks' => array(
+        'atrium_intranet-account' => array(
+          'module' => 'atrium_intranet',
+          'delta' => 'account',
+          'weight' => -47,
+          'region' => 'header',
+          'status' => '0',
+          'label' => 'Atrium Intranet: User account',
+          'type' => 'context_ui',
+        ),
+        'atrium_intranet-help' => array(
+          'module' => 'atrium_intranet',
+          'delta' => 'help',
+          'weight' => 48,
+          'region' => 'header',
+          'status' => '0',
+          'label' => 'Atrium Intranet: Help',
+          'type' => 'context_ui',
+        ),
+        'atrium_intranet-spacelinks' => array(
+          'module' => 'atrium_intranet',
+          'delta' => 'spacelinks',
+          'weight' => 47,
+          'region' => 'space_tools',
+          'status' => '0',
+          'label' => 'Atrium Intranet: Space links',
+          'type' => 'context_ui',
+        ),
+        'atrium_intranet-create' => array(
+          'module' => 'atrium_intranet',
+          'delta' => 'create',
+          'weight' => 48,
+          'region' => 'space_tools',
+          'status' => '0',
+          'label' => 'Atrium Intranet: Create content',
+          'type' => 'context_ui',
+        ),
+        'xref-create' => array(
+          'module' => 'xref',
+          'delta' => 'create',
+          'weight' => 47,
+          'region' => 'page_tools',
+          'status' => '0',
+          'label' => 'Crossref: Create referrer',
+          'type' => 'context_ui',
+        ),
       ),
     ),
   );
-  $items[] = array(
-    'namespace' => 'theme',
-    'attribute' => 'layout',
-    'value' => 'custom',
-    'description' => '',
+
+  $export['atrium-intranet-global'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'theme-layout-custom';
+  $context->description = '';
+  $context->tag = '';
+  $context->conditions = array();
+  $context->reactions = array(
     'theme_regiontoggle' => array(
       '0' => 'right',
       '1' => 'content',
     ),
   );
-  return $items;
+
+  $export['theme-layout-custom'] = $context;
+  return $export;
+}
+
+/**
+ * Helper to implementation of hook_ctools_plugin_api().
+ */
+function _atrium_intranet_ctools_plugin_api() {
+  $args = func_get_args();
+  $module = array_shift($args);
+  $api = array_shift($args);
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
 }
 
 /**
@@ -264,14 +293,6 @@ function _atrium_intranet_user_default_permissions() {
     ),
   );
 
-  // Exported permission: admin menu
-  $permissions[] = array(
-    'name' => 'admin menu',
-    'roles' => array(
-      '0' => 'admin',
-    ),
-  );
-
   // Exported permission: administer atrium
   $permissions[] = array(
     'name' => 'administer atrium',
@@ -361,21 +382,12 @@ function _atrium_intranet_user_default_permissions() {
     ),
   );
 
-  // Exported permission: configure spaces features
-  $permissions[] = array(
-    'name' => 'configure spaces features',
-    'roles' => array(
-      '0' => 'admin',
-      '1' => 'manager',
-    ),
-  );
-
   // Exported permission: post comments
   $permissions[] = array(
     'name' => 'post comments',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -384,8 +396,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'post comments without approval',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -403,8 +415,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'search content',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -413,8 +425,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'select different theme',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -423,8 +435,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'skip notifications',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -433,8 +445,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'subscribe other users',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -443,8 +455,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'subscribe to author',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -453,8 +465,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'subscribe to content',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -463,8 +475,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'upload files',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -473,8 +485,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'upload files to comments',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -483,8 +495,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'use advanced search',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -493,8 +505,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'view files uploaded to comments',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -503,18 +515,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'view imagecache fileview',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
-      '2' => 'manager',
-    ),
-  );
-
-  // Exported permission: view imagecache spaces-logo
-  $permissions[] = array(
-    'name' => 'view imagecache spaces-logo',
-    'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -523,8 +525,8 @@ function _atrium_intranet_user_default_permissions() {
   $permissions[] = array(
     'name' => 'view uploaded files',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );

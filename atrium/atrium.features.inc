@@ -10,6 +10,15 @@ function atrium_context_default_contexts() {
 }
 
 /**
+ * Implementation of hook_ctools_plugin_api().
+ */
+function atrium_ctools_plugin_api() {
+  module_load_include('inc', 'atrium', 'atrium.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_ctools_plugin_api', $args);
+}
+
+/**
  * Implementation of hook_views_default_views().
  */
 function atrium_views_default_views() {

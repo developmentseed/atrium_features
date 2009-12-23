@@ -13,6 +13,8 @@ function _atrium_calendar_node_info() {
       'title_label' => t('Title'),
       'has_body' => '1',
       'body_label' => t('Body'),
+      'min_word_count' => '0',
+      'help' => '',
     ),
     'feed_ical' => array(
       'name' => t('iCal Feed'),
@@ -21,7 +23,9 @@ function _atrium_calendar_node_info() {
       'has_title' => '1',
       'title_label' => t('Title'),
       'has_body' => '0',
-      'body_label' => t(''),
+      'body_label' => '',
+      'min_word_count' => '0',
+      'help' => '',
     ),
     'feed_ical_item' => array(
       'name' => t('iCal Event'),
@@ -31,6 +35,8 @@ function _atrium_calendar_node_info() {
       'title_label' => t('Title'),
       'has_body' => '1',
       'body_label' => t('Body'),
+      'min_word_count' => '0',
+      'help' => '',
     ),
   );
   return $items;

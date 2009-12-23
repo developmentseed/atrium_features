@@ -228,7 +228,8 @@ function atrium_intranet_block($op = 'list', $delta = 0) {
     case 'view':
       switch ($delta) {
         case 'spacelinks':
-          $links = spaces_admin_links();
+          // @TODO: spaces_admin_link() is deprecated/missing.
+          // $links = spaces_admin_links();
           if (!empty($links)) {
             return array('subject' => "<span class='icon'></span> ". t('Settings'), 'content' => theme('links', $links));
           }
@@ -262,7 +263,10 @@ function atrium_intranet_block($op = 'list', $delta = 0) {
             $info_big = theme('user_picture', $account) . theme('username', $account);
             $info_small = theme('user_picture', $user) . check_plain($user->name);
 
-            $links = spaces_admin_links(spaces_load('user', $account->uid));
+            // @TODO: spaces_admin_link() is deprecated/missing.
+            // $links = spaces_admin_links(spaces_load('user', $account->uid));
+            $links = array();
+
             // For PURL prefixing onto these links since they might be
             // used from anywhere.
             foreach ($links as $k => $v) {

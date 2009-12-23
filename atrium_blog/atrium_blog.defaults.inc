@@ -77,47 +77,58 @@ function _atrium_blog_content_default_fields() {
  * Helper to implementation of hook_context_default_contexts().
  */
 function _atrium_blog_context_default_contexts() {
-  $items = array();
-
-  $items[] = array(
-    'namespace' => 'spaces',
-    'attribute' => 'feature',
-    'value' => 'blog',
-    'description' => '',
+  $export = array();
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'spaces-feature-blog';
+  $context->description = '';
+  $context->tag = '';
+  $context->conditions = array(
     'node' => array(
-      '0' => 'blog',
+      'values' => array(
+        '0' => 'blog',
+      ),
+      'options' => array(),
     ),
     'views' => array(
-      '0' => 'atrium_blog',
-    ),
-    'spaces' => array(
-      'label' => 'Blog',
-      'description' => 'A blog for team communications.',
-      'menu' => array(
-        '0' => array(
-          'title' => 'Blog',
-          'href' => 'blog',
-        ),
+      'values' => array(
+        '0' => 'atrium_blog',
       ),
-      'types' => array(
-        '0' => 'og',
-        '1' => 'user',
-      ),
+      'options' => array(),
     ),
+  );
+  $context->reactions = array(
     'menu' => 'blog',
     'block' => array(
-      'views_atrium_blog_comments-block_1' => array(
-        'module' => 'views',
-        'delta' => 'atrium_blog_comments-block_1',
-        'weight' => 20,
-        'region' => 'right',
-        'status' => '0',
-        'label' => 'atrium_blog_comments: Recent comments',
-        'type' => 'context_ui',
+      'blocks' => array(
+        'views-atrium_blog_comments-block_1' => array(
+          'module' => 'views',
+          'delta' => 'atrium_blog_comments-block_1',
+          'weight' => 20,
+          'region' => 'right',
+          'status' => '0',
+          'label' => 'atrium_blog_comments: Recent comments',
+          'type' => 'context_ui',
+        ),
       ),
     ),
   );
-  return $items;
+
+  $export['spaces-feature-blog'] = $context;
+  return $export;
+}
+
+/**
+ * Helper to implementation of hook_ctools_plugin_api().
+ */
+function _atrium_blog_ctools_plugin_api() {
+  $args = func_get_args();
+  $module = array_shift($args);
+  $api = array_shift($args);
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
 }
 
 /**
@@ -152,8 +163,8 @@ function _atrium_blog_user_default_permissions() {
   $permissions[] = array(
     'name' => 'create blog content',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -162,8 +173,8 @@ function _atrium_blog_user_default_permissions() {
   $permissions[] = array(
     'name' => 'delete own blog content',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );
@@ -172,8 +183,8 @@ function _atrium_blog_user_default_permissions() {
   $permissions[] = array(
     'name' => 'edit own blog content',
     'roles' => array(
-      '0' => 'authenticated user',
-      '1' => 'admin',
+      '0' => 'admin',
+      '1' => 'authenticated user',
       '2' => 'manager',
     ),
   );

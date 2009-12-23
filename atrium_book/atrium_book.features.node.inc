@@ -13,6 +13,8 @@ function _atrium_book_node_info() {
       'title_label' => t('Title'),
       'has_body' => '1',
       'body_label' => t('Body'),
+      'min_word_count' => '0',
+      'help' => '',
     ),
   );
   return $items;
