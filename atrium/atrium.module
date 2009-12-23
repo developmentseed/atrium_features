@@ -176,22 +176,6 @@ function atrium_features_menu_links_alter(&$links) {
 }
 
 /**
- * Implementation of hook_spaces_settings().
- */
-function atrium_spaces_settings() {
-  return array(
-    'atrium_sitemode' => array(
-      'class' => 'atrium_setting_sitemode',
-      'file' => drupal_get_path('module', 'atrium') .'/atrium.spaces.inc',
-    ),
-    'atrium_members' => array(
-      'class' => 'atrium_setting_members',
-      'file' => drupal_get_path('module', 'atrium') .'/atrium.spaces.inc',
-    ),
-  );
-}
-
-/**
  * Implementation of hook_menu().
  */
 function atrium_menu() {
@@ -361,6 +345,49 @@ function atrium_form_alter(&$form, &$form_state, $form_id) {
       drupal_access_denied(); exit;
     }
   }
+}
+
+/**
+ * Implementation of hook_form_alter for spaces_features_form.
+ */
+function atrium_form_spaces_features_form_alter(&$form, $form_state) {
+  $space = spaces_get_space();
+  if (!$space) {
+    $form['atrium'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Site settings'),
+      '#tree' => FALSE,
+    );
+    $form['atrium']['user_register'] = array(
+      '#title' => t('Site mode'),
+      '#type' => 'select',
+      '#description' => t('Choose the access level for the site.'),
+      '#options' => array(
+        0 => t('Private access only'),
+        1 => t('Public access, open registration'),
+        2 => t('Public access, moderated registration'),
+      ),
+      '#default_value' => variable_get('user_register', 0),
+    );
+    $form['atrium']['atrium_members'] = array(
+      '#title' => t('Members'),
+      '#type' => 'select',
+      '#description' => t('Choose the access mode for the member directory and profiles. Administrators and managers will be able to see all members regardless of this setting.'),
+      '#options' => array(
+        ATRIUM_MEMBERS_ALL=> t('Users can view all members'),
+        ATRIUM_MEMBERS_GROUP => t('Users can only view members that belong to their groups')
+      ),
+      '#default_value' => variable_get('atrium_members', ATRIUM_MEMBERS_ALL),
+    );
+    $form['#submit'][] = 'atrium_form_spaces_features_form_submit';
+  }
+}
+
+/**
+ * Trigger a features rebuild.
+ */
+function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
+  features_rebuild();
 }
 
 /**
