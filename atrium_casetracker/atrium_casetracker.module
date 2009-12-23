@@ -1,0 +1,353 @@
+<?php
+
+require('atrium_casetracker.features.inc');
+
+/**
+ * Implementation of hook_help().
+ */
+function atrium_casetracker_help($path, $arg) {
+  if (($path == 'help#atrium_casetracker') || (context_get('spaces', 'feature') == 'casetracker')) {
+    switch ($path) {
+      case 'node/add/casetracker-basic-case':
+      case 'node/add/casetracker-basic-project':
+      case 'node/%/edit':
+        $help = '';
+        $help .= '<h3>'. t('Case Tracker') .'</h3>';
+        $node = menu_get_object();
+        if ($node->type == 'casetracker_basic_case') {
+          $help .= '<p>'. t('Tips for adding and editing cases:') .'</p>';
+          $help .= '<ul>';
+          $help .= '<li>'. t('Choose the project that your case applies to.') .'</li>';
+          $help .= '<li>'. t('Fill in a descriptive title and summary of the issue.') .'</li>';
+          $help .= '<li>'. t('Choose a status, priority and type for the case. Assign the case to a user and consider notifying any others who might be interested in the case.') .'</li>';
+          $help .= '</ul>';
+        }
+        else {
+          $help .= '<p>'. t('Projects can be used to organize cases and collect resources and documentations about ongoing work. You can organize <strong>book pages</strong> in a hierarchy under each project and view all of the cases that belong to a certain project in the case tracker.') .'</p>';
+        }
+        return $help;
+
+      case 'help#atrium_casetracker':
+      default:
+        $help = '';
+        $help .= '<h3>'. t('Case Tracker') .'</h3>';
+        $help .= '<p>'. t('The case tracker gives you a way to track progress on your <strong>projects</strong> and assign <strong>cases</strong> to yourself and others.') .'</p>';
+        $help .= '<ul>';
+        $help .= '<li>'. t('!add_projects to keep your cases organized.', array('!add_projects' => l(t('Add projects'), 'node/add/project'))) .'</li>';
+        $help .= '<li>'. t('!add_cases to assign tasks or assignments to yourself and others for completion.', array('!add_cases' => l(t('Add cases'), 'node/add/case'))) .'</li>';
+        $help .= '<li>'. t('Cases can be <strong>reassigned</strong>, <strong>postponed</strong>, and <strong>closed</strong>, among other actions.') .'</li>';
+        $help .= '<li>'. t('The history of a case - who it\'s been assigned to, its status and its priority - can be tracked viewing its comment thread.') .'</li>';
+        $help .= '</ul>';
+        return $help;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_strongarm().
+ */
+function atrium_casetracker_strongarm() {
+  $conf = array();
+
+  foreach (array('casetracker_basic_case', 'casetracker_basic_project') as $type) {
+    $conf['node_options_'. $type] = array('status', 'revision');
+    $conf['notifications_content_type_' . $type] = array('thread', 'grouptype', 'nodetype', 'author');
+    $conf['og_notifications_content_types'][] = $type;
+    $conf['upload_'. $type] = TRUE;
+    $conf['feedapi_settings_'. $type] = array('enabled' => FALSE);
+
+    // Enable for recent activity views
+    $conf['atrium_update_type_'. $type] = TRUE;
+  }
+
+  // Pathauto (optional) settings
+  $conf["pathauto_node_casetracker_basic_case_pattern"] = "[space-og-path]/case/[title-raw]";
+  $conf["pathauto_node_casetracker_basic_project_pattern"] = "[space-og-path]/project/[title-raw]";
+
+  // Case Tracker views
+  $conf['casetracker_view_project_options'] = 'atrium_ct_project_options';
+  $conf['casetracker_view_assignee_options'] = 'atrium_ct_assignee_options';
+
+  // Comments
+  $conf['comment_casetracker_basic_project'] = COMMENT_NODE_DISABLED;
+
+  $conf['comment_casetracker_basic_case'] = COMMENT_NODE_READ_WRITE;
+  $conf['comment_default_mode_casetracker_basic_case'] = COMMENT_MODE_THREADED_EXPANDED;
+  $conf['comment_default_order_casetracker_basic_case'] = COMMENT_ORDER_OLDEST_FIRST;
+  $conf['comment_default_per_page_casetracker_basic_case'] = 200;
+  $conf['comment_controls_casetracker_basic_case'] = COMMENT_CONTROLS_HIDDEN;
+  $conf['comment_subject_field_casetracker_basic_case'] = 0;
+  $conf['comment_preview_casetracker_basic_case'] = COMMENT_PREVIEW_OPTIONAL;
+  $conf['comment_form_location_casetracker_basic_case'] = COMMENT_FORM_BELOW;
+  $conf['comment_upload_casetracker_basic_case'] = TRUE;
+
+  // Book
+  $conf['book_allowed_types'] = array('casetracker_basic_project');
+
+  // Diff
+  $conf['show_preview_changes_casetracker_basic_case'] =
+  $conf['show_preview_changes_casetracker_basic_project'] = FALSE;
+  $conf['show_diff_inline_event_casetracker_basic_case'] = FALSE;
+  $conf['show_diff_inline_event_casetracker_basic_project'] = TRUE;
+
+  // Atrium archivable types
+  $conf['atrium_archivable'] = array('casetracker_basic_project');
+
+  // This isn't a strongarm since we don't want to blow away
+  // what the user's defined here.
+  $views_defaults = variable_get('views_defaults', array());
+  if (empty($views_defaults['casetracker_project_cases'])) {
+    $views_defaults['casetracker_project_cases'] = TRUE;
+    variable_set('views_defaults', $views_defaults);
+  }
+
+  return $conf;
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function atrium_casetracker_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
+  switch ($op) {
+    case 'view':
+      // Confirm we are actually on a page of relevance
+      if (menu_get_object() === $node) {
+        switch ($node->type) {
+          case 'casetracker_basic_project':
+            // Omit casetracker project summary -- not useful at the moment (may be one day...)
+            unset($node->content['casetracker_project_summary']);
+            break;
+        }
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function atrium_casetracker_form_alter(&$form, $form_state, $form_id) {
+  if (!empty($form['#node']) && !empty($form['book'])) {
+    switch ($form['#node']->type) {
+      // Prevent projects from becoming cihld pages
+      case 'casetracker_basic_project':
+        // Fieldset mods
+        $form['book']['#weight'] = !empty($form['body_field']['#weight']) ? $form['body_field']['#weight'] : 0;
+        $form['book']['#collapsible'] =
+        $form['book']['#collapsed'] = FALSE;
+
+        if (!empty($form['book']['bid']['#options'])) {
+          // Force book pages to not be orphaned
+          // unset($form['book']['bid']['#options'][0]);
+
+          // Force non book types to be root level books
+          $exclude = array('new');
+          if (isset($form['#node']->nid)) {
+            $exclude[] = $form['#node']->nid;
+          }
+          foreach ($form['book']['bid']['#options'] as $k => $v) {
+            if (!in_array($k, $exclude)) {
+              unset($form['book']['bid']['#options'][$k]);
+            }
+          }
+        }
+        break;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_form_views_exposed_form_alter().
+ */
+function atrium_casetracker_form_views_exposed_form_alter(&$form, &$form_state) {
+  // Pass table sort on when submitting filter forms
+  if (isset($_GET['order'])) {
+    $form['order'] = array(
+      '#type' => 'hidden',
+      '#value' => $_GET['order'],
+    );
+  }
+  if (isset($_GET['sort'])) {
+    $form['sort'] = array(
+      '#type' => 'hidden',
+      '#value' => $_GET['sort'],
+    );
+  }
+}
+
+/**
+ * Implementation of hook_block().
+ */
+function atrium_casetracker_block($op = 'list', $delta = 0) {
+  switch ($op) {
+    case 'list':
+      $blocks['filters'] = array('info' => t('Atrium: Case Tracker filter'));
+      $blocks['book'] = array('info' => t('Atrium: Case Tracker book'));
+      return $blocks;
+    case 'view':
+      $function = '_atrium_casetracker_block_'. $delta;
+      if (function_exists($function)) {
+        return call_user_func($function);
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function atrium_casetracker_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'atrium_casetracker') .'/includes',
+  );
+}
+
+/**
+ * Implementation of hook_theme_registry_alter().
+ */
+function atrium_casetracker_theme_registry_alter(&$theme_registry) {
+  $theme_registry['casetracker_case_summary']['function'] = 'atrium_casetracker_casetracker_case_summary';
+}
+
+/**
+ * Preprocessor for theme('views_view').
+ */
+function atrium_casetracker_preprocess_views_view(&$vars) {
+  $view = $vars['view'];
+  if ($view->name == 'atrium_casetracker') {
+    // Whisk away exposed filter for display in a block
+    _atrium_casetracker_block_filters($vars['exposed']);
+    $vars['exposed'] = '';
+  }
+}
+
+/**
+ * Preprocessor for theme('views_view_table').
+ */
+function atrium_casetracker_preprocess_views_view_table(&$vars) {
+  $view = $vars['view'];
+  if ($view->name == 'atrium_casetracker') {
+    $vars['class'] .= " cases";
+
+    global $user;
+    $new_rows = array();
+    $inactive_states = atrium_casetracker_get_inactive_states();
+    foreach ($vars['rows'] as $index => $row) {
+      $class = "row-$index";
+      if (!empty($view->result[$index]->casetracker_case_assign_to) && $view->result[$index]->casetracker_case_assign_to == $user->uid) {
+        $class .= ' mine';
+      }
+      if (!empty($view->result[$index]->casetracker_case_case_status_id) && in_array($view->result[$index]->casetracker_case_case_status_id, $inactive_states)) {
+        $class .= ' status-inactive';
+      }
+      $new_rows[$class] = $row;
+    }
+    $vars['rows'] = $new_rows;
+  }
+}
+
+/**
+ * Filter block.
+ */
+function _atrium_casetracker_block_filters($set = '') {
+  static $filters;
+  if (!empty($set)) {
+    $filters = $set;
+    return;
+  }
+  if (!empty($filters)) {
+    return array('subject' => t('Filter results'), 'content' => $filters);
+  }
+  return array();
+}
+
+/**
+ * Book block.
+ */
+function _atrium_casetracker_block_book() {
+  // Reuse book block code but force book pages setting (and restore the variable after.
+  $orig = variable_get('book_block_mode', 'all pages');
+  global $conf;
+  $conf['book_block_mode'] = 'book pages';
+  $block = book_block('view', 0);
+  $conf['book_block_mode'] = $orig;
+  return $block;
+}
+
+/**
+ * THEME ==============================================================
+ */
+
+/**
+ * Implementation of hook_theme().
+ */
+function atrium_casetracker_theme() {
+  return array(
+    'atrium_casetracker_priority' => array(),
+  );
+}
+
+/**
+ * Case priority theme function.
+ */
+function theme_atrium_casetracker_priority($id) {
+  return "<span class='case-priority priority-$id'>$id</span>";
+}
+
+/**
+ * Override of theme_casetracker_case_summary().
+ * @TODO: move to template file.
+ */
+function atrium_casetracker_casetracker_case_summary($case, $project) {
+  drupal_add_css(drupal_get_path('module', 'atrium_casetracker') .'/atrium_casetracker.css');
+
+  $status = casetracker_case_state_load($case->casetracker->case_status_id, 'status');
+  $priority = casetracker_case_state_load($case->casetracker->case_priority_id, 'priority');
+  $assigned = t('assigned to !user', array('!user' => theme('username', user_load(array('uid' => $case->casetracker->assign_to)))));
+
+  $type = casetracker_case_state_load($case->casetracker->case_type_id, 'type');
+  $project = l($project->title, "node/{$project->nid}");
+  $last_comment = db_result(db_query('SELECT last_comment_timestamp FROM {node_comment_statistics} WHERE nid = %d', $case->nid));
+  $last_comment = t('!time ago', array('!time' => format_interval(time() - $last_comment)));
+
+  $class = in_array($case->casetracker->case_status_id, atrium_casetracker_get_inactive_states()) ? 'inactive' : 'active';
+
+  $output = "<div class='atrium-case-summary atrium-case-status-{$class} clear-block'>";
+  $output .= "<div class='primary'>";
+  $output .= "<div class='status'>{$status}</div>";
+  $output .= "<div class='project'>{$project}</div>";
+  $output .= "<div class='assigned'>{$assigned}</div>";
+  $output .= "</div>";
+  $output .= "<div class='secondary'>";
+  $output .= "<div class='priority'><label>". t('Priority') ."</label>{$priority}</div>";
+  $output .= "<div class='type'><label>" . t('Type') . "</label>{$type}</div>";
+  $output .= "<div class='updated'><label>". t('Last updated') ."</label>{$last_comment}</div>";
+  $output .= "</div>";
+  $output .= "</div>";
+
+  return $output;
+}
+
+/**
+ * Retrieve an array of inactive state IDs.
+ */
+function atrium_casetracker_get_inactive_states() {
+  // @TODO: Replace this with a proper fix upstream in Casetracker
+  static $inactive_states;
+  if (!isset($inactive_states)) {
+    $inactive_states = array();
+    $search = array('closed', 'deferred', 'duplicate', 'postponed', 'fixed');
+    $states = casetracker_case_state_load(NULL, 'status');
+    foreach ($states as $status_id => $state) {
+      $state = strtolower($state);
+      foreach ($search as $needle) {
+        if (strpos($state, $needle) !== FALSE) {
+          $inactive_states[] = $status_id;
+          continue;
+        }
+      }
+    }
+  }
+  return $inactive_states;
+}

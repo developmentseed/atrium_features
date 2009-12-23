@@ -1,0 +1,102 @@
+<?php
+
+include_once('atrium_profile.features.inc');
+
+/**
+ * Implementation of hook_views_pre_view().
+ */
+function atrium_profile_views_pre_build(&$view) {
+  // Remove email display if site is in public mode.
+  $space = spaces_load('site', 1);
+  if ($view->name == 'atrium_profile' && isset($space->settings['atrium_sitemode']) && $space->settings['atrium_sitemode'] == ATRIUM_SITEMODE_PUBLIC) {
+    $fields = $view->display_handler->get_option('fields');
+    if (isset($fields['mail'])) {
+      unset($fields['mail']);
+      $view->display_handler->set_option('fields', $fields);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_strongarm().
+ */
+function atrium_profile_strongarm() {
+  $conf = array();
+
+  $conf['node_options_profile'] = array('status');
+  $conf["notifications_content_type_profile"] = array();
+  $conf['upload_profile'] = FALSE;
+
+  // Disable comments
+  $conf['comment_profile'] = COMMENT_NODE_DISABLED;
+
+  // Disable FeedAPI
+  $conf['feedapi_settings_profile'] = array('enabled' => FALSE);
+
+  // Disable Diff button
+  $conf["show_preview_changes_profile"] = FALSE;
+  $conf["show_diff_inline_profile"] = FALSE;
+
+  // Configure content profile.
+  $conf['content_profile_use_profile'] = 1;
+  $conf['content_profile_profile'] = array (
+    'weight' => '0',
+    'user_display' => 'full',
+    'edit_link' => 0,
+    'edit_tab' => 'sub',
+    'add_link' => 0,
+  );
+
+  // Disable from recent activity views
+  $conf['atrium_update_type_profile'] = FALSE;
+  return $conf;
+}
+
+/**
+ * Implementation of hook_spaces_admin_links_alter().
+ */
+function atrium_profile_spaces_admin_links_alter(&$links, $space) {
+  global $user;
+  if ($space->type == 'user' && $space->sid == $user->uid && node_access('create', 'profile')) {
+    $prepend = array(
+      'profile' => array(
+        'title' => t('Edit my profile'),
+        'href' => "user/{$space->sid}/edit/profile",
+      ),
+    );
+    $links = $prepend + $links;
+  }
+}
+
+/**
+ * Implementation of hook_context_links_alter().
+ */
+function atrium_profile_context_links_alter(&$links) {
+  global $user;
+  $space = spaces_get_space();
+  if ($space && $space->type == 'user' && $space->sid == $user->uid && node_access('create', 'profile')) {
+    $prepend = array(
+      'profile' => array(
+        'title' => t('Edit my profile'),
+        'href' => "user/{$space->sid}/edit/profile",
+        'custom' => TRUE,
+      ),
+    );
+    $links = $prepend + $links;
+  }
+}
+
+/**
+ * Implementation of hook_atrium_dashboard().
+ */
+function atrium_profile_atrium_dashboard() {
+  $blocks = array();
+  $blocks[] = array(
+    'module' => 'views',
+    'delta' => 'atrium_profile-block_1',
+    'region' => 'content',
+    'weight' => -20,
+    'spaces' => array('user'),
+  );
+  return $blocks;
+}

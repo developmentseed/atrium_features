@@ -1,0 +1,238 @@
+<?php
+
+include_once('atrium_members.features.inc');
+
+/**
+ * Implementation of hook_enable().
+ */
+function atrium_members_enable() {
+  // Spaces presets
+  $default_presets = variable_get('spaces_default_presets', array());
+  $default_presets['user'] = 'atrium_user_simple';
+  variable_set('spaces_default_presets', $default_presets);
+}
+
+/**
+ * Implementation of hook_strongarm().
+ */
+function atrium_members_strongarm() {
+  $conf = array();
+
+  // Seed variables
+  $conf['seed_imagecache_user_picture'] = 'user-s';
+
+  return $conf;
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function atrium_members_views_api() {
+  return array('api' => 2);
+}
+
+/**
+ * Implementation of hook_menu_alter().
+ */
+function atrium_members_menu_alter(&$items) {
+  $dummy = array();
+  $categories = module_invoke('atrium_members', 'user', 'categories', $dummy, $dummy);
+
+  foreach ($categories as $category) {
+    $item = $items['user/%user_category/edit/'. $category['name']];
+    $item['page callback'] = 'drupal_get_form';
+    $item['page arguments'] = array('atrium_members_user_profile_tab', 1, $category['name']);
+    $items['user/%user_category/edit/'. $category['name']] = $item;
+  }
+}
+
+/**
+ * Implementation of hook_context_links_alter().
+ */
+function atrium_members_context_links_alter(&$links) {
+  $feature = context_get('spaces', 'feature');
+  switch ($feature) {
+    case 'members':
+      if (module_exists('ucreate') && user_access('create users')) {
+        $links['atrium_users'] = array(
+          'title' => t('User account'),
+          'href' => 'user/add',
+        );
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_active_contexts_alter().
+ *
+ * Use hook_active_contexts_alter() as a good occasion to set the breadcrumb.
+ */
+function atrium_members_context_active_contexts_alter(&$contexts) {
+  $space = spaces_get_space();
+  if ($space->type == 'user') {
+    $breadcrumb = array(
+      l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
+      l(t('Members'), 'members', array('purl' =>array('disabled' => TRUE))),
+      l($space->title, '<front>'),
+    );
+    drupal_set_breadcrumb($breadcrumb);
+  }
+  else if ($space->type == 'site' && context_get('spaces', 'feature') == 'members') {
+    $breadcrumb = array(
+      l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
+      l(t('Members'), 'members', array('purl' =>array('disabled' => TRUE))),
+    );
+    drupal_set_breadcrumb($breadcrumb);
+  }
+}
+
+
+/**
+ * Implementation of hook_form_alter() for user_login.
+ */
+function atrium_members_form_user_login_alter(&$form) {
+  // If user has no destination set or user/login (a bad one), send to homepage post login.
+  // See user module login block for the use of [#action] to force a redirect.
+  $dest = isset($_GET['destination']) ? $_GET['destination'] : '';
+  if (!$dest || $dest == 'user/login') {
+    $path = variable_get('site_frontpage', 'node');
+    $form['#action'] = url($_GET['q'], array('query' => 'destination='. $path));
+  }
+}
+
+/**
+ * Implementation of hook_form_alter() for user_profile_form.
+ */
+function atrium_members_form_user_profile_form_alter(&$form) {
+  $dummy = array();
+  $categories = module_invoke('atrium_members', 'user', 'categories', $dummy, $dummy);
+  foreach ($categories as $info) {
+    if (!empty($form[$info['name']])) {
+      $form[$info['name']]['#access'] = FALSE;
+    }
+  }
+  $form['comment_settings']['#type'] = 'hidden';
+}
+
+/**
+ * Implementation of hook_views_pre_view().
+ */
+function atrium_members_views_pre_view(&$view) {
+  switch ($view->name) {
+    case 'atrium_members':
+      $filters = $view->display_handler->get_option('filters');
+      foreach ($filters as $id => $filter) {
+        if ("{$filter['table']}:{$filter['field']}" == 'og_uid:uid') {
+          // If user may view user outside their group memberships,
+          // yank the og_uid filter.
+          if (user_access('view users outside groups')) {
+            unset($filters[$id]);
+          }
+          // Otherwise, enforce the filter.
+          else {
+            $filters[$id]['value'] = 1;
+          }
+          $view->display_handler->set_option('filters', $filters);
+          break;
+        }
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function atrium_members_user($op, &$edit, &$account, $category = NULL) {
+  switch ($op) {
+    case 'categories':
+      $categories = array();
+      // Check that user pictures are enabled.
+      if (variable_get('user_pictures', 0)) {
+        $categories['picture'] = array(
+          'name' => 'picture',
+          'title' => 'Picture',
+          'weight' => 10,
+        );
+      }
+      // Check that user can select a theme and that there are options for her to select from.
+      if (user_access('select different theme')) {
+        $enabled = array();
+        foreach (list_themes() as $theme) {
+          if ($theme->status && !empty($theme->info['atrium'])) {
+            $enabled[] = $theme;
+          }
+        }
+        if (count($enabled) > 1) {
+          $categories['theme_select'] = array(
+            'name' => 'theme_select',
+            'title' => 'Theme settings',
+            'weight' => 10,
+          );
+        }
+      }
+      return $categories;
+  }
+}
+
+/**
+ * Implementation of hook_action_info().
+ */
+function atrium_members_action_info() {
+  return array(
+    'atrium_members_og_subscribe_action' => array(
+      'type' => 'user',
+      'description' => t('Subscribe user to the current group'),
+      'configurable' => FALSE,
+      'hooks' => array(),
+    ),
+    'atrium_members_og_unsubscribe_action' => array(
+      'type' => 'user',
+      'description' => t('Unsubscribe user from the current group'),
+      'configurable' => FALSE,
+      'hooks' => array(),
+    ),
+  );
+}
+
+/**
+ * Action: subscribe user to current group.
+ */
+function atrium_members_og_subscribe_action($account, $context) {
+  if ($group = og_get_group_context()) {
+    og_save_subscription($group->nid, $account->uid, array('is_active' => 1));
+    watchdog('action', 'Subscribed user %name to %group.', array('%name' => $account->name, '%group' => $group->title));
+  }
+}
+
+/**
+ * Action: unsubscribe user from current group.
+ */
+function atrium_members_og_unsubscribe_action($account, $context) {
+  if ($group = og_get_group_context()) {
+    og_delete_subscription($group->nid, $account->uid);
+    watchdog('action', 'Unsubscribed user %name from %group.', array('%name' => $account->name, '%group' => $group->title));
+  }
+}
+
+/**
+ * Form callback that generates only the portion of the user profile form that is requested.
+ */
+function atrium_members_user_profile_tab($form_state, $account, $tab) {
+  module_load_include('inc', 'user', 'user.pages');
+  $form = user_profile_form($form_state, $account);
+  $form['#submit'] = array('user_profile_form_submit');
+  foreach (element_children($form) as $k) {
+    if ($k == $tab || $form[$k]['#type'] == 'submit') {
+      $form[$k]['#access'] = TRUE;
+    }
+    else {
+      $form[$k]['#access'] = FALSE;
+    }
+  }
+  if (isset($form['delete'])) {
+    $form['delete']['#access'] = FALSE;
+  }
+  return $form;
+}

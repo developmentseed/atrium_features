@@ -1,0 +1,19 @@
+div.atrium-case-summary {
+  padding:10px 0px;
+  }
+
+div.atrium-case-summary div.primary {
+  float:left;
+  width:35%;
+  }
+
+div.atrium-case-summary div.primary div.status {
+  font-size:18px;
+  font-weight:bold;
+  }
+
+div.atrium-case-summary label {
+  font-size:11px;
+  float:left;
+  width:100px;
+  }

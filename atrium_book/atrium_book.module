@@ -1,0 +1,125 @@
+<?php
+
+include_once('atrium_book.features.inc');
+
+/**
+ * Implementation of hook_help().
+ */
+function atrium_book_help($path, $arg) {
+  if (($path == 'help#atrium_book') || (context_get('spaces', 'feature') == 'book')) {
+    switch ($path) {
+      case 'node/add/book':
+      case 'node/%/edit':
+        $help = '';
+        $help .= '<h3>'. t('Documents') .'</h3>';
+        $help .= '<p>'. t('Tips for adding & editing book pages:') .'</p>';
+        $help .= '<ul>';
+        $help .= '<li>'. t('Create a new book or choose an existing one for your page.') .'</li>';
+        $help .= '<li>'. t('Select a position for your page in the book\'s hierarchy and <strong>weight</strong> your page higher or lower if you would like to move it before or after other pages around it.') .'</li>';
+        $help .= '<li>'. t('Consider adding a <strong>log message</strong> when editing existing pages so others can get a quick summary of changes you have made.') .'</li>';
+        $help .= '</ul>';
+        return $help;
+
+      case 'help#atrium_book':
+      default:
+        $help = '';
+        $help .= '<h3>'. t('Documents') .'</h3>';
+        $help .= '<p>'. t('The documents section provides a way for you to store and share information with your group members. With the book feature you can:') .'</p>';
+        $help .= '<ul>';
+        $help .= '<li>'. t('!add_book_pages and organize them hierarchically into different books.', array('!add_book_pages' => l(t('Add book pages'), 'node/add/book'))) .'</li>';
+        $help .= '<li>'. t('Attach files to pages to share them with others.') .'</li>';
+        $help .= '<li>'. t('Track changes that others have made and revert changes as necessary.') .'</li>';
+        $help .= '<li>'. t('!archive books that are no longer of interest to the group. Archived books can be reactivated later if needed.', array('!archive' => l(t('Archive'), 'documents/archived'))) .'</li>';
+        $help .= '</ul>';
+        return $help;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_strongarm().
+ */
+function atrium_book_strongarm() {
+  // Book
+  $conf['book_allowed_types'] = array('book');
+
+  $conf['node_options_book'] = array('status', 'revision');
+  $conf['notifications_content_type_book'] = array('thread', 'grouptype', 'nodetype', 'author');
+  $conf['og_notifications_content_types'][] = 'book';
+  $conf['upload_book'] = TRUE;
+
+  // Comments
+  $conf['comment_book'] = COMMENT_NODE_DISABLED;
+
+  // FeedAPI
+  $conf['feedapi_settings_book'] = array('enabled' => FALSE);
+
+  // Disable Diff button
+  $conf["show_preview_changes_book"] = FALSE;
+  $conf["show_diff_inline_book"] = TRUE;
+
+  // Make archivable
+  $conf['atrium_archivable'] = array('book');
+
+  // Enable for recent activity views
+  $conf['atrium_update_type_book'] = TRUE;
+
+  // Pathauto (optional) settings
+  $conf["pathauto_node_book_pattern"] = "[space-og-path]/book/[title-raw]";
+
+  return $conf;
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function atrium_book_menu() {
+  $items = array();
+  $items['documents'] = array(
+    'title' => 'Documents',
+    'page callback' => 'atrium_book_overview',
+    'page arguments' => array(),
+    'access callback' => 'spaces_feature_access',
+    'access arguments' => array('atrium_book'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'features'
+  );
+  $items['documents/overview'] = array(
+    'title' => 'Overview',
+    'page callback' => 'atrium_book_overview',
+    'page arguments' => array(),
+    'access callback' => 'spaces_feature_access',
+    'access arguments' => array('atrium_book'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  return $items;
+}
+
+/**
+ * Page callback for book feature.
+ */
+function atrium_book_overview() {
+  context_set('spaces', 'feature', 'book');
+  $space = spaces_get_space();
+  if (!empty($space->settings['atrium_book'])) {
+    $nid = $space->settings['atrium_book'];
+    if (is_numeric($nid) && $node = node_load($nid)) {
+      menu_set_active_item("node/{$node->nid}");
+      return node_view($node, FALSE, TRUE, TRUE);
+    }
+  }
+  return views_embed_view('atrium_book', 'page_1');
+}
+
+/**
+ * Implementation of hook_spaces_settings().
+ */
+function atrium_book_spaces_settings() {
+  return array(
+    'atrium_book' => array(
+      'class' => 'atrium_book_space_setting',
+      'file' => drupal_get_path('module', 'atrium_book') .'/atrium_book.spaces.inc',
+    ),
+  );
+}

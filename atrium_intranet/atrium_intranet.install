@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * Implementation of hook_enable().
+ */
+function atrium_intranet_enable() {
+  // Spaces presets
+  $default_presets = variable_get('spaces_default_presets', array());
+  $default_presets['site'] = 'atrium_intranet';
+  variable_set('spaces_default_presets', $default_presets);
+}
+
+/**
+ * Update 6002.
+ */
+function atrium_intranet_update_6002() {
+  $ret = array();
+  $map = array(
+    'blog' => 'atrium_blog',
+    'book' => 'atrium_book',
+    'calendar' => 'atrium_calendar',
+    'casetracker' => 'atrium_casetracker',
+    'dashboard' => 'atrium_dashboard',
+  );
+  foreach ($map as $from => $to) {
+    $ret[] = update_sql("UPDATE {spaces_features} SET id = '$to' WHERE id = '$from'");
+  }
+  return $ret;
+}

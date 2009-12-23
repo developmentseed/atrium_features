@@ -1,0 +1,423 @@
+<?php
+
+include_once('atrium_intranet.features.inc');
+
+/**
+ * Implementation of hook_strongarm().
+ */
+function atrium_intranet_strongarm() {
+  $conf = array();
+
+  // ImageAPI
+  $conf['imageapi_jpeg_quality'] = 90;
+
+  // Date formats
+  $conf['date_format_short'] = 'M j, Y';
+  $conf['date_format_medium'] = 'g:ia M j, Y';
+  $conf['date_format_long'] = 'g:ia D M j, Y';
+  $conf['date_format_field_date_short'] = 'M j, Y';
+  $conf['date_format_field_date_medium'] = 'g:ia M j, Y';
+  $conf['date_format_field_date_long'] = 'g:ia D M j, Y';
+
+  // Notifications
+  $conf['notifications_content_per_type'] = 1;
+  $conf['notifications_ui_user'] = array('page' => 'page');
+  $conf['notifications_ui_account_options'] = array('block' => 'block');
+  $conf['notifications_ui_node'] = array('block' => 'block');
+  $conf['notifications_ui_per_type'] = 0;
+  $conf['notifications_ui_types'] = array(
+    'grouptype' => 'grouptype',
+    'thread' => 'thread',
+    'nodetype' => 'nodetype',
+    'author' => 'author',
+  );
+  $conf['messaging_default_method'] = 'mail';
+
+  // Nodetype settings
+  $type = 'admin_message';
+
+  $conf['node_options_'. $type] = array('status');
+  $conf["notifications_content_type_$type"] = array();
+  $conf['upload_'. $type] = FALSE;
+
+  // Disable comments
+  $conf['comment_'. $type] = COMMENT_NODE_DISABLED;
+
+  // Disable FeedAPI
+  $conf['feedapi_settings_'. $type] = array('enabled' => FALSE);
+
+  // Disable Diff button
+  $conf["show_preview_changes_{$type}"] = FALSE;
+  $conf["show_diff_inline_{$type}"] = FALSE;
+
+  // Disable from recent activity views
+  $conf['atrium_update_type_'. $type] = FALSE;
+
+  // Menus
+  $conf['menu_primary_links_source'] = 'features';
+
+  // Seed variables
+  $conf['seed_imagecache_attachment'] = 'fileview';
+
+  // Site variables
+  $conf['site_frontpage'] = 'welcome';
+
+  // FeedAPI
+  $conf['feedapi_cron_percentage'] = '25';
+  $conf['feedapi_allow_html_all'] = FALSE;
+  $conf['feedapi_allowed_html_tags'] = '<div> <h1> <h2> <h3> <h4> <h5> <h6> <img> <a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul> <sup> <sub>';
+
+  // Views
+  $conf['views_no_hover_links'] = TRUE;
+
+  // Views: disable views that we are 'overriding'
+  $views_defaults = variable_get('views_defaults', array());
+  $disabled = array(
+    'admin_content',
+    'feeds',
+  );
+  $set = FALSE;
+  foreach ($disabled as $view_name) {
+    if (empty($views_defaults[$view_name])) {
+      $set = TRUE;
+      $views_defaults[$view_name] = TRUE;
+    }
+  }
+  if ($set) {
+    variable_set('views_defaults', $views_defaults);
+  }
+
+  // Upload settings
+  // @TODO should we query for the RIDs here? : (
+  $conf['upload_extensions_2'] =
+  $conf['upload_extensions_3'] =
+  $conf['upload_extensions_4'] =
+  $conf['upload_extensions_default'] = 'au avi bzip2 csv doc docx flv gif graffle gz htm html iso jpeg jpg kml kmz mov mp2 mp3 mp4 odp ods odt pages patch pdf png pps ppt pptx psd rar svg swf template tif tgz txt vsd wav wmv xls xlsx zip';
+
+  $conf['upload_uploadsize_2'] =
+  $conf['upload_uploadsize_3'] =
+  $conf['upload_uploadsize_4'] =
+  $conf['upload_uploadsize_default'] = 20;
+
+  $conf['upload_usersize_2'] =
+  $conf['upload_usersize_default'] = 200;
+
+  $conf['upload_usersize_3'] =
+  $conf['upload_usersize_4'] = 500;
+
+  $conf['upload_list_default'] = 1;
+
+  // Do not switch to autocomplete until you have more than 200 users.
+  $conf['notifications_team_max_options'] = 200;
+
+  // Allowed HTML & default filter format settings
+  $format = db_result(db_query("SELECT format FROM {filter_formats} WHERE name = '%s'", 'Markdown'));
+  if ($format) {
+    $conf["allowed_html_{$format}"] = '<div> <span> <br> <a> <em> <strong> <cite> <code> <strike> <ul> <ol> <li> <dl> <dt> <dd> <img> <blockquote> <p> <pre> <h1> <h2> <h3> <h4> <h5> <h6> <table> <caption> <thead> <th> <td> <tr> <sup> <sub>';
+    $conf['filter_default_format'] = $format;
+  }
+
+  // Messaging Mail input filter
+  $potential_formats = array();
+  $result = db_query("SELECT ff.format, ff.name FROM {filter_formats} ff JOIN {filters} f ON ff.format = f.format WHERE f.module = '%s' AND f.delta = %d", 'messaging', 1);
+  while ($row = db_fetch_object($result)) {
+    $potential_formats[$row->format] = $row->name;
+  }
+  if (!empty($potential_formats)) {
+    // For now use the first format
+    $formats = array_keys($potential_formats);
+    $conf['messaging_method_mail'] = array('filter' => $formats[0]);
+  }
+
+  return $conf;
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function atrium_intranet_views_api() {
+  return array('api' => 2);
+}
+
+/**
+ * Implementation of hook_menu_alter().
+ */
+function atrium_intranet_menu_alter(&$items) {
+  // Kill undesirable menu items
+  $yank = array(
+    'book',
+    'rss.xml',
+    'node/%node/outline',
+  );
+  foreach ($yank as $path) {
+    if (!empty($items[$path])) {
+      unset($items[$path]);
+    }
+  }
+
+  // Replace default 403
+  $items['access-denied']['page callback'] = 'atrium_intranet_403';
+}
+
+/**
+ * Implementation of hook_imagecache_default_presets_alter().
+ */
+function atrium_intranet_imagecache_default_presets_alter(&$presets) {
+  if (!empty($presets['spaces-logo'])) {
+    if (!empty($presets['spaces-logo']['actions'][0]['data']['height'])) {
+      $presets['spaces-logo']['actions'][0]['data']['height'] = 40;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_link_alter().
+ */
+function atrium_intranet_link_alter(&$links, $node) {
+  if (!empty($links['comment_new_comments']) && !empty($links['comment_comments'])) {
+    unset($links['comment_comments']);
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function atrium_intranet_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
+  switch ($op) {
+    case 'view':
+      // Load the node's read state.
+      if (!isset($node->new)) {
+        global $user;
+        $readtime = db_result(db_query("SELECT timestamp FROM {history} WHERE uid = %d AND nid = %d", $user->uid, $node->nid));
+        $node->new = atrium_intranet_get_readstate($readtime, $node->changed);
+      }
+      break;
+  }
+}
+
+/**
+ * Helper callback that does a node_access('create') check without providing
+ * any user_access() loopholes.
+ */
+function _atrium_intranet_node_access_create($node) {
+  global $user;
+  $account = $user;
+
+  // Can't use node_invoke(), because the access hook takes the $op parameter
+  // before the $node parameter.
+  $module = node_get_types('module', $node);
+  if ($module == 'node') {
+    $module = 'node_content'; // Avoid function name collisions.
+  }
+  $access = module_invoke($module, 'access', 'create', $node, $account);
+  return !is_null($access) ? $access : FALSE;
+}
+
+/**
+ * Implementation of hook_block().
+ */
+function atrium_intranet_block($op = 'list', $delta = 0) {
+  switch ($op) {
+    case 'list':
+      return array(
+        'spacelinks' => array('info' => t('Atrium Intranet: Space links')),
+        'create' => array('info' => t('Atrium Intranet: Create content')),
+        'account' => array('info' => t('Atrium Intranet: User account')),
+        'help' => array('info' => t('Atrium Intranet: Help')),
+      );
+    case 'view':
+      switch ($delta) {
+        case 'spacelinks':
+          $links = spaces_admin_links();
+          if (!empty($links)) {
+            return array('subject' => "<span class='icon'></span> ". t('Settings'), 'content' => theme('links', $links));
+          }
+          break;
+        case 'create':
+          $space = spaces_get_space();
+          $feature_map = spaces_features_map('node');
+          $item = menu_get_item('node/add');
+          if ($space) {
+            $links = array();
+            foreach (system_admin_menu_block($item) as $menu_item) {
+              $args = explode('/', $menu_item['href']);
+              $type = str_replace('-', '_', array_pop($args));
+              if (isset($feature_map[$type]) && $space->feature_access($feature_map[$type]) && _atrium_intranet_node_access_create($type)) {
+                $feature = $feature_map[$type];
+                $menu_item['title'] = "<span class='spaces-feature feature-{$feature}'></span>{$menu_item['title']}";
+                $menu_item['html'] = TRUE;
+                $links["$feature-{$type}"] = $menu_item;
+              }
+            }
+            ksort($links);
+            return array('subject' => "<span class='icon'></span> {$item['title']}", 'content' => theme('links', $links));
+          }
+          break;
+        case 'account':
+          global $user;
+          if ($user->uid) {
+            // Clone account so we can generate a large user pic
+            $account = drupal_clone($user);
+            $account->imagecache_preset = 'user-m';
+            $info_big = theme('user_picture', $account) . theme('username', $account);
+            $info_small = theme('user_picture', $user) . check_plain($user->name);
+
+            $links = spaces_admin_links(spaces_load('user', $account->uid));
+            // For PURL prefixing onto these links since they might be
+            // used from anywhere.
+            foreach ($links as $k => $v) {
+              $links[$k]['purl'] = array('provider' => 'spaces_user', 'id' => $account->uid);
+            }
+            // Logout can stay in space.
+            $links['logout'] = menu_get_item('logout');
+
+            return array('subject' => $info_small, 'content' => "<div class='user-info clear-block'>{$info_big}</div>" . theme('links', $links));
+          }
+          else {
+            $item = menu_get_item('user/login');
+            if ($item && $item['access']) {
+              return array('content' => l($item['title'], $item['href']));
+            }
+          }
+          break;
+        case 'help':
+          if ($helptext = theme('help')) {
+            return array('subject' => t('Need help?'), 'content' => $helptext);
+          }
+          break;
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_litenode().
+ */
+function atrium_intranet_litenode() {
+  $info = array();
+  $info['atrium'] = array();
+  $info['atrium']['module'] = t('Atrium');
+  $info['atrium']['map'] = array();
+  $info['atrium']['fields'] = array(
+    'timestamp_1' => array(
+      'id' => 'timestamp_1',
+      'table' => 'history_user',
+      'field' => 'timestamp',
+    ),
+  );
+  return $info;
+}
+
+/**
+ * Implementation of hook_litenode_alter().
+ */
+function atrium_intranet_litenode_alter(&$node, $row) {
+  $node->new = atrium_intranet_get_readstate($row->history_user_timestamp, $node->changed);
+}
+
+/**
+ * Helper function to deal with node read state logic.
+ */
+function atrium_intranet_get_readstate($readtime, $nodetime) {
+  if ($readtime == 0 && $nodetime > NODE_NEW_LIMIT) {
+    return MARK_NEW;
+  }
+  elseif ($nodetime > $readtime && $nodetime > NODE_NEW_LIMIT) {
+    return MARK_UPDATED;
+  }
+  return MARK_READ;
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function atrium_intranet_form_alter(&$form, &$form_state, $form_id) {
+  // Disable notifications when editing a post outside of a group space
+  if ((!empty($form['#node']) || $form_id == 'comment_form') && isset($form['notifications'])) {
+    $space = spaces_get_space();
+    if (empty($space) || $space->type != 'og') {
+      $form['notifications']['#access'] = FALSE;
+    }
+  }
+
+  // Node form customizations/niceties
+  if ($form['#id'] == 'node-form') {
+    // Even if you have the perms, we don't want you messing with this stuff
+    $disable = array('menu', 'comment_settings');
+    foreach ($disable as $key) {
+      if (!empty($form[$key])) {
+        $form[$key]['#access'] = FALSE;
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_form_alter() for comment_form.
+ */
+function atrium_intranet_form_comment_form_alter(&$form) {
+  if (!drupal_get_title()) drupal_set_title(t('Reply'));
+  // Shrink comment field -- people don't have much to say usually
+  $form['comment_filter']['comment']['#rows'] = 8;
+}
+
+/**
+ * 403 page.
+ */
+function atrium_intranet_403() {
+  // If we're in intranet mode, send anonymous users to a login screen.
+  global $user;
+  if (!$user->uid && !user_access('access content')) {
+    // drupal_access_denied() sets the $_REQUEST['destination'] which will
+    // prevent drupal_goto from behaving as expected. So we unset it.
+    unset($_REQUEST['destination']);
+    drupal_goto('user/login', 'destination='. $_REQUEST['q']);
+  }
+  return "<div class='access-denied'>". t('You are not authorized to access this page.') ."</div>";
+}
+
+/**
+ * Implementation of hook_spaces_admin_links_alter().
+ */
+function atrium_intranet_spaces_admin_links_alter(&$links, $space) {
+  switch ($space->type) {
+    case 'user':
+      // @TODO: If menu.inc had a real API function for this we would use it, but
+      // as of now we'd have a copy hand paste hack job of menu_local_tasks()...
+      $paths = array(
+        "user/{$space->sid}/edit" => t('Account settings'),
+        "user/{$space->sid}/groups" => '',
+        "user/{$space->sid}/notifications" => '',
+        "user/{$space->sid}/openid" => '',
+      );
+      foreach ($paths as $path => $title) {
+        $item = menu_get_item($path);
+        if ($item && $item['access']) {
+          $class = seed_id_safe($item['href']);
+          $links[$class] = array(
+            'title' => !empty($title) ? $title : $item['title'],
+            'href' => $item['href'],
+          );
+        }
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_context_default_contexts_alter().
+ */
+function atrium_intranet_context_default_contexts_alter(&$contexts) {
+  // Conditionally add the notifications UI subscription block.
+  if (module_exists('notifications_ui') && !empty($contexts['atrium-intranet-global'])) {
+    $contexts['atrium-intranet-global']->block['notifications_ui_0'] = array(
+      'module' => 'notifications_ui',
+      'delta' => '0',
+      'weight' => 48,
+      'region' => 'page_tools',
+      'status' => '0',
+      'label' => 'Subscriptions',
+      'type' => 'context_ui',
+    );
+  }
+}

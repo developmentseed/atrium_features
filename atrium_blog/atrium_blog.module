@@ -1,0 +1,90 @@
+<?php
+
+include_once('atrium_blog.features.inc');
+
+/**
+ * Implementation of hook_help().
+ */
+function atrium_blog_help($path) {
+  // Central help page content.
+  if ($path == 'help#atrium_blog') {
+    $help = '<h3>'. t('Blog') .'</h3>';
+    $help .= '<p>'. t("The blog lets your team communicate by posting updates and discussing issues. It is great place for sharing progress, discussing challenges, and exploring ideas.") .'</p>';
+    $help .= '<p>'. t("To start a conversation navigate to the blog and click the \"Add blog post\" button. You will need to enter a title and some body content to your post. Then click \"Save\".") .'</p>';
+    return $help;
+  }
+
+  // Contextual help content.
+  if (context_get('spaces', 'feature') == 'blog') {
+    if ($path == 'node/add/blog') {
+      $help = '';
+      $help .= '<h3>'. t('Blog') .'</h3>';
+      $help .= '<p>'. t("Post an entry to the blog of this group. The post will be shared will all team members on the blog, and they will be able to reply to it. You can optionally notify other group members by checking their name in the notifications field.") .'</p>';
+      return $help;
+    }
+    else {
+      $help = '<h3>'. t('Blog') .'</h3>';
+      $help .= '<p>'. t("The blog lets your team communicate by posting updates and discussing issues. It is great place for sharing progress, discussing challenges, and exploring ideas.") .'</p>';
+      return $help;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_strongarm().
+ */
+function atrium_blog_strongarm() {
+  $conf = array();
+
+  $conf['node_options_blog'] = array('status', 'revision');
+  $conf['notifications_content_type_blog'] = array('thread', 'grouptype', 'nodetype', 'author');
+  $conf['og_notifications_content_types']['blog'] = 'blog';
+
+  $conf['upload_blog'] = TRUE;
+
+  // Comments
+  $conf['comment_blog'] = COMMENT_NODE_READ_WRITE;
+  $conf['comment_default_mode_blog'] = COMMENT_MODE_THREADED_EXPANDED;
+  $conf['comment_default_order_blog'] = COMMENT_ORDER_OLDEST_FIRST;
+  $conf['comment_default_per_page_blog'] = 200;
+  $conf['comment_controls_blog'] = COMMENT_CONTROLS_HIDDEN;
+  $conf['comment_subject_field_blog'] = 0;
+  $conf['comment_preview_blog'] = COMMENT_PREVIEW_OPTIONAL;
+  $conf['comment_form_location_blog'] = COMMENT_FORM_BELOW;
+  $conf['comment_upload_blog'] = TRUE;
+
+  // FeedAPI
+  $conf['feedapi_settings_blog'] = array('enabled' => FALSE);
+
+  // Disable Diff button
+  $conf["show_preview_changes_blog"] = FALSE;
+  $conf["show_diff_inline_blog"] = FALSE;
+
+  // Enable for recent activity views
+  $conf['atrium_update_type_blog'] = TRUE;
+
+  // Pathauto (optional) settings
+  $conf["pathauto_node_blog_pattern"] = "[space-og-path]/blog/[title-raw]";
+
+  return $conf;
+}
+
+/**
+ * Implementation of hook_atrium_dashboard().
+ */
+function atrium_blog_atrium_dashboard() {
+  $blocks = array();
+  $blocks[] = array(
+    'module' => 'views',
+    'delta' => 'atrium_blog-block_2',
+    'region' => 'content',
+    'weight' => '-11',
+  );
+  $blocks[] = array(
+    'module' => 'views',
+    'delta' => 'atrium_blog_comments-block_1',
+    'region' => 'right',
+    'weight' => '10',
+  );
+  return $blocks;
+}

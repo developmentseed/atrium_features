@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * Update to resolve install profile namespace collision.
+ */
+function atrium_update_6001() {
+  if (variable_get('install_profile', FALSE) == 'atrium') {
+    variable_set('install_profile', 'atrium_installer');
+  }
+  return array();
+}
+
+/**
+ * Update 6002: Enable new modules.
+ */
+function atrium_update_6002() {
+  drupal_install_modules(array(
+    'atrium_groups',
+    'atrium_members',
+  ));
+  return array();
+}
+
+/**
+ * Update 6003: Fix broken schema version for date_timezone.
+ */
+function atrium_update_6003() {
+  $return = array();
+  $status = db_result(db_query("SELECT status FROM {system} WHERE schema_version = -1 AND name = 'date_timezone'"));
+  if ($status) {
+    $return[] = update_sql("UPDATE {system} SET schema_version = 5999 WHERE name = 'date_timezone'");
+  }
+  return $return;
+}

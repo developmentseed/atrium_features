@@ -1,0 +1,202 @@
+<?php
+
+include_once('atrium_calendar.features.inc');
+
+/**
+ * Implementation of hook_help().
+ */
+function atrium_calendar_help($path, $arg) {
+  if (($path == 'help#atrium_calendar') || (context_get('spaces', 'feature') == 'calendar')) {
+    switch ($path) {
+      case 'node/add/event':
+      case 'node/add/feed-ical':
+      case 'node/%/edit':
+        $help = '';
+        $help .= '<h3>'. t('Calendar') .'</h3>';
+        $node = menu_get_object();
+        if ($path == 'node/add/event' || $node->type == 'event') {
+          $help .= '<p>'. t('Tips for adding and editing events:') .'</p>';
+          $help .= '<ul>';
+          $help .= '<li>'. t('Fill in a title and description for your event.') .'</li>';
+          $help .= '<li>'. t('Choose a start date and an end date for your event. If your event doesn\'t last longer than a day, leave out the end date.') .'</li>';
+          $help .= '</ul>';
+        }
+        else if ($path == 'node/add/feed-ical' || $node->type == 'feed_ical') {
+          $help .= '<p>'. t('Tips for adding and editing iCal feeds:') .'</p>';
+          $help .= '<ul>';
+          $help .= '<li>'. t('Add a title for your feed so you can identify it quickly later.') .'</li>';
+          $help .= '<li>'. t('Enter the URL of an iCal feed. Feed URLs often begin with <strong>webcal://</strong> and often end with a filename like <strong>my_calendar.ics</strong>.') .'</li>';
+          $help .= '</ul>';
+        }
+        return $help;
+
+      case 'help#atrium_calendar':
+      default:
+        $help = '';
+        $help .= '<h3>'. t('Calendar') .'</h3>';
+        $help .= '<p>'. t('The calendar displays events and calendar feeds submitted by your group.') .'</p>';
+        $help .= '<ul>';
+        $help .= '<li>'. t('!add_events to the calendar to let others know about what\'s coming up.', array('!add_events' => l(t('Add events'), 'node/add/event'))) .'</li>';
+        $help .= '<li>'. t('!add_feeds to automatically populate your calendar with events from external sources.', array('!add_feeds' => l(t('Add iCal feeds'), 'node/add/feed-ical'))) .'</li>';
+        $help .= '</ul>';
+        return $help;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_strongarm().
+ */
+function atrium_calendar_strongarm() {
+  $conf = array();
+
+  foreach (array('event', 'feed_ical', 'feed_ical_item') as $type) {
+    $conf['node_options_'. $type] = array('status', 'revision');
+    $conf['notifications_content_type_' . $type] = array('thread', 'grouptype', 'nodetype', 'author');
+    $conf['og_notifications_content_types'][] = $type;
+
+    // Comments
+    $conf['comment_'. $type] = COMMENT_NODE_DISABLED;
+
+    // Disable Diff button
+    $conf['show_preview_changes_'. $type] = FALSE;
+    $conf['show_diff_inline_'. $type] = FALSE;
+
+    // Pathauto (optional) settings
+    $conf["pathauto_node_{$type}_pattern"] = "[space-og-path]/{$type}/[title-raw]";
+  }
+
+  $conf['node_options_feed_ical'] = array('status');
+  $conf['notifications_content_type_feed_ical'] = array();
+
+  $conf['node_options_feed_ical_item'] = array('status');
+  $conf['notifications_content_type_feed_ical_item'] = array();
+
+  // Uploads only on events
+  $conf['upload_event'] = TRUE;
+  $conf['upload_feed_ical'] =
+  $conf['upload_feed_ical_item'] = FALSE;
+
+  // Enable for recent activity views
+  $conf['atrium_update_type_event'] = TRUE;
+  $conf['atrium_update_type_feed_ical'] =
+  $conf['atrium_update_type_feed_ical_item'] = FALSE;
+
+  // FeedAPI
+  $conf['feedapi_settings_event'] =
+  $conf['feedapi_settings_feed_ical_item'] = array('enabled' => FALSE);
+
+  // iCal feed settings
+  $conf['feedapi_settings_feed_ical'] = array (
+    'enabled' => 1,
+    'refresh_on_create' => 1,
+    'update_existing' => 1,
+    'skip' => 0,
+    'items_delete' => '0',
+    'parsers' => array (
+      'parser_ical' => array (
+        'enabled' => 1,
+        'weight' => '0',
+      ),
+    ),
+    'processors' => array (
+      'feedapi_node' => array (
+        'enabled' => 1,
+        'weight' => '-5',
+        'content_type' => 'feed_ical_item',
+        'node_date' => 'feed',
+        'promote' => '0',
+        'x_dedupe' => '1',
+      ),
+      'feedapi_inherit' => array (
+        'enabled' => 1,
+        'weight' => '0',
+        'inherit_og' => 1,
+        'inherit_taxonomy' => 1,
+      ),
+    ),
+  );
+  $conf['feedapi_mapper_mapping_feed_ical'] = array (
+    'a:2:{i:0;s:7:"options";i:1;s:6:"VEVENT";}' => 'a:3:{i:0;s:4:"date";i:1;s:10:"field_date";i:2;s:4:"ical";}',
+  );
+
+  return $conf;
+}
+
+/**
+ * Implementation of hook_feedapi_mapper_elements().
+ */
+function atrium_calendar_feedapi_mapper_elements() {
+  return array(array('options', 'VEVENT'));
+}
+
+/**
+ * Implementation of hook_context_links_alter().
+ * Removes ical event items from node links.
+ */
+function atrium_calendar_context_links_alter(&$links) {
+  if (!empty($links['feed_ical_item'])) {
+    unset($links['feed_ical_item']);
+  }
+}
+
+/**
+ * Implementation of hook_block().
+ */
+function atrium_calendar_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+      return array('mini' => array('info' => t('Atrium calendar: Mini calendar')));
+    default:
+      $function = "_atrium_calendar_block_{$delta}";
+      if (function_exists($function)) {
+        return $function($op, $edit);
+      }
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function atrium_calendar_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
+  switch ($op) {
+    case 'view':
+      // Confirm we are actually on a page of relevance
+      if (menu_get_object() === $node && !empty($node->field_date)) {
+        $from = date_convert($node->field_date[0]['value'], DATE_ISO, DATE_OBJECT);
+        context_set('node', 'field_date', $from);
+      }
+      break;
+  }
+}
+
+/**
+ * Block: contextual mini calendar block
+ */
+function _atrium_calendar_block_mini($op, $edit) {
+  if ($op == 'view') {
+    $block = array();
+    $date = context_get('node', 'field_date');
+    if ($date) {
+      $year = date_format($date, 'Y');
+      $month = date_format($date, 'm');
+      $args = "$year-$month";
+      $block['content'] = views_embed_view('atrium_calendar', 'block_1', $args);
+    }
+    return $block;
+  }
+}
+
+/**
+ * Implementation of hook_atrium_dashboard().
+ */
+function atrium_calendar_atrium_dashboard() {
+  $blocks = array();
+  $blocks[] = array(
+    'module' => 'views',
+    'delta' => 'atrium_calendar-block_1',
+    'region' => 'right',
+    'weight' => '11',
+  );
+  return $blocks;
+}

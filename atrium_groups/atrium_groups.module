@@ -1,0 +1,143 @@
+<?php
+
+include_once('atrium_groups.features.inc');
+
+/**
+ * Implementation of hook_enable().
+ */
+function atrium_groups_enable() {
+  // Spaces presets
+  $default_presets = variable_get('spaces_default_presets', array());
+  $default_presets['og'] = 'atrium_og_private';
+  variable_set('spaces_default_presets', $default_presets);
+
+  // Disable other presets
+  include_once(drupal_get_path('module', 'spaces') .'/spaces_admin.inc');
+  spaces_preset_disable('og', 'private');
+  spaces_preset_disable('og', 'controlled');
+  spaces_preset_disable('og', 'public');
+}
+
+/**
+ * Implementation of hook_strongarm().
+ */
+function atrium_groups_strongarm() {
+  $conf = array();
+
+  // @TODO: See if there are any serious consequences if this is not set
+  // during a cache-clear page load...
+  $conf['og_content_type_usage_group'] = 'group';
+
+  // Nodetype settings
+  $type = 'group';
+
+  $conf['node_options_'. $type] = array('status');
+  $conf["notifications_content_type_$type"] = array();
+  $conf['upload_'. $type] = FALSE;
+
+  // Disable comments
+  $conf['comment_'. $type] = COMMENT_NODE_DISABLED;
+
+  // Disable FeedAPI
+  $conf['feedapi_settings_'. $type] = array('enabled' => FALSE);
+
+  // Disable Diff button
+  $conf["show_preview_changes_{$type}"] = FALSE;
+  $conf["show_diff_inline_{$type}"] = FALSE;
+
+  // Disable from recent activity views
+  $conf['atrium_update_type_'. $type] = FALSE;
+
+  // Atrium archivable types
+  $conf['atrium_archivable'] = array('group');
+
+  // Views: disable views that we are 'overriding'
+  $views_defaults = variable_get('views_defaults', array());
+  $disabled = array(
+    'og',
+    'og_my',
+    'og_files',
+    'og_ghp_ron',
+    'og_mytracker',
+    'og_members_block',
+    'og_search',
+    'og_tracker',
+    'og_recent_type_term',
+    'og_unread',
+  );
+  $set = FALSE;
+  foreach ($disabled as $view_name) {
+    if (empty($views_defaults[$view_name])) {
+      $set = TRUE;
+      $views_defaults[$view_name] = TRUE;
+    }
+  }
+  if ($set) {
+    variable_set('views_defaults', $views_defaults);
+  }
+
+  return $conf;
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function atrium_groups_views_api() {
+  return array('api' => 2);
+}
+
+/**
+ * Implementation of hook_menu_alter().
+ */
+function atrium_groups_menu_alter(&$items) {
+  // Kill undesirable menu items
+  $yank = array(
+    'og/activity',
+  );
+  foreach ($yank as $path) {
+    if (!empty($items[$path])) {
+      unset($items[$path]);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_active_contexts_alter().
+ *
+ * Use hook_active_contexts_alter() as a good occasion to set the breadcrumb.
+ */
+function atrium_groups_context_active_contexts_alter(&$contexts) {
+  $space = spaces_get_space();
+  if ($space->type == 'og') {
+    $breadcrumb = array(
+      l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
+      l(t('Groups'), 'groups', array('purl' =>array('disabled' => TRUE))),
+      l($space->title, '<front>'),
+    );
+    drupal_set_breadcrumb($breadcrumb);
+  }
+  else if ($space->type == 'site' && context_get('spaces', 'feature') == 'groups') {
+    $breadcrumb = array(
+      l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
+      l(t('Groups'), 'groups', array('purl' =>array('disabled' => TRUE))),
+    );
+    drupal_set_breadcrumb($breadcrumb);
+  }
+}
+
+/**
+ * Implementation of hook_context_links_alter().
+ */
+function atrium_groups_context_links_alter(&$links) {
+  $feature = context_get('spaces', 'feature');
+  switch ($feature) {
+    case 'groups':
+      if (node_access('create', 'group')) {
+        $links['atrium_groups'] = array(
+          'title' => t('Group'),
+          'href' => 'node/add/group',
+        );
+      }
+      break;
+  }
+}

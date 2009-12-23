@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * Implementation of hook_enable().
+ */
+function atrium_casetracker_enable() {
+  drupal_get_schema(NULL, TRUE);
+  _atrium_casetracker_default_states();
+}
+
+/**
+ * Update 6001.
+ */
+function atrium_casetracker_update_6001() {
+  drupal_get_schema(NULL, TRUE);
+  _atrium_casetracker_default_states();
+  return array();
+}
+
+/**
+ * Install default casetracker states into DB.
+ */
+function _atrium_casetracker_default_states() {
+  $count = db_result(db_query("SELECT count(*) FROM {casetracker_case_states}"));
+  if (empty($count)) {
+    $realms = array(
+      'priority' => array(
+        '1-Sprint: Critical', '2-Sprint', '3-Release: Critical', '4-Release', '5-Project',
+      ),
+      'status' => array(
+        'Open', 'Closed', 'Resolved-Staging', 'Resolved-Production', 'Deferred', 'Duplicate',
+      ),
+      'type' => array(
+        'Bug', 'Feature Request', 'General Task',
+      ),
+    );
+    foreach ($realms as $realm => $states) {
+      foreach ($states as $statename) {
+        $data = array(
+          'name' => $statename,
+          'realm' => $realm,
+          'weight' => 0,
+        );
+        casetracker_case_state_save($data);
+      }
+    }
+    $csid = db_result(db_query("SELECT csid FROM {casetracker_case_states} WHERE case_state_name = '%s'", 'Open'));
+    variable_set('casetracker_default_case_status', $csid);
+
+    $csid = db_result(db_query("SELECT csid FROM {casetracker_case_states} WHERE case_state_name = '%s'", '3-Release: Critical'));
+    variable_set('casetracker_default_case_priority', $csid);
+
+    $csid = db_result(db_query("SELECT csid FROM {casetracker_case_states} WHERE case_state_name = '%s'", 'General Task'));
+    variable_set('casetracker_default_case_type', $csid);
+  }
+}

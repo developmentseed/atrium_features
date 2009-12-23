@@ -1,0 +1,232 @@
+<?php
+
+include_once('atrium_shoutbox.features.inc');
+
+/**
+ * Implementation of hook_strongarm().
+ */
+function atrium_shoutbox_strongarm() {
+  $conf = array();
+
+  // Nodetype settings
+  $conf['node_options_shoutbox'] = array('status');
+  $conf["notifications_content_type_shoutbox"] = array();
+  $conf['upload_shoutbox'] = FALSE;
+
+  // Disable comments -- this is counterintuitive, but since the
+  // shoutbox essentially ignores this setting this is a way to
+  // disable the normal comment UI on shoutbox pages.
+  $conf['comment_shoutbox'] = COMMENT_NODE_DISABLED;
+
+  // Disable FeedAPI
+  $conf['feedapi_settings_shoutbox'] = array('enabled' => FALSE);
+
+  // Disable Diff button
+  $conf["show_preview_changes_shoutbox"] = FALSE;
+  $conf["show_diff_inline_shoutbox"] = FALSE;
+
+  // Disable from recent activity views
+  $conf['atrium_update_type_shoutbox'] = FALSE;
+
+  return $conf;
+}
+
+/**
+ * Implementation of hook_help().
+ */
+function atrium_shoutbox_help($path, $arg) {
+  // This is a reliable way to run on every page, but late in the stack.
+  if (variable_get('atrium_shoutbox_alert', FALSE)) {
+    atrium_shoutbox_alert();
+  }
+
+  if (($path == 'help#atrium_shoutbox') || context_isset('spaces', 'shoutbox')) {
+    $help = '';
+    $help .= '<h3>'. t('Shoutbox') .'</h3>';
+    $help .= '<p>'. t('The shoutbox gives your team a space to microblog.') .'</p>';
+    $help .= '<ul>';
+    $help .= '<li>'. t('Shouts can be used to tell others what you\'re up to, link to websites of interest, or cover other random stuff that comes up during the day.') .'</li>';
+    $help .= '<li>'. t('<strong>Keep your shouts short</strong> and to the point. If a shout starts getting long, consider using a blog post or document to capture your thoughts.') .'</li>';
+    $help .= '<li>'. t('<strong>URLs</strong> will automatically be linked in your posts.') .'</li>';
+    $help .= '</ul>';
+    return $help;
+  }
+}
+
+/**
+ * Implementation of hook_menu()
+ */
+function atrium_shoutbox_menu() {
+  $items = array();  
+  if (module_exists('spaces')) {
+    $items['shoutbox'] = array(
+      'title' => 'Shoutbox',
+      'description' => 'A simple shoutbox feature',
+      'page callback' => 'atrium_shoutbox_page',
+      'access callback' => 'spaces_feature_access',
+      'access arguments' => array('atrium_shoutbox'),
+      'type' => MENU_NORMAL_ITEM,
+      'menu_name' => 'features',
+    );
+  }
+  return $items;
+}
+
+/**
+ * Implementation of hook_block()
+ */
+function atrium_shoutbox_block($op = 'list', $delta = 0) {
+  switch ($op) {
+    case 'list':
+      $blocks = array();
+      $blocks['shoutbox'] = array('info' =>  t('Atrium Shoutbox (space-aware)'));
+      return $blocks;
+    case 'view':
+      if ($delta == 'shoutbox') {
+        $space = spaces_get_space();
+        if ($space && $space->feature_access('atrium_shoutbox')) {
+          // @TODO support user space shoutbox blocks.
+          if ($space->type == 'user') {
+            return NULL;
+          }
+          $shoutbox = atrium_shoutbox_active_space_shoutbox();
+
+          // Lazy instantiate a shoutbox if no shoutbox exists for this space.
+          if (!$shoutbox && $space->type == 'og') {
+            $form_state = array();
+            module_load_include('inc', 'node', 'node.pages');
+            $node = array('type' => 'shoutbox');
+            $form_state['values']['title'] = $space->title;
+            $form_state['values']['body'] = '';
+            $form_state['values']['name'] = $space->group->name;
+            $form_state['values']['op'] = t('Save');
+            drupal_execute('shoutbox_node_form', $form_state, (object) $node);
+
+            $shoutbox = atrium_shoutbox_active_space_shoutbox(TRUE);
+          }
+
+          if ($shoutbox && node_access('view', $shoutbox)) {
+            return module_invoke('messaging_shoutbox', 'block', 'view', $shoutbox->nid); 
+          }
+        }
+        return array();
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function atrium_shoutbox_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  switch ($op) {
+    case 'view':
+      if ($node->type == 'shoutbox') {
+        $node->content = array('shoutbox' => array('#value' => atrium_shoutbox_page()));
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_context_links_alter().
+ */
+function atrium_shoutbox_context_links_alter(&$links) {
+  // Yank out button for creating new shoutbox
+  if (isset($links['shoutbox'])) {
+    unset($links['shoutbox']);
+  }
+}
+
+/**
+ * Page callback for spaces shoutbox feature.
+ */
+function atrium_shoutbox_page() {
+  $space = spaces_get_space();
+
+  // Special case for user space shoutbox
+  if ($space && $space->type == 'user') {
+    context_set('spaces', 'shoutbox', 'user');
+    $view = views_get_view('atrium_shoutbox_shouts');
+    return $view->execute_display('page_2');
+  }
+  else if ($space->type == 'og') {
+    $shoutbox = atrium_shoutbox_active_space_shoutbox();
+    // Lazy instantiate a shoutbox if no shoutbox exists for this space.
+    if (!$shoutbox) {
+      $form_state = array();
+      module_load_include('inc', 'node', 'node.pages');
+      $node = array('type' => 'shoutbox');
+      $form_state['values']['title'] = $space->title;
+      $form_state['values']['body'] = '';
+      $form_state['values']['name'] = $space->group->name;
+      $form_state['values']['op'] = t('Save');
+      drupal_execute('shoutbox_node_form', $form_state, (object) $node);
+
+      $shoutbox = atrium_shoutbox_active_space_shoutbox(TRUE);
+    }
+    if ($shoutbox && node_access('view', $shoutbox)) {
+      $output = drupal_get_form('messaging_shoutbox_shoutform', $shoutbox, array('view' => 'atrium_shoutbox_shouts', 'display' => 'page_1', 'args' => array($shoutbox->nid)));
+      return $output;
+    }
+  }
+  return '';
+}
+
+/**
+ * Helper function to retrieve and static cache the current active shoutbox for a space.
+ */
+function atrium_shoutbox_active_space_shoutbox($reset = FALSE) {
+  static $active_shoutbox;
+  if (!isset($active_shoutbox) || $reset) {
+    $active_shoutbox = FALSE;
+    if ($view = views_get_view('atrium_shoutbox')) {
+      $view->set_display();
+      $view->set_items_per_page(0);
+      $view->execute();
+      if (is_array($view->result) && count($view->result)) {
+        $node = node_load($view->result[0]->nid);
+        if ($node) {
+          $active_shoutbox = $node;
+        }
+      }
+    }
+  }
+  return $active_shoutbox;
+}
+
+/**
+ * Implementation of hook_atrium_dashboard().
+ */
+function atrium_shoutbox_atrium_dashboard() {
+  $blocks = array();
+  $blocks['atrium_shoutbox-shoutbox'] = array(
+    'module' => 'atrium_shoutbox',
+    'delta' => 'shoutbox',
+    'weight' => 20,
+    'region' => 'right',
+    'spaces' => array('og'),
+  );
+  return $blocks;
+}
+
+/**
+ * Experimental growl-like shoutbox interactions.
+ */
+function atrium_shoutbox_alert() {
+  static $once;
+  if (!isset($once)) {
+    $once = TRUE;
+    global $user;
+    $view = views_get_view('atrium_shoutbox_unread');
+    $view->display['default']->display_options['filters']['timestamp']['value']['value'] = format_date($user->access, 'custom', "Y-m-d H:i:s");
+    $view->display['default']->display_options['filters']['name']['value'] = $user->name;
+    $output = $view->execute_display();
+    if (count($view->result)) {
+      // Update the session access time.
+      // @TODO: See how badly this affects performance.
+      db_query("UPDATE {users} SET access = %d WHERE uid = %d", time(), $user->uid);
+      drupal_set_message($output, 'shout');
+    }
+  }
+}
