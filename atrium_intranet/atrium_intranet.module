@@ -196,24 +196,6 @@ function atrium_intranet_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
 }
 
 /**
- * Helper callback that does a node_access('create') check without providing
- * any user_access() loopholes.
- */
-function _atrium_intranet_node_access_create($node) {
-  global $user;
-  $account = $user;
-
-  // Can't use node_invoke(), because the access hook takes the $op parameter
-  // before the $node parameter.
-  $module = node_get_types('module', $node);
-  if ($module == 'node') {
-    $module = 'node_content'; // Avoid function name collisions.
-  }
-  $access = module_invoke($module, 'access', 'create', $node, $account);
-  return !is_null($access) ? $access : FALSE;
-}
-
-/**
  * Implementation of hook_block().
  */
 function atrium_intranet_block($op = 'list', $delta = 0) {
@@ -243,7 +225,7 @@ function atrium_intranet_block($op = 'list', $delta = 0) {
             foreach (system_admin_menu_block($item) as $menu_item) {
               $args = explode('/', $menu_item['href']);
               $type = str_replace('-', '_', array_pop($args));
-              if (isset($feature_map[$type]) && $space->feature_access($feature_map[$type]) && _atrium_intranet_node_access_create($type)) {
+              if (isset($feature_map[$type]) && $space->access_feature('create', $feature_map[$type])) {
                 $feature = $feature_map[$type];
                 $menu_item['title'] = "<span class='spaces-feature feature-{$feature}'></span>{$menu_item['title']}";
                 $menu_item['html'] = TRUE;

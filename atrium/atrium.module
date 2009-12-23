@@ -485,7 +485,7 @@ function atrium_get_typename($type, $lower = TRUE) {
  * feature and an access perm.
  */
 function atrium_feature_access($feature, $perm = 'access content') {
-  return spaces_feature_access($feature) && user_access($perm);
+  return spaces_access_feature('view', $feature) && user_access($perm);
 }
 
 /**
