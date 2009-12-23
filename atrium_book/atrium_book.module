@@ -79,8 +79,8 @@ function atrium_book_menu() {
     'title' => 'Documents',
     'page callback' => 'atrium_book_overview',
     'page arguments' => array(),
-    'access callback' => 'spaces_feature_access',
-    'access arguments' => array('atrium_book'),
+    'access callback' => 'spaces_access_feature',
+    'access arguments' => array('view', 'atrium_book'),
     'type' => MENU_NORMAL_ITEM,
     'menu_name' => 'features'
   );
@@ -88,8 +88,8 @@ function atrium_book_menu() {
     'title' => 'Overview',
     'page callback' => 'atrium_book_overview',
     'page arguments' => array(),
-    'access callback' => 'spaces_feature_access',
-    'access arguments' => array('atrium_book'),
+    'access callback' => 'spaces_access_feature',
+    'access arguments' => array('view', 'atrium_book'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
