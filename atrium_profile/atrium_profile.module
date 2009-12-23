@@ -18,41 +18,6 @@ function atrium_profile_views_pre_build(&$view) {
 }
 
 /**
- * Implementation of hook_strongarm().
- */
-function atrium_profile_strongarm() {
-  $conf = array();
-
-  $conf['node_options_profile'] = array('status');
-  $conf["notifications_content_type_profile"] = array();
-  $conf['upload_profile'] = FALSE;
-
-  // Disable comments
-  $conf['comment_profile'] = COMMENT_NODE_DISABLED;
-
-  // Disable FeedAPI
-  $conf['feedapi_settings_profile'] = array('enabled' => FALSE);
-
-  // Disable Diff button
-  $conf["show_preview_changes_profile"] = FALSE;
-  $conf["show_diff_inline_profile"] = FALSE;
-
-  // Configure content profile.
-  $conf['content_profile_use_profile'] = 1;
-  $conf['content_profile_profile'] = array (
-    'weight' => '0',
-    'user_display' => 'full',
-    'edit_link' => 0,
-    'edit_tab' => 'sub',
-    'add_link' => 0,
-  );
-
-  // Disable from recent activity views
-  $conf['atrium_update_type_profile'] = FALSE;
-  return $conf;
-}
-
-/**
  * Implementation of hook_spaces_admin_links_alter().
  */
 function atrium_profile_spaces_admin_links_alter(&$links, $space) {
