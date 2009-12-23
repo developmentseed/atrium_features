@@ -1,0 +1,8 @@
+; $Id: simpletest.info,v 1.4.2.2.2.4 2009/04/23 05:39:51 boombatower Exp $
+name = "Atrium test"
+description = "Provides a framework for unit and functional testing for Atrium."
+package = Development
+version = VERSION
+core = "6.x"
+dependencies[] = simpletest
+

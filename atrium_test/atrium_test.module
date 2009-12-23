@@ -1,0 +1,13 @@
+<?php 
+// *Id*
+/**
+ * @file
+ *   Atrium test module
+ *   
+ * Atrium specific module for running tests
+ */
+define('ATRIUM_TEST_THEME', 'bluemarine');
+
+
+
+

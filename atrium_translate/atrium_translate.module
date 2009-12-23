@@ -1,0 +1,30 @@
+<?php 
+// *Id*
+/**
+ * @file
+ *   Atrium translate module
+ *   
+ * Handles language files directly downloading them from the server when available
+ */
+
+/**
+ * Implementation of hook_menu()
+ */
+function atrium_translate_menu() {
+  
+}
+/**
+ * Implementation of hook_menu_alter()
+ */
+function atrium_translate_menu_alter(&$menu) {
+  // Add translate menu to admin top bar
+  $menu['admin/build/translate']['options']['admin'] = TRUE;
+}
+
+/**
+ * Implementation of hook l10n_update()
+ */
+function atrium_translate_l10n_update() {
+  module_load_include('inc', 'atrium_translate');
+  return _atrium_translate_default_projects();
+}

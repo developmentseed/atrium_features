@@ -1,0 +1,53 @@
+<?php
+// $Id: block.test,v 1.1.2.1.2.2 2009/04/23 05:39:52 boombatower Exp $
+/**
+ * @file
+ * Backport of Drupal 7 block.test with modifications, see BACKPORT.txt.
+ *
+ * Copyright 2008-2009 by Jimmy Berry ("boombatower", http://drupal.org/user/214218)
+ */
+
+require_once drupal_get_path('module', 'atrium_test') . '/atrium_web_test_case.php';
+
+class AtriumTranslateTestCase extends AtriumWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Atrium translate',
+      'description' => 'Install Atrium in a different language.',
+      'group' => 'Atrium',
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    // Change install locale, will download translation on the fly
+    $this->install_locale = 'es';
+    // Set time limit, 180 (default) may not be enough for language install
+    $this->timeLimit = 360;
+    parent::setUp();
+  }
+
+  function testWelcomePage() {
+    // Check the language has been added
+    $this->assertEqual(count(language_list()), 2, 'Two languages have been added.');
+    $this->assertEqual(language_default('language'), 'es', 'Spanish is the default language.');
+    // Check translations have been added properly
+    $count = db_result(db_query("SELECT COUNT(*) FROM {locales_target} WHERE language = '%s'", $this->install_locale));
+    $this->assertTrue($count, "Translations have been loaded: $count strings.");
+    // Create and login admin user
+    $admin_user = $this->atriumCreateUser('admin');
+    $this->drupalLogin($admin_user);
+    // Check initial texts
+    $this->assertText(t('Welcome to !sitename', array('!sitename' => variable_get('site_name', 'Atrium'))));
+    $this->assertText(t('Create your first !type to get started.', array('!type' => atrium_get_typename('group'))));
+    // Check random string translations
+    $this->assertText('Bienvenido');
+    $this->assertText('Cree su primer grupo');
+  }  
+}
+

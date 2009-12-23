@@ -1,0 +1,148 @@
+<?php
+// $Id: block.test,v 1.1.2.1.2.2 2009/04/23 05:39:52 boombatower Exp $
+/**
+ * @file
+ * Backport of Drupal 7 block.test with modifications, see BACKPORT.txt.
+ *
+ * Copyright 2008-2009 by Jimmy Berry ("boombatower", http://drupal.org/user/214218)
+ */
+
+require_once drupal_get_path('module', 'atrium_test') . '/atrium_web_test_case.php';
+
+class AtriumBasicTestCase extends AtriumWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Atrium basics',
+      'description' => 'Install Atrium and do the initial set up.',
+      'group' => 'Atrium',
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+  }
+
+  function testWelcomePage() {
+    // Create and login admin user
+    $admin_user = $this->atriumCreateUser('admin');
+    $this->drupalLogin($admin_user);
+    // Check initial texts
+    $this->assertText(t('Welcome to !sitename', array('!sitename' => variable_get('site_name', 'Atrium'))));
+    $this->assertText(t('Create your first !type to get started.', array('!type' => atrium_get_typename('group'))));
+    
+    // Check some initial paths. More than checking the page is properly built
+    // we just do some page loading to check for errors.
+    foreach (array('groups', 'groups/my') as $path) {
+      $this->drupalGet($path);
+      $this->assertText(t('There is currently no content to view in this section.'));
+    }
+    $this->drupalGet('groups/archived');
+    $this->assertText(t('No archived groups found.'));
+    $this->drupalGet('members');
+    $this->assertNoUniqueText($admin_user->name); // In menu and directory
+    $this->drupalGet('members/all');
+    $this->assertText($admin_user->mail); // Display user mail
+    $this->drupalGet('members/blocked');
+    $this->assertText(t('Anonymous')); // Anonymous user is blocked
+    
+    // Check the user space and account pages
+    $space = 'space-' . $admin_user->name;
+    $this->drupalGet("$space/blog");
+    $this->drupalGet("$space/calendar");
+    $this->drupalGet("$space/profile");
+    $path = $space . '/user/' . $admin_user->uid;
+    foreach (array('edit', 'edit/profile', 'edit/picture', 'groups', 'notifications', 'openid', 'spaces') as $page) {
+      $this->drupalGet("$path/$page");
+    }
+    // Create public and private group using the form
+    $group0->path = 'group0';
+    $group0->preset = 'atrium_og_private';
+    $group1->path = 'group1';
+    $group1->preset = 'atrium_og_public';
+    
+    foreach (array($group0, $group1) as $group) {
+      $group->title = $this->randomName(8);
+      $group->description = $this->randomName(32);
+      $this->drupalGet('node/add/group');
+      $edit = array(
+        'title' => $group->title,
+        'og_description' => $group->description,
+        'purl[value]' => $group->path,
+        'preset' => $group->preset,
+      );
+      $this->drupalPost('node/add/group', $edit, t('Save'));
+      // Save nid for this group
+      $group->nid = db_result(db_query("SELECT id FROM {purl} WHERE value = '%s'", $group->path));    
+      
+      // Test all pages for this group
+      $this->drupalGet($group->path);
+      $this->assertText($group->title);
+      foreach (array('dashboard', 'dashboard/all', 'dashboard/my', 'dashboard/files') as $page) {
+        $this->drupalGet("$group->path/$page");
+        $this->assertText(t('No recent activity found.'));
+      }     
+      
+      $content = array();
+      // Check blog
+      $this->drupalGet("$group->path/blog");
+      $this->assertText(t('Please add your first !type to get started.', array('!type' => node_get_types('name', 'blog'))));
+      $blog = $this->atriumCreateGroupContent($group, 'blog');
+      $content[] = $blog;
+      $this->drupalGet("$group->path/blog");
+      $this->assertText($blog->title);
+      
+      // Check documents
+      $this->drupalGet("$group->path/documents");
+      $this->assertText(t('Please add your first !type to get started.', array('!type' => node_get_types('name', 'book'))));
+      $this->drupalGet("$group->path/documents/archived");
+      $this->assertText(t('No archived books found.'));
+      $book = $this->atriumCreateGroupContent($group, 'book');
+      $content[] = $book;
+      $this->drupalGet("$group->path/documents");
+      $this->assertText($book->title);
+      
+      // These should show up in dashboard
+      $this->drupalGet("$group->path/dashboard");
+      foreach ($content as $node) {
+        $this->assertText($node->title);
+      }
+      
+      // Group member pages
+      $path = "$group->path/og/users/$group->nid";
+      $this->drupalGet($path);
+      $this->drupalGet("$path/faces");
+      $this->drupalGet("$path/ucreate");
+      $this->drupalGet("$path/add_user");
+    }
+  }  
+  
+  /**
+   * Create group content 
+   */
+  function atriumCreateGroupContent($group, $type, $edit = array()) {    
+    $node->type = $type;
+    $node->title = $this->randomName(8);
+    $node->body = $this->randomName(32);
+    $edit += array(
+      'title' => $node->title,
+      'body' => $node->body,
+    );
+    $path = "$group->path/node/add/$type";
+    $this->drupalGet($path);
+    $this->drupalPost($path, $edit, t('Save'));
+    // Get nid from database
+    $node->nid = db_result(db_query("SELECT nid FROM {node} WHERE title = '%s'", $node->title));
+    // Reload page and assert title
+    $this->drupalGet("$group->path/node/$node->nid");
+    $this->assertText($node->title);
+    return $node;
+  }
+}
+
+

@@ -1,0 +1,174 @@
+<?php
+// *Id*
+/**
+ * @file
+ *   Atrium translate install file
+ */
+
+require_once 'atrium_translate.inc';
+//require_once ATRIUM_L10N_UPDATE . '/l10n_update.inc';
+
+/**
+ * Implementation of hook_requirements()
+ * 
+ * This function will be called first before installing the database ($phase = 'install')
+ * so we need some workarounds to make sure it can work without a db
+ */
+function atrium_translate_requirements($phase) {
+  _atrium_translate_include($phase);
+  $t = get_t();
+  // Get current locale. We only support one at a time
+  $locale = _atrium_translate_locale($phase);
+
+  if ($phase == 'install') {
+    $requirements['translation'] = array(
+      'title' => $t('Translation is available'),
+    );
+    $file_path = _atrium_translate_default_file($locale);
+    $variables = array(
+      '%filepath' => $file_path,
+      '%server' => ATRIUM_L10N_SERVER,
+      '%language' => $locale,
+    );
+    if (is_readable($file_path)) {
+      $requirements['translation']['description'] = $t('A translation file has been found: %filepath', $variables);
+      $requirements['translation']['severity'] = REQUIREMENT_OK;
+      return $requirements;
+    }
+    else {
+      // Check server connectivity and available downloads
+      if ($error = _atrium_translate_ping_server(ATRIUM_L10N_SERVER)) {
+        $description[] = $t('We cannot connect with the translation server at %server.', $variables);
+        $description[] = $error;
+        $status = REQUIREMENT_ERROR;        
+      }
+      elseif ($url = _atrium_translate_download_url($locale)) {
+        $description[] = $t('The chosen language(%language) is available for downloading at the translation server. It will be downloaded automatically from %server.', $variables);
+        $status = REQUIREMENT_OK;        
+      }
+      else {
+        $description[] = $t('The chosen language(%language) is not supported by the translation server %server.', $variables);
+        $status = REQUIREMENT_ERROR;        
+      }  
+
+      $description[] = $t('Alternatively you can download a translation file and drop it into %filepath.', $variables);
+      $requirements['translation']['description'] = implode('<br />', $description);
+      $requirements['translation']['severity'] = $status;
+      return $requirements;
+    }
+
+  }
+}
+
+/**
+ * Implementation of hook_install()
+ *
+ * We do the initial language import on install
+ */
+function atrium_translate_install() {
+  // Set some variables for l10n_update to work with Atrium server
+  variable_set('l10n_update_server', ATRIUM_L10N_SERVER);
+  // Just in case they want to enable later the l10n_client module
+  variable_set('l10n_client_server', ATRIUM_L10N_SERVER);
+}
+
+/**
+ * Create batch for importing this language
+ * @param $locale
+ * @return unknown_type
+ */
+function atrium_translate_create_batch($locale, $phase = 'runtime') {
+  _atrium_translate_include($phase);
+
+  // First check for the default local file. If not there go for the remote one.
+  if (is_readable($filename = _atrium_translate_default_file($locale))) {
+    $file = new Stdclass();
+    $file->filename = $filename;
+    $batch = _locale_batch_build(array($file));
+    return $batch;
+  }
+  elseif ($projects = _atrium_translate_default_projects()) {
+    return l10n_update_batch_multiple($projects, array($locale));
+  }
+}
+
+/**
+ * Get download URL
+ */
+function _atrium_translate_download_url($locale) {
+  if ($release = _atrium_translate_default_release($locale)) {
+    return $release['download_link'];
+  }
+}
+
+/**
+ * Get default release for downloading and check download link
+ */
+function _atrium_translate_default_release($locale) {
+  $release = l10n_update_project_get_release('atrium', $locale, ATRIUM_L10N_VERSION, ATRIUM_L10N_SERVER);
+  if ($release && !empty($release['download_link'])) {
+    return $release;
+  }
+}
+
+/**
+ * Path for the default Atrium file
+ */
+function _atrium_translate_default_file($locale) {
+  return ATRIUM_L10N_DIRECTORY . "/$locale.po";
+}
+
+/**
+ * Get current locale
+ */
+function _atrium_translate_locale($phase = 'runtime') {
+  global $install_locale;
+  global $language;
+
+  if ($phase == 'install' && isset($install_locale)) {
+    return $install_locale;
+  }
+  elseif(!empty($language)) {
+    return $language->language;
+  }
+}
+
+/**
+ * Ping the translation server. Installer safe version.
+ *
+ * @return string
+ *   Error message if something went wrong
+ */
+function _atrium_translate_ping_server($url) {
+  _atrium_translate_include('install');
+  $t = get_t();
+  $response = l10n_update_http_request($url);
+  if (!empty($response->error)) {
+    // 0 -> php_network_getaddresses: getaddrinfo failed: Name or service not known
+    return $t('Error @number: %message', array('@number' => $response->code, '%message' => $response->error));
+  }
+}
+
+/**
+ * Include l10n_update library
+ * 
+ * Helper function that resolves module file name before installing the modules
+ */
+function _atrium_translate_include($phase = 'runtime') {
+  static $done;
+  
+  if (isset($done)) {
+    return;
+  }
+  elseif ($phase == 'runtime') {
+    $filename = drupal_get_path('module', 'l10n_update') . '/l10n_update.inc';
+  }
+  elseif ($files = drupal_system_listing('l10n_update.inc$', 'modules')) {
+    $file = current($files);
+    $filename = $file->filename;
+  }
+  if (!empty($filename)) {
+    require_once $filename;
+    $done = TRUE;
+  }
+}
