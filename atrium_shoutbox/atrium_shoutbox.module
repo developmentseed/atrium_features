@@ -3,35 +3,6 @@
 include_once('atrium_shoutbox.features.inc');
 
 /**
- * Implementation of hook_strongarm().
- */
-function atrium_shoutbox_strongarm() {
-  $conf = array();
-
-  // Nodetype settings
-  $conf['node_options_shoutbox'] = array('status');
-  $conf["notifications_content_type_shoutbox"] = array();
-  $conf['upload_shoutbox'] = FALSE;
-
-  // Disable comments -- this is counterintuitive, but since the
-  // shoutbox essentially ignores this setting this is a way to
-  // disable the normal comment UI on shoutbox pages.
-  $conf['comment_shoutbox'] = COMMENT_NODE_DISABLED;
-
-  // Disable FeedAPI
-  $conf['feedapi_settings_shoutbox'] = array('enabled' => FALSE);
-
-  // Disable Diff button
-  $conf["show_preview_changes_shoutbox"] = FALSE;
-  $conf["show_diff_inline_shoutbox"] = FALSE;
-
-  // Disable from recent activity views
-  $conf['atrium_update_type_shoutbox'] = FALSE;
-
-  return $conf;
-}
-
-/**
  * Implementation of hook_help().
  */
 function atrium_shoutbox_help($path, $arg) {

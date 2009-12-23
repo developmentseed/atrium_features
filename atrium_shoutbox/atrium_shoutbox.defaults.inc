@@ -5,7 +5,7 @@
  */
 function _atrium_shoutbox_context_default_contexts() {
   $items = array();
-
+/*
   $items[] = array(
     'namespace' => 'spaces',
     'attribute' => 'shoutbox',
@@ -64,6 +64,7 @@ function _atrium_shoutbox_context_default_contexts() {
       ),
     ),
   );
+*/
   return $items;
 }
 
@@ -113,3 +114,83 @@ function _atrium_shoutbox_user_default_permissions() {
 
   return $permissions;
 }
+
+/**
+ * Helper to implementation of hook_ctools_plugin_api().
+ */
+function _atrium_shoutbox_ctools_plugin_api() {
+  $args = func_get_args();
+  $module = array_shift($args);
+  $api = array_shift($args);
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
+  else if ($module == "system" && $api == "strongarm") {
+    return array("version" => 1);
+  }
+}
+
+/**
+ * Helper to implementation of hook_strongarm().
+ */
+function _atrium_shoutbox_strongarm() {
+  $export = array();
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_options_shoutbox';
+  $strongarm->value = array('status');
+
+  $export['node_options_shoutbox'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_content_type_shoutbox';
+  $strongarm->value = array(); 
+
+  $export['notifications_content_type_shoutbox'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_shoutbox';
+  $strongarm->value = FALSE; 
+
+  $export['upload_shoutbox'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'comment_shoutbox';
+  $strongarm->value = COMMENT_NODE_DISABLED; 
+
+  $export['comment_shoutbox'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'feedapi_settings_shoutbox';
+  $strongarm->value = array('enabled' => FALSE); 
+
+  $export['feedapi_settings_shoutbox'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_preview_changes_shoutbox';
+  $strongarm->value = FALSE; 
+
+  $export['show_preview_changes_shoutbox'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_diff_inline_shoutbox';
+  $strongarm->value = FALSE; 
+
+  $export['show_diff_inline_shoutbox'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'atrium_update_type_shoutbox';
+  $strongarm->value = FALSE; 
+
+  $export['atrium_update_type_shoutbox'] = $strongarm;
+  return $export;
+}
+
