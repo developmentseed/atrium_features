@@ -46,6 +46,9 @@ function _atrium_members_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
+  else if ($module == "spaces" && $api == "spaces") {
+    return array("version" => 3);
+  }
 }
 
 /**
@@ -111,39 +114,28 @@ function _atrium_members_menu_default_items() {
  * Helper to implementation of hook_spaces_presets().
  */
 function _atrium_members_spaces_presets() {
-  $presets = array();
-
-  // Exported preset: atrium_user_simple
-  $presets['atrium_user_simple'] = array(
-    'name' => 'Simple profile',
-    'description' => 'A simple profile with a blog, calendar and dashboard.',
-    'type' => 'user',
-    'preset' => array(
-      'features' => array(
+  $export = array();
+  $spaces_presets = new stdClass;
+  $spaces_presets->disabled = FALSE; /* Edit this to true to make a default spaces_presets disabled initially */
+  $spaces_presets->api_version = 3;
+  $spaces_presets->name = 'atrium_user_simple';
+  $spaces_presets->title = 'Simple profile';
+  $spaces_presets->description = 'A simple profile with a blog, calendar and dashboard.';
+  $spaces_presets->space_type = 'user';
+  $spaces_presets->value = array(
+    'variable' => array(
+      'spaces_features' => array(
         'atrium_blog' => '1',
         'atrium_book' => '0',
         'atrium_calendar' => '1',
         'atrium_dashboard' => '1',
       ),
-      'settings' => array(
-        'home' => 'profile',
-      ),
-      'locked' => array(
-        'features' => array(
-          'atrium_blog' => 1,
-          'atrium_book' => 0,
-          'atrium_calendar' => 1,
-          'atrium_dashboard' => 1,
-        ),
-        'settings' => array(
-          'home' => 1,
-        ),
-      ),
-      'user' => array(),
+      'spaces_setting_home' => 'profile',
     ),
   );
 
-  return $presets;
+  $export['atrium_user_simple'] = $spaces_presets;
+  return $export;
 }
 
 /**

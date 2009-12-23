@@ -63,6 +63,9 @@ function _atrium_groups_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
+  else if ($module == "spaces" && $api == "spaces") {
+    return array("version" => 3);
+  }
 }
 
 /**
@@ -91,57 +94,56 @@ function _atrium_groups_menu_default_items() {
  * Helper to implementation of hook_spaces_presets().
  */
 function _atrium_groups_spaces_presets() {
-  $presets = array();
-
-  // Exported preset: atrium_og_private
-  $presets['atrium_og_private'] = array(
-    'name' => 'Private group',
-    'description' => 'A simple private group with a blog, document library and dashboard.',
-    'type' => 'og',
-    'preset' => array(
-      'features' => array(
+  $export = array();
+  $spaces_presets = new stdClass;
+  $spaces_presets->disabled = FALSE; /* Edit this to true to make a default spaces_presets disabled initially */
+  $spaces_presets->api_version = 3;
+  $spaces_presets->name = 'atrium_og_private';
+  $spaces_presets->title = 'Private group';
+  $spaces_presets->description = 'A simple private group with a blog, document library and dashboard.';
+  $spaces_presets->space_type = 'og';
+  $spaces_presets->value = array(
+    'variable' => array(
+      'spaces_features' => array(
         'atrium_blog' => 1,
         'atrium_book' => 1,
         'atrium_calendar' => 0,
         'atrium_dashboard' => 1,
       ),
-      'settings' => array(
-        'home' => 'dashboard',
-      ),
-      'og' => array(
-        'og_selective' => 3,
-        'og_directory' => 0,
-        'og_register' => 1,
-        'og_private' => 1,
-      ),
+      'spaces_setting_home' => 'dashboard',
+      'spaces_og_selective' => 3,
+      'spaces_og_directory' => 0,
+      'spaces_og_register' => 1,
+      'spaces_og_private' => 1,
     ),
   );
 
-  // Exported preset: atrium_og_public
-  $presets['atrium_og_public'] = array(
-    'name' => 'Public group',
-    'description' => 'A simple public group with a blog, document library and dashboard.',
-    'type' => 'og',
-    'preset' => array(
-      'features' => array(
+  $export['atrium_og_private'] = $spaces_presets;
+  $spaces_presets = new stdClass;
+  $spaces_presets->disabled = FALSE; /* Edit this to true to make a default spaces_presets disabled initially */
+  $spaces_presets->api_version = 3;
+  $spaces_presets->name = 'atrium_og_public';
+  $spaces_presets->title = 'Public group';
+  $spaces_presets->description = 'A simple public group with a blog, document library and dashboard.';
+  $spaces_presets->space_type = 'og';
+  $spaces_presets->value = array(
+    'variable' => array(
+      'spaces_features' => array(
         'atrium_blog' => 2,
         'atrium_book' => 2,
         'atrium_calendar' => 0,
         'atrium_dashboard' => 2,
       ),
-      'settings' => array(
-        'home' => 'dashboard',
-      ),
-      'og' => array(
-        'og_selective' => 0,
-        'og_directory' => 1,
-        'og_register' => 1,
-        'og_private' => 0,
-      ),
+      'spaces_setting_home' => 'dashboard',
+      'spaces_og_selective' => 0,
+      'spaces_og_directory' => 1,
+      'spaces_og_register' => 1,
+      'spaces_og_private' => 0,
     ),
   );
 
-  return $presets;
+  $export['atrium_og_public'] = $spaces_presets;
+  return $export;
 }
 
 /**
