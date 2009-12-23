@@ -49,6 +49,9 @@ function _atrium_members_ctools_plugin_api() {
   else if ($module == "spaces" && $api == "spaces") {
     return array("version" => 3);
   }
+  else if ($module == "system" && $api == "strongarm") {
+    return array("version" => 1);
+  }
 }
 
 /**
@@ -199,4 +202,19 @@ function _atrium_members_user_default_permissions() {
   );
 
   return $permissions;
+}
+
+/**
+ * Helper to implementation of hook_strongarm().
+ */
+function _atrium_members_strongarm() {
+  $export = array();
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'seed_imagecache_user_picture';
+  $strongarm->value = 'user-s';
+
+  $export['seed_imagecache_user_picture'] = $strongarm;
+  return $export;
 }
