@@ -69,7 +69,6 @@ function _atrium_groups_ctools_plugin_api() {
   else if ($module == "system" && $api == "strongarm") {
     return array("version" => 1);
   }
-
 }
 
 /**
@@ -194,6 +193,54 @@ function _atrium_groups_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'atrium_archivable';
+  $strongarm->value = array(
+    '0' => 'group',
+  );
+
+  $export['atrium_archivable'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'atrium_update_type_group';
+  $strongarm->value = FALSE;
+
+  $export['atrium_update_type_group'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'comment_group';
+  $strongarm->value = 0;
+
+  $export['comment_group'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'feedapi_settings_group';
+  $strongarm->value = array(
+    'enabled' => FALSE,
+  );
+
+  $export['feedapi_settings_group'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_options_group';
+  $strongarm->value = array(
+    '0' => 'status',
+  );
+
+  $export['node_options_group'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_content_type_group';
+  $strongarm->value = array();
+
+  $export['notifications_content_type_group'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'og_audience_checkboxes';
   $strongarm->value = 0;
 
@@ -205,6 +252,13 @@ function _atrium_groups_strongarm() {
   $strongarm->value = 1;
 
   $export['og_audience_required'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'og_content_type_usage_group';
+  $strongarm->value = 'group';
+
+  $export['og_content_type_usage_group'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
@@ -250,45 +304,10 @@ function _atrium_groups_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'og_content_type_usage_group';
-  $strongarm->value = 'group';
-
-  $export['og_content_type_usage_group'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'node_options_group';
-  $strongarm->value = 'group';
-
-  $export['node_options_group'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'notifications_content_type_group';
-  $strongarm->value = array();
-
-  $export['notifications_content_type_group'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'upload_group';
+  $strongarm->name = 'show_diff_inline_group';
   $strongarm->value = FALSE;
 
-  $export['upload_group'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'comment_group';
-  $strongarm->value = COMMENT_NODE_DISABLED;
-
-  $export['comment_group'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'feedapi_settings_group';
-  $strongarm->value = array('enabled' => FALSE);
-
-  $export['feedapi_settings_group'] = $strongarm;
+  $export['show_diff_inline_group'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
@@ -299,23 +318,9 @@ function _atrium_groups_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'show_diff_inline_group';
+  $strongarm->name = 'upload_group';
   $strongarm->value = FALSE;
 
-  $export['show_diff_inline_group'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'atrium_update_type_group';
-  $strongarm->value = FALSE;
-
-  $export['atrium_update_type_group'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'atrium_archivable';
-  $strongarm->value = array('group');
-
-  $export['atrium_archivable'] = $strongarm;
+  $export['upload_group'] = $strongarm;
   return $export;
 }
