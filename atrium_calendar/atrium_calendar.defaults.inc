@@ -189,6 +189,9 @@ function _atrium_calendar_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
+  else if ($module == "system" && $api == "strongarm") {
+    return array("version" => 1);
+  }
 }
 
 /**
@@ -301,4 +304,311 @@ function _atrium_calendar_user_default_permissions() {
   );
 
   return $permissions;
+}
+
+/**
+ * Helper to implementation of hook_strongarm().
+ */
+function _atrium_calendar_strongarm() {
+  $export = array();
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'atrium_update_type_event';
+  $strongarm->value = 1;
+
+  $export['atrium_update_type_event'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'atrium_update_type_feed_ical';
+  $strongarm->value = 0;
+
+  $export['atrium_update_type_feed_ical'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'atrium_update_type_feed_ical_item';
+  $strongarm->value = 0;
+
+  $export['atrium_update_type_feed_ical_item'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'comment_event';
+  $strongarm->value = '0';
+
+  $export['comment_event'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'comment_feed_ical';
+  $strongarm->value = '0';
+
+  $export['comment_feed_ical'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'comment_feed_ical_item';
+  $strongarm->value = '0';
+
+  $export['comment_feed_ical_item'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'feedapi_mapper_mapping_feed_ical';
+  $strongarm->value = array(
+    'a:2:{i:0;s:7:"options";i:1;s:6:"VEVENT";}' => 'a:3:{i:0;s:4:"date";i:1;s:10:"field_date";i:2;s:4:"ical";}',
+  );
+
+  $export['feedapi_mapper_mapping_feed_ical'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'feedapi_settings_event';
+  $strongarm->value = array(
+    'enabled' => 0,
+    'upload_method' => 'url',
+    'refresh_on_create' => 0,
+    'update_existing' => 1,
+    'refresh_time' => '1800',
+    'items_delete' => '0',
+    'parsers' => array(
+      'parser_ical' => array(
+        'enabled' => 0,
+        'weight' => '0',
+      ),
+    ),
+    'processors' => array(
+      'feedapi_node' => array(
+        'enabled' => 0,
+        'weight' => '0',
+        'content_type' => 'blog',
+        'input_format' => '4',
+        'node_date' => 'feed',
+        'x_dedupe' => '0',
+      ),
+      'feedapi_inherit' => array(
+        'enabled' => 0,
+        'weight' => '0',
+        'inherit_og' => 1,
+        'inherit_taxonomy' => 1,
+        'inherit_author' => 1,
+      ),
+    ),
+  );
+
+  $export['feedapi_settings_event'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'feedapi_settings_feed_ical';
+  $strongarm->value = array(
+    'enabled' => 1,
+    'upload_method' => 'url',
+    'refresh_on_create' => 1,
+    'update_existing' => 1,
+    'refresh_time' => '1800',
+    'items_delete' => '0',
+    'parsers' => array(
+      'parser_ical' => array(
+        'enabled' => 1,
+        'weight' => '0',
+      ),
+    ),
+    'processors' => array(
+      'feedapi_node' => array(
+        'enabled' => 1,
+        'weight' => '-5',
+        'content_type' => 'feed_ical_item',
+        'input_format' => '4',
+        'node_date' => 'feed',
+        'x_dedupe' => '1',
+      ),
+      'feedapi_inherit' => array(
+        'enabled' => 1,
+        'weight' => '0',
+        'inherit_og' => 1,
+        'inherit_taxonomy' => 1,
+        'inherit_author' => 1,
+      ),
+    ),
+  );
+
+  $export['feedapi_settings_feed_ical'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'feedapi_settings_feed_ical_item';
+  $strongarm->value = array(
+    'enabled' => 0,
+    'upload_method' => 'url',
+    'refresh_on_create' => 0,
+    'update_existing' => 1,
+    'refresh_time' => '1800',
+    'items_delete' => '0',
+    'parsers' => array(
+      'parser_ical' => array(
+        'enabled' => 0,
+        'weight' => '0',
+      ),
+    ),
+    'processors' => array(
+      'feedapi_node' => array(
+        'enabled' => 0,
+        'weight' => '0',
+        'content_type' => 'blog',
+        'input_format' => '4',
+        'node_date' => 'feed',
+        'x_dedupe' => '0',
+      ),
+      'feedapi_inherit' => array(
+        'enabled' => 0,
+        'weight' => '0',
+        'inherit_og' => 1,
+        'inherit_taxonomy' => 1,
+        'inherit_author' => 1,
+      ),
+    ),
+  );
+
+  $export['feedapi_settings_feed_ical_item'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_options_event';
+  $strongarm->value = array(
+    '0' => 'status',
+    '1' => 'revision',
+  );
+
+  $export['node_options_event'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_options_feed_ical';
+  $strongarm->value = array(
+    '0' => 'status',
+  );
+
+  $export['node_options_feed_ical'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_options_feed_ical_item';
+  $strongarm->value = array(
+    '0' => 'status',
+  );
+
+  $export['node_options_feed_ical_item'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_content_type_event';
+  $strongarm->value = array(
+    '0' => 'thread',
+    '1' => 'nodetype',
+    '2' => 'author',
+  );
+
+  $export['notifications_content_type_event'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_content_type_feed_ical';
+  $strongarm->value = array();
+
+  $export['notifications_content_type_feed_ical'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_content_type_feed_ical_item';
+  $strongarm->value = array();
+
+  $export['notifications_content_type_feed_ical_item'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'og_content_type_usage_event';
+  $strongarm->value = 'group_post_standard';
+
+  $export['og_content_type_usage_event'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'og_content_type_usage_feed_ical';
+  $strongarm->value = 'group_post_standard';
+
+  $export['og_content_type_usage_feed_ical'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'og_content_type_usage_feed_ical_item';
+  $strongarm->value = 'group_post_standard';
+
+  $export['og_content_type_usage_feed_ical_item'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_diff_inline_event';
+  $strongarm->value = 0;
+
+  $export['show_diff_inline_event'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_diff_inline_feed_ical';
+  $strongarm->value = 0;
+
+  $export['show_diff_inline_feed_ical'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_diff_inline_feed_ical_item';
+  $strongarm->value = 0;
+
+  $export['show_diff_inline_feed_ical_item'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_preview_changes_event';
+  $strongarm->value = 0;
+
+  $export['show_preview_changes_event'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_preview_changes_feed_ical';
+  $strongarm->value = 0;
+
+  $export['show_preview_changes_feed_ical'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'show_preview_changes_feed_ical_item';
+  $strongarm->value = 0;
+
+  $export['show_preview_changes_feed_ical_item'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_event';
+  $strongarm->value = '1';
+
+  $export['upload_event'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_feed_ical';
+  $strongarm->value = FALSE;
+
+  $export['upload_feed_ical'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_feed_ical_item';
+  $strongarm->value = FALSE;
+
+  $export['upload_feed_ical_item'] = $strongarm;
+  return $export;
 }

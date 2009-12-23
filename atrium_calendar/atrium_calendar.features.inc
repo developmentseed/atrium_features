@@ -55,6 +55,15 @@ function atrium_calendar_user_default_permissions() {
 }
 
 /**
+ * Implementation of hook_strongarm().
+ */
+function atrium_calendar_strongarm() {
+  module_load_include('inc', 'atrium_calendar', 'atrium_calendar.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_calendar_strongarm', $args);
+}
+
+/**
  * Implementation of hook_views_default_views().
  */
 function atrium_calendar_views_default_views() {
