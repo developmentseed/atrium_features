@@ -79,6 +79,9 @@ function _atrium_intranet_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
+  else if ($module == "system" && $api == "strongarm") {
+    return array("version" => 1);
+  }
 }
 
 /**
@@ -199,55 +202,6 @@ function _atrium_intranet_imagecache_default_presets() {
     ),
   );
   return $items;
-}
-
-/**
- * Helper to implementation of hook_spaces_presets().
- */
-function _atrium_intranet_spaces_presets() {
-  $presets = array();
-
-  // Exported preset: atrium_intranet
-  $presets['atrium_intranet'] = array(
-    'name' => 'Basic intranet',
-    'description' => 'A basic intranet hub setup.',
-    'type' => 'site',
-    'preset' => array(
-      'features' => array(
-        'atrium_intranet' => '1',
-        'atrium_dashboard' => '1',
-        'atrium_groups' => '1',
-        'atrium_members' => '1',
-      ),
-      'settings' => array(
-        'home' => 'home',
-      ),
-      'locked' => array(
-        'features' => array(
-          'atrium_intranet' => 1,
-          'atrium_dashboard' => 1,
-          'atrium_groups' => 1,
-          'atrium_members' => 1,
-        ),
-        'settings' => array(
-          'atrium_sitemode' => 0,
-          'atrium_members' => 0,
-          'home' => 0,
-          'logo' => 0,
-          'color' => 0,
-        ),
-      ),
-      'weights' => array(
-        'atrium_intranet' => '-10',
-        'atrium_dashboard' => '-9',
-        'atrium_groups' => '-8',
-        'atrium_members' => '-7',
-      ),
-      'site' => array(),
-    ),
-  );
-
-  return $presets;
 }
 
 /**
@@ -511,4 +465,303 @@ function _atrium_intranet_user_default_permissions() {
   );
 
   return $permissions;
+}
+
+/**
+ * Helper to implementation of hook_strongarm().
+ */
+function _atrium_intranet_strongarm() {
+  $export = array();
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'allowed_html_5';
+  $strongarm->value = '<div> <span> <br> <a> <em> <strong> <cite> <code> <strike> <ul> <ol> <li> <dl> <dt> <dd> <img> <blockquote> <p> <pre> <h1> <h2> <h3> <h4> <h5> <h6> <table> <caption> <thead> <th> <td> <tr> <sup> <sub>';
+
+  $export['allowed_html_5'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'date_format_field_date_long';
+  $strongarm->value = 'g:ia D M j, Y';
+
+  $export['date_format_field_date_long'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'date_format_field_date_medium';
+  $strongarm->value = 'g:ia M j, Y';
+
+  $export['date_format_field_date_medium'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'date_format_field_date_short';
+  $strongarm->value = 'M j, Y';
+
+  $export['date_format_field_date_short'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'date_format_long';
+  $strongarm->value = 'g:ia D M j, Y';
+
+  $export['date_format_long'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'date_format_medium';
+  $strongarm->value = 'g:ia M j, Y';
+
+  $export['date_format_medium'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'date_format_short';
+  $strongarm->value = 'M j, Y';
+
+  $export['date_format_short'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'feedapi_allow_html_all';
+  $strongarm->value = FALSE;
+
+  $export['feedapi_allow_html_all'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'feedapi_allowed_html_tags';
+  $strongarm->value = '<div> <h1> <h2> <h3> <h4> <h5> <h6> <img> <a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul> <sup> <sub>';
+
+  $export['feedapi_allowed_html_tags'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'feedapi_cron_percentage';
+  $strongarm->value = '25';
+
+  $export['feedapi_cron_percentage'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'filter_default_format';
+  $strongarm->value = '5';
+
+  $export['filter_default_format'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'imageapi_jpeg_quality';
+  $strongarm->value = 90;
+
+  $export['imageapi_jpeg_quality'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'menu_primary_links_source';
+  $strongarm->value = 'features';
+
+  $export['menu_primary_links_source'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'messaging_default_method';
+  $strongarm->value = 'mail';
+
+  $export['messaging_default_method'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'messaging_method_mail';
+  $strongarm->value = array(
+    'filter' => 3,
+  );
+
+  $export['messaging_method_mail'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_content_per_type';
+  $strongarm->value = 1;
+
+  $export['notifications_content_per_type'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_team_max_options';
+  $strongarm->value = 200;
+
+  $export['notifications_team_max_options'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_ui_account_options';
+  $strongarm->value = array(
+    'block' => 'block',
+  );
+
+  $export['notifications_ui_account_options'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_ui_node';
+  $strongarm->value = array(
+    'block' => 'block',
+  );
+
+  $export['notifications_ui_node'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_ui_per_type';
+  $strongarm->value = 0;
+
+  $export['notifications_ui_per_type'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_ui_types';
+  $strongarm->value = array(
+    'grouptype' => 'grouptype',
+    'thread' => 'thread',
+    'nodetype' => 'nodetype',
+    'author' => 'author',
+  );
+
+  $export['notifications_ui_types'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_ui_user';
+  $strongarm->value = array(
+    'page' => 'page',
+  );
+
+  $export['notifications_ui_user'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'seed_imagecache_attachment';
+  $strongarm->value = 'fileview';
+
+  $export['seed_imagecache_attachment'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'site_frontpage';
+  $strongarm->value = 'welcome';
+
+  $export['site_frontpage'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'spaces_features';
+  $strongarm->value = array(
+    'atrium_calendar' => '0',
+    'atrium_groups' => '1',
+    'atrium_intranet' => '1',
+    'atrium_members' => '1',
+  );
+
+  $export['spaces_features'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_extensions_2';
+  $strongarm->value = 'au avi bzip2 csv doc docx flv gif graffle gz htm html iso jpeg jpg kml kmz mov mp2 mp3 mp4 odp ods odt pages patch pdf png pps ppt pptx psd rar svg swf template tif tgz txt vsd wav wmv xls xlsx zip';
+
+  $export['upload_extensions_2'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_extensions_3';
+  $strongarm->value = 'au avi bzip2 csv doc docx flv gif graffle gz htm html iso jpeg jpg kml kmz mov mp2 mp3 mp4 odp ods odt pages patch pdf png pps ppt pptx psd rar svg swf template tif tgz txt vsd wav wmv xls xlsx zip';
+
+  $export['upload_extensions_3'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_extensions_4';
+  $strongarm->value = 'au avi bzip2 csv doc docx flv gif graffle gz htm html iso jpeg jpg kml kmz mov mp2 mp3 mp4 odp ods odt pages patch pdf png pps ppt pptx psd rar svg swf template tif tgz txt vsd wav wmv xls xlsx zip';
+
+  $export['upload_extensions_4'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_extensions_default';
+  $strongarm->value = 'au avi bzip2 csv doc docx flv gif graffle gz htm html iso jpeg jpg kml kmz mov mp2 mp3 mp4 odp ods odt pages patch pdf png pps ppt pptx psd rar svg swf template tif tgz txt vsd wav wmv xls xlsx zip';
+
+  $export['upload_extensions_default'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_list_default';
+  $strongarm->value = 1;
+
+  $export['upload_list_default'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_uploadsize_2';
+  $strongarm->value = 20;
+
+  $export['upload_uploadsize_2'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_uploadsize_3';
+  $strongarm->value = 20;
+
+  $export['upload_uploadsize_3'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_uploadsize_4';
+  $strongarm->value = 20;
+
+  $export['upload_uploadsize_4'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_uploadsize_default';
+  $strongarm->value = 20;
+
+  $export['upload_uploadsize_default'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_usersize_2';
+  $strongarm->value = 200;
+
+  $export['upload_usersize_2'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_usersize_3';
+  $strongarm->value = 500;
+
+  $export['upload_usersize_3'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_usersize_4';
+  $strongarm->value = 500;
+
+  $export['upload_usersize_4'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'upload_usersize_default';
+  $strongarm->value = 200;
+
+  $export['upload_usersize_default'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'views_no_hover_links';
+  $strongarm->value = TRUE;
+
+  $export['views_no_hover_links'] = $strongarm;
+  return $export;
 }
