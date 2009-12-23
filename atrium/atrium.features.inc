@@ -19,6 +19,15 @@ function atrium_ctools_plugin_api() {
 }
 
 /**
+ * Implementation of hook_strongarm().
+ */
+function atrium_strongarm() {
+  module_load_include('inc', 'atrium', 'atrium.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_strongarm', $args);
+}
+
+/**
  * Implementation of hook_views_default_views().
  */
 function atrium_views_default_views() {

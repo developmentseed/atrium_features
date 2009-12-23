@@ -3,8 +3,7 @@
 include_once('atrium.features.inc');
 
 /**
- * The default site mode of Atrium - only authenticated users may
- * access content and registration is not allowed.
+ * DEPRECATED and slated for removal use 'user_registration' variable instead
  */
 define('ATRIUM_SITEMODE_PRIVATE', 0);
 
@@ -32,72 +31,46 @@ define('ATRIUM_MEMBERS_GROUP', 1);
 
 
 /**
- * Implementation of hook_strongarm().
- */
-function atrium_strongarm() {
-  $conf = array();
-
-  // User registration. Default to no registration.
-  // We use variable set here because this value *can* be changed, but
-  // we want to provide a sensible default.
-  $space = spaces_load('site', 1);
-  if (!isset($space->settings['atrium_sitemode'])) {
-    variable_set('user_register', ATRIUM_SITEMODE_PRIVATE);
-  }
-
-  $conf['user_signatures'] = FALSE;
-  $conf['user_pictures'] = TRUE;
-  $conf['user_picture_path'] = 'pictures';
-  $conf['user_picture_dimensions'] = '500x500';
-  $conf['user_picture_file_size'] = '500';
-  return $conf;
-}
-
-/**
  * Implementation of hook_user_default_permissions().
  */
 function atrium_user_default_permissions() {
   $permissions = array();
 
-  $sitemode = variable_get('user_register', ATRIUM_SITEMODE_PRIVATE);
-  switch ($sitemode) {
-    case ATRIUM_SITEMODE_PRIVATE:
-      $permissions[] = array(
-        'name' => 'access user profiles',
-        'roles' => array('authenticated user'),
-      );
-      $permissions[] = array(
-        'name' => 'access content',
-        'roles' => array('authenticated user'),
-      );
-      $permissions[] = array(
-        'name' => 'access comments',
-        'roles' => array('authenticated user'),
-      );
-      $permissions[] = array(
-        'name' => 'view revisions',
-        'roles' => array('authenticated user'),
-      );
-      break;
-    case ATRIUM_SITEMODE_PUBLIC:
-    case ATRIUM_SITEMODE_CONTROLLED:
-      $permissions[] = array(
-        'name' => 'access user profiles',
-        'roles' => array('anonymous user', 'authenticated user'),
-      );
-      $permissions[] = array(
-        'name' => 'access content',
-        'roles' => array('anonymous user', 'authenticated user'),
-      );
-      $permissions[] = array(
-        'name' => 'access comments',
-        'roles' => array('anonymous user', 'authenticated user'),
-      );
-      $permissions[] = array(
-        'name' => 'view revisions',
-        'roles' => array('anonymous user', 'authenticated user'),
-      );
-      break;
+  if (!variable_get('user_register', FALSE)) {
+    $permissions[] = array(
+      'name' => 'access user profiles',
+      'roles' => array('authenticated user'),
+    );
+    $permissions[] = array(
+      'name' => 'access content',
+      'roles' => array('authenticated user'),
+    );
+    $permissions[] = array(
+      'name' => 'access comments',
+      'roles' => array('authenticated user'),
+    );
+    $permissions[] = array(
+      'name' => 'view revisions',
+      'roles' => array('authenticated user'),
+    );
+  }
+  else {
+    $permissions[] = array(
+      'name' => 'access user profiles',
+      'roles' => array('anonymous user', 'authenticated user'),
+    );
+    $permissions[] = array(
+      'name' => 'access content',
+      'roles' => array('anonymous user', 'authenticated user'),
+    );
+    $permissions[] = array(
+      'name' => 'access comments',
+      'roles' => array('anonymous user', 'authenticated user'),
+    );
+    $permissions[] = array(
+      'name' => 'view revisions',
+      'roles' => array('anonymous user', 'authenticated user'),
+    );
   }
   switch (variable_get('atrium_members', ATRIUM_MEMBERS_GROUP)) {
     case ATRIUM_MEMBERS_ALL:
