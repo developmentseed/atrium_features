@@ -44,67 +44,6 @@ function atrium_casetracker_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_strongarm().
- */
-function atrium_casetracker_strongarm() {
-  $conf = array();
-
-  foreach (array('casetracker_basic_case', 'casetracker_basic_project') as $type) {
-    $conf['node_options_'. $type] = array('status', 'revision');
-    $conf['notifications_content_type_' . $type] = array('thread', 'grouptype', 'nodetype', 'author');
-    $conf['og_notifications_content_types'][] = $type;
-    $conf['upload_'. $type] = TRUE;
-    $conf['feedapi_settings_'. $type] = array('enabled' => FALSE);
-
-    // Enable for recent activity views
-    $conf['atrium_update_type_'. $type] = TRUE;
-  }
-
-  // Pathauto (optional) settings
-  $conf["pathauto_node_casetracker_basic_case_pattern"] = "[space-og-path]/case/[title-raw]";
-  $conf["pathauto_node_casetracker_basic_project_pattern"] = "[space-og-path]/project/[title-raw]";
-
-  // Case Tracker views
-  $conf['casetracker_view_project_options'] = 'atrium_ct_project_options';
-  $conf['casetracker_view_assignee_options'] = 'atrium_ct_assignee_options';
-
-  // Comments
-  $conf['comment_casetracker_basic_project'] = COMMENT_NODE_DISABLED;
-
-  $conf['comment_casetracker_basic_case'] = COMMENT_NODE_READ_WRITE;
-  $conf['comment_default_mode_casetracker_basic_case'] = COMMENT_MODE_THREADED_EXPANDED;
-  $conf['comment_default_order_casetracker_basic_case'] = COMMENT_ORDER_OLDEST_FIRST;
-  $conf['comment_default_per_page_casetracker_basic_case'] = 200;
-  $conf['comment_controls_casetracker_basic_case'] = COMMENT_CONTROLS_HIDDEN;
-  $conf['comment_subject_field_casetracker_basic_case'] = 0;
-  $conf['comment_preview_casetracker_basic_case'] = COMMENT_PREVIEW_OPTIONAL;
-  $conf['comment_form_location_casetracker_basic_case'] = COMMENT_FORM_BELOW;
-  $conf['comment_upload_casetracker_basic_case'] = TRUE;
-
-  // Book
-  $conf['book_allowed_types'] = array('casetracker_basic_project');
-
-  // Diff
-  $conf['show_preview_changes_casetracker_basic_case'] =
-  $conf['show_preview_changes_casetracker_basic_project'] = FALSE;
-  $conf['show_diff_inline_event_casetracker_basic_case'] = FALSE;
-  $conf['show_diff_inline_event_casetracker_basic_project'] = TRUE;
-
-  // Atrium archivable types
-  $conf['atrium_archivable'] = array('casetracker_basic_project');
-
-  // This isn't a strongarm since we don't want to blow away
-  // what the user's defined here.
-  $views_defaults = variable_get('views_defaults', array());
-  if (empty($views_defaults['casetracker_project_cases'])) {
-    $views_defaults['casetracker_project_cases'] = TRUE;
-    variable_set('views_defaults', $views_defaults);
-  }
-
-  return $conf;
-}
-
-/**
  * Implementation of hook_nodeapi().
  */
 function atrium_casetracker_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
