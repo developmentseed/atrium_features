@@ -118,6 +118,9 @@ function _atrium_groups_spaces_presets() {
       'spaces_og_directory' => 0,
       'spaces_og_register' => 1,
       'spaces_og_private' => 1,
+      'designkit_color' => array(
+        'background' => '#3399aa',
+      ),
     ),
   );
 
@@ -142,6 +145,9 @@ function _atrium_groups_spaces_presets() {
       'spaces_og_directory' => 1,
       'spaces_og_register' => 1,
       'spaces_og_private' => 0,
+      'designkit_color' => array(
+        'background' => '#3399aa',
+      ),
     ),
   );
 
@@ -311,17 +317,17 @@ function _atrium_groups_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'spaces_preset_og';
-  $strongarm->value = 'atrium_og_private';
-
-  $export['spaces_preset_og'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'show_preview_changes_group';
   $strongarm->value = FALSE;
 
   $export['show_preview_changes_group'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'spaces_preset_og';
+  $strongarm->value = 'atrium_og_private';
+
+  $export['spaces_preset_og'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
