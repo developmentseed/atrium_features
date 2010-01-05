@@ -8,33 +8,6 @@ function _atrium_groups_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'atrium-groups-global';
-  $context->description = '';
-  $context->tag = 'Groups';
-  $context->conditions = array(
-    'sitewide' => array(
-      'values' => array(
-        '1' => 1,
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'views-atrium_groups-block_1' => array(
-          'module' => 'views',
-          'delta' => 'atrium_groups-block_1',
-          'region' => 'header',
-          'weight' => 0,
-        ),
-      ),
-    ),
-  );
-
-  $export['atrium-groups-global'] = $context;
-  $context = new stdClass;
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
   $context->name = 'spaces-feature-groups';
   $context->description = '';
   $context->tag = 'Groups';

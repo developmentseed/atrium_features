@@ -27,9 +27,9 @@ function _atrium_intranet_context_default_contexts() {
           'region' => 'header',
           'weight' => 0,
         ),
-        'atrium_intranet-help' => array(
-          'module' => 'atrium_intranet',
-          'delta' => 'help',
+        'views-atrium_groups-block_1' => array(
+          'module' => 'views',
+          'delta' => 'atrium_groups-block_1',
           'region' => 'header',
           'weight' => 1,
         ),
