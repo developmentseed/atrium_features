@@ -255,7 +255,7 @@ function _atrium_groups_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'og_audience_required';
-  $strongarm->value = 1;
+  $strongarm->value = '1';
 
   $export['og_audience_required'] = $strongarm;
   $strongarm = new stdClass;
@@ -297,14 +297,14 @@ function _atrium_groups_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'og_visibility_directory';
-  $strongarm->value = 2;
+  $strongarm->value = '2';
 
   $export['og_visibility_directory'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'og_visibility_registration';
-  $strongarm->value = 3;
+  $strongarm->value = '3';
 
   $export['og_visibility_registration'] = $strongarm;
   $strongarm = new stdClass;

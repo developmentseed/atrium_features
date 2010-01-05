@@ -82,6 +82,9 @@ function atrium_views_handlers() {
       'atrium_handler_field_file' => array(
         'parent' => 'views_handler_field_file',
        ),
+      'atrium_handler_field_group' => array(
+        'parent' => 'views_handler_field',
+      ),
       'atrium_handler_field_ncs_last_updated' => array(
         'parent' => 'seed_handler_field_date',
        ),
@@ -109,6 +112,14 @@ function atrium_views_handlers() {
  */
 function atrium_views_data() {
   $data = array();
+
+  // Group space link
+  $data['node']['atrium_group'] = array(
+    'real field' => 'title',
+    'title' => t('Group space'),
+    'help' => t("Provide link to a group node's space."),
+    'field' => array('handler' => 'atrium_handler_field_group'),
+  );
 
   // UID
   $data['users']['uid_list'] = array(
