@@ -61,20 +61,24 @@ function atrium_intranet_block($op = 'list', $delta = 0) {
   switch ($op) {
     case 'list':
       return array(
-        'spacelinks' => array('info' => t('Atrium Intranet: Space links')),
+        'user_links' => array('info' => t('Atrium Intranet: User links')),
+        'admin_links' => array('info' => t('Atrium Intranet: Admin links')),
         'create' => array('info' => t('Atrium Intranet: Create content')),
         'account' => array('info' => t('Atrium Intranet: User account')),
         'help' => array('info' => t('Atrium Intranet: Help')),
       );
     case 'view':
       switch ($delta) {
-        case 'spacelinks':
-          // @TODO: spaces_admin_link() is deprecated/missing.
-          // $links = spaces_admin_links();
-          if (!empty($links)) {
-            return array('subject' => "<span class='icon'></span> ". t('Settings'), 'content' => theme('links', $links));
+        case 'user_links':
+          if ($links = atrium_intranet_user_links()) {
+            return array('subject' => t('Membership'), 'content' => theme('links', $links));
           }
-          break;
+        break;
+        case 'admin_links':
+          if ($links = atrium_intranet_admin_links()) {
+            return array('subject' => t('Settings'), 'content' => theme('links', $links));
+          }
+        break;
         case 'create':
           $space = spaces_get_space();
           $feature_map = spaces_features_map('node');
@@ -104,18 +108,7 @@ function atrium_intranet_block($op = 'list', $delta = 0) {
             $info_big = theme('user_picture', $account) . theme('username', $account);
             $info_small = theme('user_picture', $user) . check_plain($user->name);
 
-            // @TODO: spaces_admin_link() is deprecated/missing.
-            // $links = spaces_admin_links(spaces_load('user', $account->uid));
-            $links = array();
-
-            // For PURL prefixing onto these links since they might be
-            // used from anywhere.
-            foreach ($links as $k => $v) {
-              $links[$k]['purl'] = array('provider' => 'spaces_user', 'id' => $account->uid);
-            }
-            // Logout can stay in space.
-            $links['logout'] = menu_get_item('logout');
-
+            $links = atrium_intranet_account_links();
             return array('subject' => $info_small, 'content' => "<div class='user-info clear-block'>{$info_big}</div>" . theme('links', $links));
           }
           else {
@@ -133,6 +126,101 @@ function atrium_intranet_block($op = 'list', $delta = 0) {
       }
       break;
   }
+}
+
+/**
+ * Generates an array of account links suitable for use in theme_links().
+ */
+function atrium_intranet_account_links() {
+  global $user;
+  $links = array();
+
+  // @TODO: If menu.inc had a real API function for this we would use it, but
+  // as of now we'd have a copy hand paste hack job of menu_local_tasks()...
+  $paths = array(
+    "user/{$user->uid}/edit" => t('Account settings'),
+    "user/{$user->uid}/groups" => '',
+    "user/{$user->uid}/notifications" => '',
+    "user/{$user->uid}/openid" => '',
+    'logout' => '',
+  );
+  foreach ($paths as $path => $title) {
+    $item = menu_get_item($path);
+    if ($item && $item['access']) {
+      $class = seed_id_safe($item['href']);
+      $links[$class] = array(
+        'title' => !empty($title) ? $title : $item['title'],
+        'href' => $item['href'],
+      );
+    }
+  }
+  drupal_alter('atrium_intranet_account_links', $links, $space);
+  return $links;
+}
+
+/**
+ * Generates an array of admin links for the current space suitable
+ * for use in theme_links().
+ */
+function atrium_intranet_admin_links($space = NULL) {
+  $links = array();
+  $space = !isset($space) ? spaces_get_space() : $space;
+
+  // Within a space
+  if ($space) {
+    if ($space->type == 'og' && $space->access_admin()) {
+      $item = menu_get_item("og/users/{$space->id}/faces");
+      if ($item && $item['access']) {
+        $links['members'] = array(
+          'title' => t('Members'),
+          'href' => "og/users/{$space->id}/faces",
+        );
+      }
+
+      $item = menu_get_item("node/{$space->sid}/edit");
+      if ($item && $item['access']) {
+        // Add settings link for administering spaces
+        $links['settings'] = array(
+          'title' => t('@type settings', array('@type' => node_get_types('name', $space->group->type))),
+          'href' => "node/{$space->id}/edit",
+        );
+      }
+
+      $item = menu_get_item("node/{$space->id}/spaces/features");
+      if ($item && $item['access']) {
+        $links['features'] = array(
+          'title' => t('Customize features'),
+          'href' => "node/{$space->id}/spaces/features",
+        );
+      }
+    }
+  }
+  // Sitewide
+  else if (user_access('administer site configuration')) {
+    $links['features'] = array(
+      'title' => t('Customize features'),
+      'href' => "features",
+    );
+  }
+  drupal_alter('atrium_intranet_admin_links', $links, $space);
+  return $links;
+}
+
+/**
+ * Generates an array of user links for the current space suitable
+ * for use in theme_links().
+ */
+function atrium_intranet_user_links($space = NULL) {
+  $space = !isset($space) ? spaces_get_space() : $space;
+  if ($space && $space->type == 'og' && $space->access_space()) {
+    // TODO revist this
+    if ($subscribe = spaces_og_subscription_link()) {
+      $links['subscribe'] = $subscribe;
+    }
+    drupal_alter('atrium_intranet_user_links', $links, $space);
+    return $links;
+  }
+  return array();
 }
 
 /**
@@ -219,34 +307,6 @@ function atrium_intranet_403() {
     drupal_goto('user/login', 'destination='. $_REQUEST['q']);
   }
   return "<div class='access-denied'>". t('You are not authorized to access this page.') ."</div>";
-}
-
-/**
- * Implementation of hook_spaces_admin_links_alter().
- */
-function atrium_intranet_spaces_admin_links_alter(&$links, $space) {
-  switch ($space->type) {
-    case 'user':
-      // @TODO: If menu.inc had a real API function for this we would use it, but
-      // as of now we'd have a copy hand paste hack job of menu_local_tasks()...
-      $paths = array(
-        "user/{$space->sid}/edit" => t('Account settings'),
-        "user/{$space->sid}/groups" => '',
-        "user/{$space->sid}/notifications" => '',
-        "user/{$space->sid}/openid" => '',
-      );
-      foreach ($paths as $path => $title) {
-        $item = menu_get_item($path);
-        if ($item && $item['access']) {
-          $class = seed_id_safe($item['href']);
-          $links[$class] = array(
-            'title' => !empty($title) ? $title : $item['title'],
-            'href' => $item['href'],
-          );
-        }
-      }
-      break;
-  }
 }
 
 /**

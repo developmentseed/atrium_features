@@ -64,61 +64,6 @@ function atrium_groups_menu_alter(&$items) {
 }
 
 /**
- * Generates an array of admin links for the current space suitable
- * for use in theme_links().
- */
-function atrium_groups_admin_links($space = NULL) {
-  $space = !isset($space) ? spaces_get_space() : $space;
-  if ($space && $space->type == 'og' && $space->access_admin()) {
-    $links = array();
-    $item = menu_get_item("og/users/{$space->id}/faces");
-    if ($item && $item['access']) {
-      $links['members'] = array(
-        'title' => t('Members'),
-        'href' => "og/users/{$space->id}/faces",
-      );
-    }
-
-    $item = menu_get_item("node/{$space->sid}/edit");
-    if ($item && $item['access']) {
-      // Add settings link for administering spaces
-      $links['settings'] = array(
-        'title' => t('@type settings', array('@type' => node_get_types('name', $space->group->type))),
-        'href' => "node/{$space->id}/edit",
-      );
-    }
-
-    $item = menu_get_item("node/{$space->id}/spaces/features");
-    if ($item && $item['access']) {
-      $links['features'] = array(
-        'title' => t('Customize features'),
-        'href' => "node/{$space->id}/spaces/features",
-      );
-    }
-    drupal_alter('atrium_groups_admin_links', $links, $space);
-    return $links;
-  }
-  return array();
-}
-
-/**
- * Generates an array of user links for the current space suitable
- * for use in theme_links().
- */
-function atrium_groups_user_links($space = NULL) {
-  $space = !isset($space) ? spaces_get_space() : $space;
-  if ($space && $space->type == 'og' && $space->access_space()) {
-    // TODO revist this
-    if ($subscribe = spaces_og_subscription_link()) {
-      $links['subscribe'] = $subscribe;
-    }
-    drupal_alter('atrium_groups_user_links', $links, $space);
-    return $links;
-  }
-  return array();
-}
-
-/**
  * Implementation of hook_block
  */
 function atrium_groups_block($op, $delta = 0) {

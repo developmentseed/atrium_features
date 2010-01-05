@@ -33,15 +33,15 @@ function _atrium_intranet_context_default_contexts() {
           'region' => 'header',
           'weight' => 1,
         ),
-        'atrium_intranet-spacelinks' => array(
-          'module' => 'atrium_intranet',
-          'delta' => 'spacelinks',
-          'region' => 'space_tools',
-          'weight' => 0,
-        ),
         'atrium_intranet-create' => array(
           'module' => 'atrium_intranet',
           'delta' => 'create',
+          'region' => 'space_tools',
+          'weight' => 0,
+        ),
+        'atrium_intranet-admin_links' => array(
+          'module' => 'atrium_intranet',
+          'delta' => 'admin_links',
           'region' => 'space_tools',
           'weight' => 1,
         ),
