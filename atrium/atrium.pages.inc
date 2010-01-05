@@ -34,13 +34,7 @@ function atrium_welcome() {
           }
         }
         if ($firstgroup) {
-          $space = spaces_load('site', 1);
-          // If a homepage setting has been chosen, go there
-          if (!empty($space->settings['home'])) {
-            $space->redirect('home');
-          }
-          // Otherwise, fallback to site dashboard feature
-          return drupal_goto('home');
+          return drupal_goto('dashboard');
         }
         else {
           drupal_set_title(t('Welcome to !sitename', array('!sitename' => variable_get('site_name', 'Atrium'))));
