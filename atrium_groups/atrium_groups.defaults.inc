@@ -108,10 +108,11 @@ function _atrium_groups_spaces_presets() {
   $spaces_presets->value = array(
     'variable' => array(
       'spaces_features' => array(
-        'atrium_blog' => 1,
-        'atrium_book' => 1,
-        'atrium_calendar' => 0,
-        'atrium_dashboard' => 1,
+        'atrium_blog' => '1',
+        'atrium_book' => '1',
+        'atrium_calendar' => '0',
+        'atrium_casetracker' => '0',
+        'spaces_dashboard' => '1',
       ),
       'spaces_setting_home' => 'dashboard',
       'spaces_og_selective' => 3,
@@ -120,6 +121,25 @@ function _atrium_groups_spaces_presets() {
       'spaces_og_private' => 1,
       'designkit_color' => array(
         'background' => '#3399aa',
+      ),
+      'site_frontpage' => 'dashboard',
+    ),
+    'context' => array(
+      'spaces_dashboard:reaction:block' => array(
+        'blocks' => array(
+          'views-atrium_intranet-block_3' => array(
+            'module' => 'views',
+            'delta' => 'atrium_intranet-block_3',
+            'region' => 'content',
+            'weight' => 0,
+          ),
+          'views-atrium_blog_comments-block_1' => array(
+            'module' => 'views',
+            'delta' => 'atrium_blog_comments-block_1',
+            'region' => 'right',
+            'weight' => 0,
+          ),
+        ),
       ),
     ),
   );
@@ -135,18 +155,37 @@ function _atrium_groups_spaces_presets() {
   $spaces_presets->value = array(
     'variable' => array(
       'spaces_features' => array(
-        'atrium_blog' => 2,
-        'atrium_book' => 2,
-        'atrium_calendar' => 0,
-        'atrium_dashboard' => 2,
+        'atrium_blog' => '1',
+        'atrium_book' => '1',
+        'atrium_calendar' => '0',
+        'atrium_casetracker' => '0',
+        'spaces_dashboard' => '1',
       ),
-      'spaces_setting_home' => 'dashboard',
+      'site_frontpage' => 'dashboard',
       'spaces_og_selective' => 0,
       'spaces_og_directory' => 1,
       'spaces_og_register' => 1,
       'spaces_og_private' => 0,
       'designkit_color' => array(
         'background' => '#3399aa',
+      ),
+    ),
+    'context' => array(
+      'spaces_dashboard:reaction:block' => array(
+        'blocks' => array(
+          'views-atrium_intranet-block_3' => array(
+            'module' => 'views',
+            'delta' => 'atrium_intranet-block_3',
+            'region' => 'content',
+            'weight' => 0,
+          ),
+          'views-atrium_blog_comments-block_1' => array(
+            'module' => 'views',
+            'delta' => 'atrium_blog_comments-block_1',
+            'region' => 'right',
+            'weight' => 0,
+          ),
+        ),
       ),
     ),
   );
