@@ -475,6 +475,22 @@ function _atrium_intranet_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'admin_toolbar';
+  $strongarm->value = array(
+    'layout' => 'vertical',
+    'position' => 'nw',
+    'blocks' => array(
+      'spaces_dashboard-editor' => 'spaces_dashboard-editor',
+      'admin-create' => 'admin-create',
+      'admin-menu' => 'admin-menu',
+      'context_ui-editor' => 0,
+    ),
+  );
+
+  $export['admin_toolbar'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'allowed_html_1';
   $strongarm->value = '<div> <span> <br> <a> <em> <strong> <cite> <code> <strike> <ul> <ol> <li> <dl> <dt> <dd> <img> <blockquote> <p> <pre> <h1> <h2> <h3> <h4> <h5> <h6> <table> <caption> <thead> <th> <td> <tr> <sup> <sub>';
 
@@ -513,10 +529,16 @@ function _atrium_intranet_strongarm() {
   $strongarm->name = 'book_allowed_types';
   $strongarm->value = array(
     '0' => 'book',
-    '1' => 'casetracker_basic_project',
   );
 
   $export['book_allowed_types'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'context_ui_show_empty_regions';
+  $strongarm->value = 1;
+
+  $export['context_ui_show_empty_regions'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
@@ -715,6 +737,7 @@ function _atrium_intranet_strongarm() {
     'atrium_groups' => '1',
     'atrium_intranet' => '1',
     'atrium_members' => '1',
+    'spaces_dashboard' => '1',
   );
 
   $export['spaces_features'] = $strongarm;

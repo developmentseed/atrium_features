@@ -30,17 +30,6 @@ function atrium_intranet_menu_alter(&$items) {
 }
 
 /**
- * Implementation of hook_imagecache_default_presets_alter().
- */
-function atrium_intranet_imagecache_default_presets_alter(&$presets) {
-  if (!empty($presets['spaces-logo'])) {
-    if (!empty($presets['spaces-logo']['actions'][0]['data']['height'])) {
-      $presets['spaces-logo']['actions'][0]['data']['height'] = 40;
-    }
-  }
-}
-
-/**
  * Implementation of hook_link_alter().
  */
 function atrium_intranet_link_alter(&$links, $node) {
@@ -264,16 +253,29 @@ function atrium_intranet_spaces_admin_links_alter(&$links, $space) {
  * Implementation of hook_context_default_contexts_alter().
  */
 function atrium_intranet_context_default_contexts_alter(&$contexts) {
+  if (module_exists('spaces_dashboard')) {
+    $contexts['spaces_dashboard']->reactions['block']['blocks'] = array(
+      'views-atrium_intranet-block_3' => array(
+        'module' => 'views',
+        'delta' => 'atrium_intranet-block_3',
+        'region' => 'content',
+        'weight' => 0,
+      ),
+      'views-atrium_groups-block_2' => array(
+        'module' => 'views',
+        'delta' => 'atrium_groups-block_2',
+        'region' => 'right',
+        'weight' => 0,
+      ),
+    );
+  }
   // Conditionally add the notifications UI subscription block.
   if (module_exists('notifications_ui') && !empty($contexts['atrium-intranet-global'])) {
-    $contexts['atrium-intranet-global']->block['notifications_ui_0'] = array(
+    $contexts['atrium-intranet-global']->reactions['block']['blocks']['notifications_ui_0'] = array(
       'module' => 'notifications_ui',
       'delta' => '0',
       'weight' => 48,
       'region' => 'page_tools',
-      'status' => '0',
-      'label' => 'Subscriptions',
-      'type' => 'context_ui',
     );
   }
 }
