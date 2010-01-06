@@ -186,11 +186,11 @@ function atrium_intranet_admin_links($space = NULL) {
         );
       }
 
-      $item = menu_get_item("node/{$space->id}/spaces/features");
+      $item = menu_get_item("node/{$space->id}/features");
       if ($item && $item['access']) {
         $links['features'] = array(
           'title' => t('Customize features'),
-          'href' => "node/{$space->id}/spaces/features",
+          'href' => "node/{$space->id}/features",
         );
       }
     }
