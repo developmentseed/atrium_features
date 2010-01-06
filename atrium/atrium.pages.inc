@@ -42,8 +42,8 @@ function atrium_welcome() {
 
           $output = "<div class='view-empty'>";
           if (node_access('create', 'group')) {
-            $output .= t('Create your first !type to get started.', array('!type' => atrium_get_typename('group')));
-            $output .= "<div class='buttons'>". l(t('Create !type', array('!type' => atrium_get_typename('group'))), 'node/add/group', array('attributes' => array('class' => 'button'))) ."</div>";
+            $output .= t('Create your first !type to get started.', array('!type' => node_get_types('name', 'group')));
+            $output .= "<div class='buttons'>". l(t('Create !type', array('!type' => node_get_types('name', 'group'))), 'node/add/group', array('attributes' => array('class' => 'button'))) ."</div>";
           }
           else {
             $output .= t('The site administator has not finished setting up this site. Please be patient and try again later.');

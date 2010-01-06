@@ -34,7 +34,7 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
     $this->drupalLogin($admin_user);
     // Check initial texts
     $this->assertText(t('Welcome to !sitename', array('!sitename' => variable_get('site_name', 'Atrium'))));
-    $this->assertText(t('Create your first !type to get started.', array('!type' => atrium_get_typename('group'))));
+    $this->assertText(t('Create your first !type to get started.', array('!type' => node_get_types('name', 'group'))));
     
     // Check some initial paths. More than checking the page is properly built
     // we just do some page loading to check for errors.

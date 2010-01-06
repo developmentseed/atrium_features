@@ -3,23 +3,6 @@
 include_once('atrium.features.inc');
 
 /**
- * DEPRECATED and slated for removal use 'user_registration' variable instead
- */
-define('ATRIUM_SITEMODE_PRIVATE', 0);
-
-/**
- * Anonymous users may view public content and user registration is
- * open to the public.
- */
-define('ATRIUM_SITEMODE_PUBLIC', 1);
-
-/**
- * Anonymous users may view public content and user registration is
- * moderated.
- */
-define('ATRIUM_SITEMODE_CONTROLLED', 2);
-
-/**
  * Users may view all members of the site.
  */
 define('ATRIUM_MEMBERS_ALL', 0);
@@ -28,7 +11,6 @@ define('ATRIUM_MEMBERS_ALL', 0);
  * Users may only view members that belong to their groups.
  */
 define('ATRIUM_MEMBERS_GROUP', 1);
-
 
 /**
  * Implementation of hook_user_default_permissions().
@@ -97,9 +79,9 @@ function atrium_init() {
   // Alert the user that they are browsing an archived group.
   $space = spaces_get_space();
   if ($space && atrium_is_archived($space)) {
-    $message = t('This !type is <strong>archived</strong>. You may not add or alter any of its content.', array('!type' => atrium_get_typename('group')));
+    $message = t('This !type is <strong>archived</strong>. You may not add or alter any of its content.', array('!type' => node_get_types('name', 'group')));
     if (node_access('update', $space->group)) {
-      $message .= ' '. t('To reactivate this !type, !link.', array('!type' => atrium_get_typename('group'), '!link' => l(t('click here'), "node/$space->sid/reactivate")));
+      $message .= ' '. t('To reactivate this !type, !link.', array('!type' => node_get_types('name', 'group'), '!link' => l(t('click here'), "node/$space->sid/reactivate")));
     }
     drupal_set_message($message);
   }
@@ -146,9 +128,9 @@ function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
         }
         // Display a message for archived content
         if ($op == 'view' && $node->status == 0) {
-          $message = t('This !type is <strong>archived</strong>.', array('!type' => atrium_get_typename($node->type)));
+          $message = t('This !type is <strong>archived</strong>.', array('!type' => node_get_types('name', $node->type)));
           if (node_access('update', $node)) {
-            $message .= ' '. t('To reactivate this !type, !link.', array('!type' => atrium_get_typename($node->type), '!link' => l(t('click here'), "node/{$node->nid}/reactivate")));
+            $message .= ' '. t('To reactivate this !type, !link.', array('!type' => node_get_types('name', $node->type), '!link' => l(t('click here'), "node/{$node->nid}/reactivate")));
           }
           drupal_set_message($message);
         }
@@ -202,14 +184,6 @@ function atrium_menu() {
     'type' => MENU_CALLBACK,
   );
   return $items;
-}
-
-/**
- * Implementation of hook_perm().
- */
-function atrium_perm() {
-  // Gives users access to all "easy administration" tools in Atrium.
-  return array('administer atrium');
 }
 
 /**
@@ -319,10 +293,10 @@ function atrium_form_alter(&$form, &$form_state, $form_id) {
     if ($archivable) {
       // Add archive / reactivate buttons
       if ($node->status) {
-        $archive_help = t('This !type is currently <strong>active</strong>. You can archive it to hide it from listings and prevent others from adding to or altering its content. You can always undo this action by reactivating the !type.', array('!type' => atrium_get_typename($node->type)));
+        $archive_help = t('This !type is currently <strong>active</strong>. You can archive it to hide it from listings and prevent others from adding to or altering its content. You can always undo this action by reactivating the !type.', array('!type' => node_get_types('name', $node->type)));
       }
       else {
-        $archive_help = t('This !type is currently <strong>archived</strong>. You can reactivate it to allow others to add and alter its content.', array('!type' => atrium_get_typename($node->type)));
+        $archive_help = t('This !type is currently <strong>archived</strong>. You can reactivate it to allow others to add and alter its content.', array('!type' => node_get_types('name', $node->type)));
       }
       $form['archive'] = array(
         '#type' => 'fieldset',
@@ -331,7 +305,7 @@ function atrium_form_alter(&$form, &$form_state, $form_id) {
       );
       $form['archive']['button'] = array(
         '#type' => 'submit',
-        '#value' => $node->status ? t('Archive this !type', array('!type' => atrium_get_typename($node->type))) : t('Reactivate'),
+        '#value' => $node->status ? t('Archive this !type', array('!type' => node_get_types('name', $node->type))) : t('Reactivate'),
         '#submit' => $node->status ? array('atrium_archive_submit') : array('atrium_reactivate_submit'),
       );
     }
@@ -448,7 +422,7 @@ function atrium_archive_submit($form, &$form_state) {
   $node = node_load($nid);
   $node->status = 0;
   node_save($node);
-  drupal_set_message(t('The @type @title has been archived.', array('@type' => atrium_get_typename($node->type), '@title' => $node->title)));
+  drupal_set_message(t('The @type @title has been archived.', array('@type' => node_get_types('name', $node->type), '@title' => $node->title)));
   $form_state['redirect'] = "node/{$node->nid}";
 }
 
@@ -460,7 +434,7 @@ function atrium_reactivate_submit($form, &$form_state) {
   $node = node_load($nid);
   $node->status = 1;
   node_save($node);
-  drupal_set_message(t('The @type @title has been reactivated.', array('@type' => atrium_get_typename($node->type), '@title' => $node->title)));
+  drupal_set_message(t('The @type @title has been reactivated.', array('@type' => node_get_types('name', $node->type), '@title' => $node->title)));
   $form_state['redirect'] = "node/{$node->nid}";
 }
 
@@ -488,18 +462,6 @@ function atrium_update_types($reset = FALSE) {
     }
   }
   return $types;
-}
-
-/**
- * Small API function to make retrieving the human-readable node type
- * name easier.
- */
-function atrium_get_typename($type, $lower = TRUE) {
-  $types = node_get_types();
-  if (!empty($types[$type])) {
-    return $lower ? strtolower($types[$type]->name) : $types[$type]->name;
-  }
-  return FALSE;
 }
 
 /**
