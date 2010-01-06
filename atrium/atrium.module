@@ -171,15 +171,6 @@ function atrium_context_links_alter(&$links) {
 }
 
 /**
- * Implementation of hook_features_menu_links_alter().
- *
- * Make features menu skinnable
- */
-function atrium_features_menu_links_alter(&$links) {
-  $links = atrium_skin_links($links, TRUE);
-}
-
-/**
  * Implementation of hook_menu().
  */
 function atrium_menu() {
@@ -573,13 +564,11 @@ function atrium_search_form($form_state) {
     '#size' => 30,
     '#required' => true,
     '#default_value' => !empty($default) ? $default : '',
-    '#attributes' => array('class' => 'atrium-skin'),
   );
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Search'),
     '#submit' => array('atrium_search_form_submit'),
-    '#attributes' => array('class' => 'atrium-skin'),
   );
   return $form;
 }
@@ -669,26 +658,4 @@ function atrium_preprocess_views_view(&$vars) {
       }
     }
   }
-}
-
-/**
- * Add an "atrium-skin" class to a links array for skinners.
- */
-function atrium_skin_links($links, $both = FALSE) {
-  $new_links = array();
-  foreach ($links as $k => $v) {
-    if (!isset($v['attributes']['class'])) {
-      $v['attributes']['class'] = 'atrium-skin';
-    }
-    else {
-      $v['attributes']['class'] .= ' atrium-skin';
-    }
-    if ($both) {
-      $new_links["$k atrium-skin"] = $v;
-    }
-    else {
-      $new_links[$k] = $v;
-    }
-  }
-  return $new_links;
 }
