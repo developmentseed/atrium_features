@@ -1,0 +1,567 @@
+<?php
+// $Id$
+/**
+ * @file
+ * Messaging shoutbox module
+ * 
+ * This module provides a shoutbox node type, displayable in a block. It integrates with:
+ * - Notifications, providing subscriptions to shoubox posts
+ * - Messaging, providing both an incoming message channel and a processor to post to shoutbox
+ * 
+ * However, it can work as stand alone, having no hard dependencies on all the others.
+ * 
+ * NOTE: All comments added as shouts will be marked unpublished ($comment->status == 1)
+ * so that they are excluded from most other queries & views that display comments.
+ *
+ * (c) Development Seed, 2007-2008
+ * http://www.developmentseed.org
+ *
+ */
+
+/**
+ * Implementation of hook_init()
+ */
+function messaging_shoutbox_init() {
+  drupal_add_css(drupal_get_path('module', 'messaging_shoutbox') .'/messaging_shoutbox.css');
+}
+
+/**
+ * Implementation of hook_menu()
+ */
+function messaging_shoutbox_menu() {
+  $items = array();  
+  $items['shoutbox/js'] = array(
+    'description' => 'Shoutbox AJAX submission callback.',
+    'page callback' => 'messaging_shoutbox_ajax',
+    'access arguments' => array('post messages to shoutbox'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_node_info().
+ */
+function messaging_shoutbox_node_info() {
+  return array(
+    'shoutbox' => array(
+      'name' => t('Shoutbox'),
+      'module' => 'messaging_shoutbox',
+      'description' => t('A shoutbox for informal message blasts.'),
+      'title_label' => t('Name'),
+      'body_label' => t('Description'),
+    )
+  );
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function messaging_shoutbox_perm() {
+  return array('create shoutbox', 'post messages to shoutbox', 'subscribe to shoutbox');
+}
+
+/**
+ * Implementation of hook_access().
+ */
+function messaging_shoutbox_access($op, $node, $account) {
+  switch ($op) {
+    case 'create':
+    case 'delete':
+    case 'update':
+      return user_access('create shoutbox', $account);
+    default:
+      return TRUE;
+  }
+}
+
+/**
+ * Implementation of hook_form().
+ */
+function messaging_shoutbox_form(&$node) {
+  $type = node_get_types('type', $node);
+  $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => !empty($node->title) ? $node->title : NULL, '#weight' => -5);
+  $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
+  return $form;
+}
+
+/**
+ * Node prepare, just disable comments
+ */
+function messaging_shoutbox_load(&$node) {
+  $node->shoutbox = $node->nid;
+  unset($node->comment);
+}
+
+/**
+ * Node view
+ */
+function messaging_shoutbox_view($node, $teaser = FALSE, $page = FALSE) {
+  $node = node_prepare($node, $teaser);
+  if ($page) {
+    $node->content['shoutbox'] = array(
+      '#value' => views_embed_view('messaging_shoutbox_shouts', 'block_2', $node->nid),
+      '#weight' => 1,
+    );
+  }
+
+  return $node;
+}
+
+/**
+ * Shoutbox AJAX callback
+ */
+function messaging_shoutbox_ajax($op = 'shout') {
+  // Disable any devel output
+  global $user, $devel_shutdown;
+  $devel_shutdown = FALSE;
+
+  switch ($op) {
+    case 'full': // Requested full comment
+    case 'shout': // Submitted shout
+    default:
+      $form_state = array('values' => $_POST);
+      if (($nid = $form_state['values']['nid']) && !empty($form_state['values']['shout'])) {
+        messaging_shoutbox_shout($nid, array('text' => $form_state['values']['shout'], 'uid' => $user->uid));
+      }
+      $view_name = $form_state['values']['view_name'];
+      $view_display = $form_state['values']['view_display'];
+      $output = views_embed_view($view_name, $view_display, $nid);
+      print drupal_to_js(array('status' => TRUE, 'data' => $output));
+  }
+  exit();
+}
+
+/**
+ * Save shoutbox as comment
+ * 
+ * Store the whole comment but trim the subject to a shorter text
+ */
+function messaging_shoutbox_shout($nid, $shout) {
+  $comment = $shout;
+  $comment['nid'] = $nid;
+  
+  $comment += array(
+    'nid' => $nid,
+    'comment' => $shout['text'],
+    'timestamp' => time(),
+    'uid' => 0, // Defaults to anonymous
+    'status' => COMMENT_NOT_PUBLISHED,
+  );
+  // Retrieve the username to store with the comment
+  if (!empty($comment['uid'])) {
+    if ($account = user_load(array('uid' => $comment['uid']))) {
+      $comment['name'] = $account->name;
+    }
+  }
+  // The body may be in any format, so we:
+  // 1) Filter it into HTML
+  // 2) Strip out all HTML tags
+  // 3) Convert entities back to plain-text.
+  // Note: format is checked by check_markup().
+  if (trim($shout['subject']) == '') {
+    $comment['subject'] = _messaging_shoutbox_clean($shout['text']);
+  }
+  drupal_write_record('comments', $comment);
+  
+  // Generate notifications event
+  $event = array(
+      'module' => 'messaging_shoutbox',
+      'uid' => $shout['uid'],
+      'type' => 'shoutbox',
+      'action' => 'shout', // $op,
+      'params' => array('nid' => $nid, 'cid' => $comment['cid']),
+      // Event specific objects
+      'shoutbox' => node_load($nid),
+      'comment' => (object)$comment,
+  );
+  notifications_event($event);
+  
+  // Generate an incoming message and send to messaging module for processing
+  $message = new StdClass();
+  $message->subject = $comment['subject'];
+  $message->body = $shout['text'];
+  $message->text = t('[Shoutbox]') . ' ' . $shout['text'];
+  $message->source['uid'] = $comment['uid'];
+
+  messaging_message_in('shoutbox', $nid, $message);
+}
+
+/**
+ * Implementation of hook_block()
+ */
+function messaging_shoutbox_block($op = 'list', $delta = 0) {
+  if ($op == 'list') {
+    $blocks = array();
+    foreach (messaging_shoutbox_list() as $item) {
+      $blocks[$item->nid] = array(
+        'info' => t('Shoutbox: @name', array('@name' => $item->title)),
+      );
+    }
+    return $blocks;
+  }
+  else if ($op == 'view') {
+    if (is_numeric($delta)) {
+      $block = array();
+      $shoutbox = node_load($delta);
+      if ($shoutbox && node_access('view', $shoutbox)) {
+        $block['subject'] = check_plain($shoutbox->title);
+        $block['content'] = drupal_get_form('messaging_shoutbox_shoutform', $shoutbox, array('args' => array($shoutbox->nid)));
+      }
+      return $block;
+    }
+  }
+}
+
+/**
+ * New shoutbox form.
+ *
+ * @param $form_state
+ *   The FAPI form state array.
+ * @param $shoutbox
+ *   The shoutbox node object to which shouts will be related.
+ * @param $view_name
+ *   The name of the view to use for rendering shouts.
+ * @param $display_id
+ *   The view display to use for rendering shouts.
+ * @param $view_args
+ *   Any additional arguments to pass to the view.
+ */
+function messaging_shoutbox_shoutform($form_state, $shoutbox, $views_params = array()) {
+  $form = array('#theme' => 'messaging_shoutbox_shoutform');
+
+  $defaults = array(
+    'view' => 'messaging_shoutbox',
+    'display' => 'block_1',
+    'args' => array(),
+  );
+  $views_params = array_merge($defaults, $views_params);
+
+  // Different wrapper classes so we can have more shoutboxes on a page
+  $wrapper = 'shoutbox-wrapper-' . $shoutbox->nid;
+
+  // Form values to pass thru
+  $form['nid'] = array('#type' => 'hidden', '#value' => $shoutbox->nid);
+  $form['view_name'] = array('#type' => 'hidden', '#value' => $views_params['view']);
+  $form['view_display'] = array('#type' => 'hidden', '#value' => $views_params['display']);
+
+  $form['shout'] = array(
+    '#type' => 'textarea',
+    '#required' => TRUE,
+    '#resizable' => FALSE,
+    '#rows' => 2,
+  );
+  $form['shoutbox_submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Shout'),
+    '#ahah' => array('path' => 'shoutbox/js/shout', 'wrapper' => $wrapper),
+  );
+  $args = array_merge(array($views_params['view'], $views_params['display']), $views_params['args']);
+  $form['shoutbox'] = array(
+    '#value' => call_user_func_array('views_embed_view', $args),
+    '#prefix' => "<div class='shoutbox-list' id='$wrapper'>",
+    '#suffix' => '</div>',
+  );
+
+  // Limit visibility for post controls
+  $form['shout']['#access'] = $form['shoutbox_submit']['#access'] = user_access('post messages to shoutbox');
+  
+  return $form;  
+}
+
+/**
+ * Form submission, in case there's no js
+ */
+function messaging_shoutbox_shoutform_submit($form, $form_state) {
+  global $user;
+  messaging_shoutbox_shout($form_state['values']['nid'], array('text' => $form_state['values']['shout'], 'uid' => $user->uid));
+}
+
+/**
+ * Get full list of shoutboxes
+ */
+function messaging_shoutbox_list($field = NULL) {
+  $list = array();
+  $result = db_query("SELECT n.nid, n.title FROM {node} n WHERE n.type = 'shoutbox'");
+  while ($item = db_fetch_object($result)) {
+    $list[$item->nid] = $field ? $item->$field: $item;
+  }
+  return $list;
+}
+
+//*** Integration with Messaging & Notifications
+
+/**
+ * Implementation of hook_messaging()
+ * 
+ * Support for some known modules
+ */
+function messaging_shoutbox_messaging($op, $type = NULL) {
+  switch ($op) {
+    case 'in methods':
+      $info['shoutbox'] = array(
+        'name' => t('Shout box'),
+        'description' => t('New shouts from the web site.'),
+      );
+      return $info;
+    case 'channels':
+      if ($type == 'incoming') {
+        $info = array();
+        foreach (messaging_shoutbox_list() as $shoutbox) {
+          $info[] = array(
+            'method' => 'shoutbox',
+            'channel' => $shoutbox->nid,
+            'name' => t('Shoutbox: %name', array('%name' => $shoutbox->title)),
+            'description' => t('Messages posted to the shoutbox %name', array('%name' => $shoutbox->title)),
+          );
+        }
+        return $info;
+      }
+      break;
+    case 'message groups':
+      $info['notifications-event-shoutbox-shout'] = array(
+        'module' => 'notifications_content',
+        'name' => t('Notifications for shoutbox posts'),
+        'description' => t('Notifications produced when a new shout is post.'),
+        'help' => t('The header and footer will be taken from Notification events'),
+      );
+      return $info;
+
+    case 'message keys':
+      switch ($type) {
+        case 'notifications-event-shoutbox-shout':
+          // Some parts will be re-used from 'notifications-event' group
+          // So we specify only subject and main message
+          return array(
+            'subject' => t('Subject'),
+            'main' => t('Content'),
+            'digest' => t('Digest line'),
+          );
+      }
+      break;
+    case 'messages':
+      switch ($type) {
+        case 'notifications-event-shoutbox-shout':
+          return array(
+            'subject' => t('Shout on [title]: [comment-title]'),
+            'main' => array(
+              t('[comment-author-name] shouted: [comment-title]'),
+              t('Read more [node-url]'),
+            ),
+            'digest' => t('[comment-author-name] shouted: [comment-title]'),
+          ); 
+      }
+      break;
+    case 'tokens':
+      if ($type == 'notifications-event-shoutbox-shout') {
+        return array('node', 'comment');
+      }
+      break; 
+  }
+}
+
+/**
+ * Implementation of hook_action_info()
+ */
+function messaging_shoutbox_action_info() {
+  return array(
+    'messaging_shoutbox_action' => array(
+      'type' => 'messaging',
+      'description' => t('Post to shoutbox'),
+      'configurable' => TRUE,
+      'hooks' => array(
+        'messaging' => array('incoming', 'outgoing'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Action settings form
+ */
+function messaging_shoutbox_action_form($context) {
+  $context += array(
+    'shoutbox' => '',
+  );
+
+  $form['shoutbox'] = array(
+    '#type' => 'select',
+    '#title' => t('Select shoutbox'),
+    '#options' => messaging_shoutbox_list('title'),
+    '#default_value' => $context['shoutbox'],
+  );
+  return $form;
+}
+
+/**
+ * Action submit
+ */
+function messaging_shoutbox_action_submit($form, $form_state) {
+  return $form_state['values'];  
+}
+
+/**
+ * Action callback, post to shoutbox
+ */
+function messaging_shoutbox_action($message, $context) {
+  messaging_shoutbox_message_post($context['shoutbox'], $message);
+}
+
+/**
+ * Messaging callback for incoming messages
+ */
+function messaging_shoutbox_message_post($nid, $message) {
+  // Do some filtering and pass on
+  if (empty($message->text)) {
+    if ($subject = filter_xss($message->subject, array())) {
+      $text[] = $subject;
+    }
+    if ($body = drupal_html_to_text($message->body)) {
+      $text[] = $body;
+    }
+    $message->text = empty($text) ? '' : implode(': ', $text);
+  }
+  // Build shout
+  $shout = array(
+    'text' => $message->text, 
+    'subject' => $message->subject,  
+  );
+  // Some user mapping and user name
+  if (!empty($message->uid)) {
+    $shout['uid'] = $message->uid;
+  } 
+  if (!empty($message->from_name)) {
+    $shout['name'] = $message->from_name;
+  }
+  messaging_shoutbox_shout($nid, $shout);
+  // Return message for further processing
+  return $message;
+}
+
+/**
+ * Implementation of hook_notifications()
+ * 
+ * Allow subscriptions to shoutboxes
+ */
+function messaging_shoutbox_notifications($op, &$arg0, $arg1 = NULL, $arg2 = NULL) {
+  switch ($op) {
+    case 'names':
+      $subs = &$arg0;
+      if ($subs->type == 'shoutbox') {
+        $subs->type_name = t('Shoutbox');
+        if (!empty($subs->fields['shoutbox']) && ($node = node_load($subs->fields['nid']))) {
+          $subs->names['shoutbox'] = t('Shoutbox: %title', array('%title' => $node->title));
+        }
+      }
+      break;
+
+    case 'subscription types':
+      $types['shoutbox'] = array(
+        'event_type' => 'shoutbox',
+        'title' => t('Shout'),
+        'access' => 'subscribe to shoutbox',
+        'fields' => array('nid'),
+      );
+      return $types;
+
+    case 'subscription fields':
+      // Information about available fields for subscriptions
+      $fields['shoutbox'] = array(
+        'name' => t('Shoutbox'),
+        'field' => 'nid',
+        'type' => 'int',
+      );
+      return $fields;
+
+    case 'query':
+      // $arg2 is $event array.
+      if ($arg0 == 'event' && $arg1 == 'shoutbox' && ($node = $arg2->shoutbox) ||
+          $arg0 == 'user' && $arg1 == 'node' && ($node = $arg2) && $node->type == 'shoutbox') {
+        $query[]['fields'] = array(
+          'nid' => $node->nid,
+        );
+        return $query;
+      }
+      break;
+    case 'node options':
+      // $arg0 is $account, $arg1 is $node
+      if ($arg1->type == 'shoutbox') {
+        $options[] = array(
+          'name' => t('Shoutbox'),
+          'type' => 'shoutbox',
+          'fields' => array('nid' => $arg1->nid),
+        );
+        return $options;
+      }
+      break;
+    case 'event load': // $arg0 is event
+      $event = &$arg0;
+      $load = array();
+      if ($event->type == 'shoutbox') {
+        if (!empty($event->params['nid']) && empty($event->objects['node'])) {
+          $event->objects['node'] = node_load($event->params['nid']);
+        }
+        if (!empty($event->params['cid']) && empty($event->objects['comment'])) {
+          $event->objects['comment'] = notifications_content_comment_load($event->params['cid']);
+        }
+      }
+      break;
+    case 'event types':
+      // Node inserts are not grouped by node but all together. The digest will look like:
+      //   New content has been submitted
+      //   - Story Title1 by Author1
+      //   - Event Title2 by Author2
+      $types[] = array(
+        'type' => 'shoutbox',
+        'action' => 'shout',
+        'name' => t('New shouts on [title]'),
+        'line' => t('[comment-author-name] shouted: [comment-subject]'),
+        'digest' => array('node', 'nid'),
+        'description' => t('Shoutbox post'),
+      );
+      return $types;
+
+    case 'access': 
+       break;
+  }  
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function messaging_shoutbox_views_api() {
+  return array('api' => 2);
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function messaging_shoutbox_theme() {
+  return array('messaging_shoutbox_shoutform' => array());
+}
+
+/**
+ * Shoutbox form theme function.
+ */
+function theme_messaging_shoutbox_shoutform($form) {
+  drupal_add_js(drupal_get_path('module', 'messaging_shoutbox') .'/messaging_shoutbox.js');
+
+  $output = "<div class='shoutform'>";
+  $input = drupal_render($form['shout']) . drupal_render($form['shoutbox_submit']);
+  $output .= "<div class='shoutbox-input clear-block'>{$input}</div>";
+  $output .= drupal_render($form['shoutbox']);
+  $output .= drupal_render($form);
+  $output .= "</div>";
+  return $output;
+}
+
+/**
+ * Filter, clean up, trim
+ */
+function _messaging_shoutbox_clean($text) {
+  // Clean up HTML
+  $text = decode_entities(strip_tags(filter_xss($text, array())));
+  // Replace URLs by links
+  $text = _filter_url($text, 'shout');
+  return $text;
+}

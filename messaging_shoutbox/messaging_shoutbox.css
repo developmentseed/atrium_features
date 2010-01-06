@@ -1,0 +1,26 @@
+/* $Id$ */
+
+div.shoutform { padding:0px; }
+
+div.shoutform div.shoutbox-input {
+  text-align:center;
+  white-space:nowrap;
+  }
+
+  div.shoutform div.shoutbox-input div.form-item { margin:0px; }
+
+  div.shoutform div.shoutbox-input textarea { width:99%; }
+
+  div.shoutform div.shoutbox-input input.form-submit { float:right; }
+
+  div.shoutform div.shoutbox-input div.ahah-progress { display:none; }
+
+div.shoutform div.views-field-comment p {
+  margin:0px;
+  padding:0px;
+  }
+
+div.shoutform div.views-field-name {
+  font-size:small;
+  padding-right:0.5em;
+  }

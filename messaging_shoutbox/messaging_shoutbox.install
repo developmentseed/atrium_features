@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * Update 6001.
+ */
+function messaging_shoutbox_update_6001() {
+  $ret = array();
+  if (module_exists('spaces')) {
+    module_enable(array('atrium_shoutbox'));
+    $ret[] = update_sql("UPDATE {spaces_features} SET id = 'atrium_shoutbox' WHERE id = 'messaging_shoutbox'");
+    drupal_flush_all_caches();
+  }
+  return $ret;
+}

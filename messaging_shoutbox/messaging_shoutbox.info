@@ -1,0 +1,7 @@
+; $Id$
+name = "Messaging Shoutbox"
+description = "The shoutbox provides a microblog that integrates with Messaging and Notifications."
+package = "Messaging"
+dependencies[] = "node"
+dependencies[] = "comment"
+core = "6.x"
