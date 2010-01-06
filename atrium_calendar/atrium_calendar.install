@@ -1,0 +1,7 @@
+<?php
+
+function atrium_calendar_install() {
+  // Delete the feedapi settings for the feed node type which feedapi
+  // automatically creates.
+  variable_del('feedapi_settings_feed');
+}
