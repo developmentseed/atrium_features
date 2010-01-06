@@ -121,7 +121,7 @@ function atrium_groups_context_links_alter(&$links) {
   if (context_get('context', 'spaces-feature-groups')) {
     $item = menu_get_item('node/add/group');
     if ($item['access']) {
-      $links['atrium_groups'] = array('title' => $item['title'], 'href' => $item['href']);
+      $links['atrium_groups'] = array('title' => t('Add @type', array('@type' => $item['title'])), 'href' => $item['href']);
     }
   }
 }
