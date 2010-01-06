@@ -34,7 +34,8 @@ function atrium_welcome() {
           }
         }
         if ($firstgroup) {
-          return drupal_goto('dashboard');
+          menu_set_active_item('dashboard');
+          return menu_execute_active_handler();
         }
         else {
           drupal_set_title(t('Welcome to !sitename', array('!sitename' => variable_get('site_name', 'Atrium'))));

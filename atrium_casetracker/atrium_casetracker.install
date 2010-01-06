@@ -63,8 +63,8 @@ function atrium_casetracker_update_6002() {
   $ret[] = update_sql("UPDATE {node_type} SET module = 'features' WHERE type = 'casetracker_basic_project'");
   $ret[] = update_sql("UPDATE {node_type} SET module = 'features' WHERE type = 'casetracker_basic_case'");
 
-  module_disable('casetracker_basic');
-  $ret[] = array('success' => true, 'query' => 'Module "casetracker_basic" was disabled');
+  module_disable(array('casetracker_basic'));
+  $ret[] = array('success' => TRUE, 'query' => 'Module "casetracker_basic" was disabled');
   return $ret;
 }
 
