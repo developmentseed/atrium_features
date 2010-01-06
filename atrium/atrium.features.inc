@@ -19,12 +19,30 @@ function atrium_ctools_plugin_api() {
 }
 
 /**
+ * Implementation of hook_filter_default_formats().
+ */
+function atrium_filter_default_formats() {
+  module_load_include('inc', 'atrium', 'atrium.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_filter_default_formats', $args);
+}
+
+/**
+ * Implementation of hook_imagecache_default_presets().
+ */
+function atrium_imagecache_default_presets() {
+  module_load_include('inc', 'atrium', 'atrium.defaults');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_imagecache_default_presets', $args);
+}
+
+/**
  * Implementation of hook_user_default_permissions().
  */
 function atrium_user_default_permissions() {
   module_load_include('inc', 'atrium', 'atrium.defaults');
   $args = func_get_args();
-  return call_user_func_array('_atrium_user_default_permissions', $args);
+  return atrium_user_default_permissions_extra();
 }
 
 /**
@@ -43,22 +61,4 @@ function atrium_views_default_views() {
   module_load_include('inc', 'atrium', 'atrium.features.views');
   $args = func_get_args();
   return call_user_func_array('_atrium_views_default_views', $args);
-}
-
-/**
- * Implementation of hook_filter_default_formats().
- */
-function atrium_filter_default_formats() {
-  module_load_include('inc', 'atrium', 'atrium.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_filter_default_formats', $args);
-}
-
-/**
- * Implementation of hook_imagecache_default_presets().
- */
-function atrium_imagecache_default_presets() {
-  module_load_include('inc', 'atrium', 'atrium.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_imagecache_default_presets', $args);
 }

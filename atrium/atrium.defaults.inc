@@ -148,6 +148,126 @@ function _atrium_ctools_plugin_api() {
 }
 
 /**
+ * Helper to implementation of hook_filter_default_formats().
+ */
+function _atrium_filter_default_formats() {
+  $formats = array();
+
+  // Exported format: Full HTML
+  $formats[] = array(
+    'name' => 'Full HTML',
+    'roles' => array(
+      '0' => 'admin',
+      '1' => 'manager',
+    ),
+    'filters' => array(
+      '0' => array(
+        'module' => 'codefilter',
+        'delta' => '0',
+        'weight' => '0',
+      ),
+      '1' => array(
+        'module' => 'filter',
+        'delta' => '2',
+        'weight' => '0',
+      ),
+      '2' => array(
+        'module' => 'filter',
+        'delta' => '1',
+        'weight' => '1',
+      ),
+      '3' => array(
+        'module' => 'filter',
+        'delta' => '3',
+        'weight' => '10',
+      ),
+    ),
+  );
+
+  // Exported format: Messaging plain text
+  $formats[] = array(
+    'name' => 'Messaging plain text',
+    'roles' => array(),
+    'filters' => array(
+      '0' => array(
+        'module' => 'filter',
+        'delta' => '1',
+        'weight' => '-10',
+      ),
+      '1' => array(
+        'module' => 'messaging',
+        'delta' => '1',
+        'weight' => '-9',
+      ),
+    ),
+  );
+
+  // Exported format: Markdown
+  $formats[] = array(
+    'name' => 'Markdown',
+    'roles' => array(
+      '0' => 'anonymous user',
+      '1' => 'authenticated user',
+      '2' => 'admin',
+      '3' => 'manager',
+    ),
+    'filters' => array(
+      '0' => array(
+        'module' => 'markdown',
+        'delta' => '0',
+        'weight' => '-10',
+      ),
+      '1' => array(
+        'module' => 'filter',
+        'delta' => '2',
+        'weight' => '-9',
+      ),
+      '2' => array(
+        'module' => 'filter',
+        'delta' => '0',
+        'weight' => '-8',
+      ),
+      '3' => array(
+        'module' => 'codefilter',
+        'delta' => '0',
+        'weight' => '-7',
+      ),
+      '4' => array(
+        'module' => 'filter',
+        'delta' => '3',
+        'weight' => '-6',
+      ),
+    ),
+  );
+
+  return $formats;
+}
+
+/**
+ * Helper to implementation of hook_imagecache_default_presets().
+ */
+function _atrium_imagecache_default_presets() {
+  $items = array(
+    'fileview' => array(
+      'presetname' => 'fileview',
+      'actions' => array(
+        '0' => array(
+          'weight' => '0',
+          'module' => 'imagecache',
+          'action' => 'imagecache_deprecated_scale',
+          'data' => array(
+            'fit' => 'inside',
+            'width' => '60',
+            'height' => '40',
+          ),
+        ),
+      ),
+    ),
+  );
+  return $items;
+}
+
+/**
  * Helper to implementation of hook_user_default_permissions().
  */
 function _atrium_user_default_permissions() {
@@ -164,14 +284,6 @@ function _atrium_user_default_permissions() {
   // Exported permission: add list of open ids
   $permissions[] = array(
     'name' => 'add list of open ids',
-    'roles' => array(
-      '0' => 'admin',
-    ),
-  );
-
-  // Exported permission: administer atrium
-  $permissions[] = array(
-    'name' => 'administer atrium',
     'roles' => array(
       '0' => 'admin',
     ),
@@ -764,124 +876,3 @@ function _atrium_strongarm() {
   $export['views_no_hover_links'] = $strongarm;
   return $export;
 }
-
-/**
- * Helper to implementation of hook_filter_default_formats().
- */
-function _atrium_filter_default_formats() {
-  $formats = array();
-
-  // Exported format: Full HTML
-  $formats[] = array(
-    'name' => 'Full HTML',
-    'roles' => array(
-      '0' => 'admin',
-      '1' => 'manager',
-    ),
-    'filters' => array(
-      '0' => array(
-        'module' => 'codefilter',
-        'delta' => '0',
-        'weight' => '0',
-      ),
-      '1' => array(
-        'module' => 'filter',
-        'delta' => '2',
-        'weight' => '0',
-      ),
-      '2' => array(
-        'module' => 'filter',
-        'delta' => '1',
-        'weight' => '1',
-      ),
-      '3' => array(
-        'module' => 'filter',
-        'delta' => '3',
-        'weight' => '10',
-      ),
-    ),
-  );
-
-  // Exported format: Messaging plain text
-  $formats[] = array(
-    'name' => 'Messaging plain text',
-    'roles' => array(),
-    'filters' => array(
-      '0' => array(
-        'module' => 'filter',
-        'delta' => '1',
-        'weight' => '-10',
-      ),
-      '1' => array(
-        'module' => 'messaging',
-        'delta' => '1',
-        'weight' => '-9',
-      ),
-    ),
-  );
-
-  // Exported format: Markdown
-  $formats[] = array(
-    'name' => 'Markdown',
-    'roles' => array(
-      '0' => 'anonymous user',
-      '1' => 'authenticated user',
-      '2' => 'admin',
-      '3' => 'manager',
-    ),
-    'filters' => array(
-      '0' => array(
-        'module' => 'markdown',
-        'delta' => '0',
-        'weight' => '-10',
-      ),
-      '1' => array(
-        'module' => 'filter',
-        'delta' => '2',
-        'weight' => '-9',
-      ),
-      '2' => array(
-        'module' => 'filter',
-        'delta' => '0',
-        'weight' => '-8',
-      ),
-      '3' => array(
-        'module' => 'codefilter',
-        'delta' => '0',
-        'weight' => '-7',
-      ),
-      '4' => array(
-        'module' => 'filter',
-        'delta' => '3',
-        'weight' => '-6',
-      ),
-    ),
-  );
-
-  return $formats;
-}
-
-/**
- * Helper to implementation of hook_imagecache_default_presets().
- */
-function _atrium_imagecache_default_presets() {
-  $items = array(
-    'fileview' => array(
-      'presetname' => 'fileview',
-      'actions' => array(
-        '0' => array(
-          'weight' => '0',
-          'module' => 'imagecache',
-          'action' => 'imagecache_deprecated_scale',
-          'data' => array(
-            'fit' => 'inside',
-            'width' => '60',
-            'height' => '40',
-          ),
-        ),
-      ),
-    ),
-  );
-  return $items;
-}
-

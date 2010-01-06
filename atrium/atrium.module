@@ -13,72 +13,6 @@ define('ATRIUM_MEMBERS_ALL', 0);
 define('ATRIUM_MEMBERS_GROUP', 1);
 
 /**
- * Implementation of hook_user_default_permissions_alter().
- */
-function atrium_user_default_permissions_alter(&$permissions) {
-  if (!variable_get('user_register', FALSE)) {
-    $access_perms = array(
-      'access user profiles' => array(
-        'name' => 'access user profiles',
-        'roles' => array('authenticated user'),
-      ),
-      'access content' => array(
-        'name' => 'access content',
-        'roles' => array('authenticated user'),
-      ),
-      'access comments' => array(
-        'name' => 'access comments',
-        'roles' => array('authenticated user'),
-      ),
-      'view revisions' => array(
-        'name' => 'view revisions',
-        'roles' => array('authenticated user'),
-      ),
-    );
-  }
-  else {
-    $access_perms = array(
-      'access user profiles' => array(
-        'name' => 'access user profiles',
-        'roles' => array('anonymous user', 'authenticated user'),
-      ),
-      'access content' => array(
-        'name' => 'access content',
-        'roles' => array('anonymous user', 'authenticated user'),
-      ),
-      'access comments' => array(
-        'name' => 'access comments',
-        'roles' => array('anonymous user', 'authenticated user'),
-      ),
-      'view revisions' => array(
-        'name' => 'view revisions',
-        'roles' => array('anonymous user', 'authenticated user'),
-      ),
-    );
-  }
-  switch (variable_get('atrium_members', ATRIUM_MEMBERS_GROUP)) {
-    case ATRIUM_MEMBERS_ALL:
-      $access_perms['view users outside groups'] = array(
-        'name' => 'view users outside groups',
-        'roles' => array('anonymous user', 'authenticated user', 'manager', 'admin'),
-      );
-      break;
-    case ATRIUM_MEMBERS_GROUP:
-      $access_perms['view users outside groups'] = array(
-        'name' => 'view users outside groups',
-        'roles' => array('manager', 'admin'),
-      );
-      break;
-  }
-  // Only alter if this alter is running for our perms.
-  foreach ($permissions as $k => $permission) {
-    if (isset($access_perms[$permission['name']])) {
-      $permissions[$k] = $access_perms[$permission['name']];
-    }
-  }
-}
-
-/**
  * Implementation of hook_init().
  */
 function atrium_init() {
@@ -385,9 +319,77 @@ function atrium_preprocess_views_view(&$vars) {
 }
 
 /**
- * API Functions ======================================================
-
+ * Extra permissions that are dependent upon variable settings.
+ * This function is called by atrium_user_default_permissions() and
+ * the call to it needs to be manually retained when this feature is
+ * updated.
  */
+function atrium_user_default_permissions_extra() {
+  if (context_get('atrium', 'access_perms')) {
+    if (!variable_get('user_register', FALSE)) {
+      $permissions = array(
+        array(
+          'name' => 'access user profiles',
+          'roles' => array('authenticated user'),
+        ),
+        array(
+          'name' => 'access content',
+          'roles' => array('authenticated user'),
+        ),
+        array(
+          'name' => 'access comments',
+          'roles' => array('authenticated user'),
+        ),
+        array(
+          'name' => 'view revisions',
+          'roles' => array('authenticated user'),
+        ),
+      );
+    }
+    else {
+      $permissions = array(
+        array(
+          'name' => 'access user profiles',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+        array(
+          'name' => 'access content',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+        array(
+          'name' => 'access comments',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+        array(
+          'name' => 'view revisions',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+      );
+    }
+    switch (variable_get('atrium_members', ATRIUM_MEMBERS_GROUP)) {
+      case ATRIUM_MEMBERS_ALL:
+        $permissions[] = array(
+          'name' => 'view users outside groups',
+          'roles' => array('anonymous user', 'authenticated user', 'manager', 'admin'),
+        );
+        break;
+      case ATRIUM_MEMBERS_GROUP:
+        $permissions[] = array(
+          'name' => 'view users outside groups',
+          'roles' => array('manager', 'admin'),
+        );
+        break;
+    }
+    return $permissions;
+  }
+  module_load_include('inc', 'atrium', 'atrium.defaults');
+  return _atrium_user_default_permissions();
+}
+
+/**
+ * API Functions ======================================================
+ */
+
 /**
  * Generates an array of account links suitable for use in theme_links().
  */
@@ -594,5 +596,7 @@ function atrium_archive_submit($form, &$form_state) {
  * Trigger a features rebuild.
  */
 function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
+  context_set('atrium', 'access_perms', TRUE);
   features_rebuild();
+  context_set('atrium', 'access_perms', FALSE);
 }
