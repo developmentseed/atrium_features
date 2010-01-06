@@ -265,8 +265,12 @@ function atrium_intranet_get_readstate($readtime, $nodetime) {
  * Implementation of hook_form_alter().
  */
 function atrium_intranet_form_alter(&$form, &$form_state, $form_id) {
+  // Set login layout via context
+  if (in_array($form_id, array('user_login', 'user_pass', 'user_register'))) {
+    context_set('context', 'layout_login', context_load('layout_login'));
+  }
   // Disable notifications when editing a post outside of a group space
-  if ((!empty($form['#node']) || $form_id == 'comment_form') && isset($form['notifications'])) {
+  else if ((!empty($form['#node']) || $form_id == 'comment_form') && isset($form['notifications'])) {
     $space = spaces_get_space();
     if (empty($space) || $space->type != 'og') {
       $form['notifications']['#access'] = FALSE;

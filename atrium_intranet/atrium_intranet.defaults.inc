@@ -59,13 +59,42 @@ function _atrium_intranet_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'theme-layout-custom';
+  $context->name = 'layout_login';
   $context->description = '';
   $context->tag = 'Theme';
   $context->conditions = array();
-  $context->reactions = array();
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(),
+      'layout' => 'login',
+    ),
+  );
 
-  $export['theme-layout-custom'] = $context;
+  $export['layout_login'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'layout_wide';
+  $context->description = '';
+  $context->tag = 'Theme';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        'node/add/*' => 'node/add/*',
+        'node/*/edit' => 'node/*/edit',
+        'admin/*' => 'admin/*',
+        'user/*/edit' => 'user/*/edit',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(),
+      'layout' => 'wide',
+    ),
+  );
+
+  $export['layout_wide'] = $context;
   return $export;
 }
 
