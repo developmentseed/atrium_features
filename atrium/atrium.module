@@ -629,16 +629,6 @@ function atrium_theme_registry_alter(&$theme_registry) {
 }
 
 /**
- * Implementation of preprocess_page().
- */
-function atrium_preprocess_page(&$vars) {
-  if (user_access('access content') && user_access('search content')) {
-    $search = drupal_get_form('atrium_search_form');
-    $vars['search_box'] = "<div class='search clear-block'>{$search}</div>";;
-  }
-}
-
-/**
  * Implementation of preprocess_views_view().
  */
 function atrium_preprocess_views_view(&$vars) {

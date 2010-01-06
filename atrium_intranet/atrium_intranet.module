@@ -66,9 +66,15 @@ function atrium_intranet_block($op = 'list', $delta = 0) {
         'create' => array('info' => t('Atrium Intranet: Create content')),
         'account' => array('info' => t('Atrium Intranet: User account')),
         'help' => array('info' => t('Atrium Intranet: Help')),
+        'search' => array('info' => t('Atrium Intranet: Search form')),
       );
     case 'view':
       switch ($delta) {
+        case 'search':
+          if (user_access('access content') && user_access('search content')) {
+            return array('subject' => "<span class='icon'></span> ". t('Search'), 'content' => drupal_get_form('atrium_search_form'));
+          }
+          break;
         case 'user_links':
           if ($links = atrium_intranet_user_links()) {
             return array('subject' => t('Membership'), 'content' => theme('links', $links));
