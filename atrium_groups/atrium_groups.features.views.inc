@@ -18,20 +18,6 @@ function _atrium_groups_views_default_views() {
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
-    'post_count_new' => array(
-      'label' => '',
-      'set_precision' => FALSE,
-      'precision' => 0,
-      'decimal' => '.',
-      'separator' => ',',
-      'prefix' => '',
-      'suffix' => '',
-      'exclude' => 0,
-      'id' => 'post_count_new',
-      'table' => 'og',
-      'field' => 'post_count_new',
-      'relationship' => 'none',
-    ),
     'atrium_group' => array(
       'label' => '',
       'alter' => array(
@@ -118,7 +104,9 @@ function _atrium_groups_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'My groups');
-  $handler->override_option('items_per_page', 0);
+  $handler->override_option('use_more', 1);
+  $handler->override_option('use_more_text', 'View more');
+  $handler->override_option('link_display', 'page_1');
   $handler->override_option('style_plugin', 'list');
   $handler->override_option('style_options', array(
     'grouping' => '',
@@ -128,8 +116,22 @@ function _atrium_groups_views_default_views() {
     'inline' => array(),
     'separator' => '',
   ));
-  $handler = $view->new_display('block', 'Block: My groups (header)', 'block_1');
+  $handler = $view->new_display('block', 'Block: My groups (sidebar)', 'block_2');
   $handler->override_option('fields', array(
+    'post_count_new' => array(
+      'label' => '',
+      'set_precision' => FALSE,
+      'precision' => 0,
+      'decimal' => '.',
+      'separator' => ',',
+      'prefix' => '',
+      'suffix' => '',
+      'exclude' => 0,
+      'id' => 'post_count_new',
+      'table' => 'og',
+      'field' => 'post_count_new',
+      'relationship' => 'none',
+    ),
     'atrium_group' => array(
       'label' => '',
       'alter' => array(
@@ -152,9 +154,6 @@ function _atrium_groups_views_default_views() {
       'id' => 'atrium_group',
       'table' => 'node',
       'field' => 'atrium_group',
-      'override' => array(
-        'button' => 'Use default',
-      ),
       'relationship' => 'none',
     ),
   ));
@@ -163,19 +162,7 @@ function _atrium_groups_views_default_views() {
     'perm' => 'access content',
   ));
   $handler->override_option('items_per_page', 15);
-  $handler->override_option('use_more', 1);
-  $handler->override_option('use_more_text', 'View more');
-  $handler->override_option('block_description', '');
-  $handler->override_option('block_caching', -1);
-  $handler = $view->new_display('block', 'Block: My groups (sidebar)', 'block_2');
-  $handler->override_option('access', array(
-    'type' => 'perm',
-    'perm' => 'access content',
-  ));
-  $handler->override_option('items_per_page', 15);
-  $handler->override_option('use_more', 1);
-  $handler->override_option('use_more_text', 'View more');
-  $handler->override_option('block_description', '');
+  $handler->override_option('block_description', 'My groups');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('page', 'Page: My groups', 'page_1');
   $handler->override_option('fields', array(
@@ -317,7 +304,7 @@ function _atrium_groups_views_default_views() {
     'default' => '-1',
   ));
   $handler->override_option('row_options', array());
-  $handler->override_option('path', 'groups/my');
+  $handler->override_option('path', 'og/my');
   $handler->override_option('menu', array(
     'type' => 'tab',
     'title' => 'My groups',
@@ -533,7 +520,7 @@ function _atrium_groups_views_default_views() {
     ),
     'separator' => '',
   ));
-  $handler->override_option('path', 'groups/directory');
+  $handler->override_option('path', 'og/all');
   $handler->override_option('menu', array(
     'type' => 'default tab',
     'title' => 'Directory',
@@ -773,7 +760,7 @@ function _atrium_groups_views_default_views() {
     ),
     'default' => '-1',
   ));
-  $handler->override_option('path', 'groups/archived');
+  $handler->override_option('path', 'og/archived');
   $handler->override_option('menu', array(
     'type' => 'tab',
     'title' => 'Archived',
@@ -790,7 +777,6 @@ function _atrium_groups_views_default_views() {
   $translatables['atrium_groups'] = array(
     t('Defaults'),
     t('My groups'),
-    t('Block: My groups (header)'),
     t('View more'),
     t('Block: My groups (sidebar)'),
     t('Page: My groups'),

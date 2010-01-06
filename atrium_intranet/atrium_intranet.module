@@ -73,43 +73,46 @@ function atrium_intranet_block($op = 'list', $delta = 0) {
           if ($links = atrium_intranet_user_links()) {
             return array('subject' => t('Membership'), 'content' => theme('links', $links));
           }
-        break;
+          break;
         case 'admin_links':
           if ($links = atrium_intranet_admin_links()) {
-            return array('subject' => t('Settings'), 'content' => theme('links', $links));
+            return array('subject' => "<span class='icon'></span> ". t('Settings'), 'content' => theme('links', $links));
           }
-        break;
+          break;
         case 'create':
-          $space = spaces_get_space();
           $feature_map = spaces_features_map('node');
           $item = menu_get_item('node/add');
-          if ($space) {
-            $links = array();
-            foreach (system_admin_menu_block($item) as $menu_item) {
-              $args = explode('/', $menu_item['href']);
-              $type = str_replace('-', '_', array_pop($args));
-              if (isset($feature_map[$type]) && $space->access_feature('create', $feature_map[$type])) {
-                $feature = $feature_map[$type];
-                $menu_item['title'] = "<span class='spaces-feature feature-{$feature}'></span>{$menu_item['title']}";
-                $menu_item['html'] = TRUE;
-                $links["$feature-{$type}"] = $menu_item;
-              }
+          $links = array();
+          foreach (system_admin_menu_block($item) as $menu_item) {
+            $args = explode('/', $menu_item['href']);
+            $type = str_replace('-', '_', array_pop($args));
+            if (isset($feature_map[$type])) {
+              $feature = $feature_map[$type];
+              $menu_item['title'] = "<span class='spaces-feature feature-{$feature}'></span>{$menu_item['title']}";
+              $menu_item['html'] = TRUE;
+              $links["$feature-{$type}"] = $menu_item;
             }
-            ksort($links);
-            return array('subject' => "<span class='icon'></span> {$item['title']}", 'content' => theme('links', $links));
           }
+          ksort($links);
+          return array('subject' => "<span class='icon'></span> {$item['title']}", 'content' => theme('links', $links));
           break;
         case 'account':
           global $user;
+          $block = array();
           if ($user->uid) {
-            // Clone account so we can generate a large user pic
-            $account = drupal_clone($user);
-            $account->imagecache_preset = 'user-m';
-            $info_big = theme('user_picture', $account) . theme('username', $account);
-            $info_small = theme('user_picture', $user) . check_plain($user->name);
+            $block['subject'] = theme('user_picture', $user) . check_plain($user->name);
+            $block['content'] = "<div class='panes clear-block'><div class='pane-left'>";
+            $block['content'] .= "<h3>". t('My account') ."</h3>". theme('links', atrium_intranet_account_links());
+            $block['content'] .= "</div>";
 
-            $links = atrium_intranet_account_links();
-            return array('subject' => $info_small, 'content' => "<div class='user-info clear-block'>{$info_big}</div>" . theme('links', $links));
+            // My groups
+            if ($view = views_get_view('atrium_groups')) {
+              $block['content'] .= "<div class='pane-right'>";
+              $block['content'] .= "<h3>". t('My groups') ."</h3>" . $view->execute_display('default');
+              $block['content'] .= "</div></div>";
+              $view->destroy();
+            }
+            return $block;
           }
           else {
             $item = menu_get_item('user/login');

@@ -19,7 +19,7 @@ function _atrium_groups_context_default_contexts() {
     ),
   );
   $context->reactions = array(
-    'menu' => 'groups',
+    'menu' => 'og',
   );
 
   $export['spaces-feature-groups'] = $context;
@@ -52,7 +52,7 @@ function _atrium_groups_menu_default_items() {
 
   $items[] = array(
     'title' => 'Groups',
-    'path' => 'groups',
+    'path' => 'og',
     'weight' => '0',
     'description' => 'Provides a group management feature',
   );

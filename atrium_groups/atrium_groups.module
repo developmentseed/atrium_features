@@ -99,22 +99,13 @@ function atrium_groups_block($op, $delta = 0) {
     return array(); 
   }
 }
+
 /**
- * Implementation of hook_active_contexts_alter().
- *
- * Use hook_active_contexts_alter() as a good occasion to set the breadcrumb.
+ * Implementation of hook_context_page_reaction().
+ * Good occasion to set the breadcrumb.
  */
-function atrium_groups_context_active_contexts_alter(&$contexts) {
-  $space = spaces_get_space();
-  if ($space->type == 'og') {
-    $breadcrumb = array(
-      l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
-      l(t('Groups'), 'groups', array('purl' =>array('disabled' => TRUE))),
-      l($space->title, '<front>'),
-    );
-    drupal_set_breadcrumb($breadcrumb);
-  }
-  else if ($space->type == 'site' && context_get('spaces', 'feature') == 'groups') {
+function atrium_groups_context_page_reaction() {
+  if (!spaces_get_space() && context_get('context', 'spaces-feature-groups')) {
     $breadcrumb = array(
       l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
       l(t('Groups'), 'groups', array('purl' =>array('disabled' => TRUE))),

@@ -52,17 +52,16 @@ function atrium_members_context_links_alter(&$links) {
 }
 
 /**
- * Implementation of hook_active_contexts_alter().
- *
- * Use hook_active_contexts_alter() as a good occasion to set the breadcrumb.
+ * Implementation of hook_context_page_reaction().
+ * Good occasion to set the breadcrumb.
  */
-function atrium_members_context_active_contexts_alter(&$contexts) {
+function atrium_members_context_page_reaction() {
   $space = spaces_get_space();
   if ($space->type == 'user') {
     $breadcrumb = array(
       l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
       l(t('Members'), 'members', array('purl' =>array('disabled' => TRUE))),
-      l($space->title, '<front>'),
+      l(check_plain($space->title()), '<front>'),
     );
     drupal_set_breadcrumb($breadcrumb);
   }
