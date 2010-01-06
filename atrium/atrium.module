@@ -81,7 +81,7 @@ function atrium_init() {
   if ($space && atrium_is_archived($space)) {
     $message = t('This !type is <strong>archived</strong>. You may not add or alter any of its content.', array('!type' => node_get_types('name', 'group')));
     if (node_access('update', $space->group)) {
-      $message .= ' '. t('To reactivate this !type, !link.', array('!type' => node_get_types('name', 'group'), '!link' => l(t('click here'), "node/$space->sid/reactivate")));
+      $message .= ' '. t('To reactivate this !type, !link.', array('!type' => node_get_types('name', 'group'), '!link' => l(t('click here'), "node/$space->id/reactivate")));
     }
     drupal_set_message($message);
   }
@@ -544,80 +544,20 @@ function atrium_search_form_submit($form, &$form_state) {
 }
 
 /**
- * Helper function to ensure a permission exists in a roles array for a given role/perm.
- */
-function _atrium_ensure_perm(&$roles, $role, $perm) {
-  if (!isset($roles[$role]['perm']) || !in_array($perm, $roles[$role]['perm'])) {
-    $roles[$role]['perm'][] = $perm;
-  }
-}
-
-/**
- * Helper function to remove a permission from a roles array for a given role/perm.
- */
-function _atrium_remove_perm(&$roles, $role, $perm) {
-  if (in_array($perm, $roles[$role]['perm'])) {
-    $position = array_search($perm, $roles[$role]['perm']);
-    unset($roles[$role]['perm'][$position]);
-  }
-}
-
-/**
- * THEME & UI  FUNCTIONS ==============================================
- */
-
-/**
- * Implementation of hook_theme_registry_alter().
- */
-function atrium_theme_registry_alter(&$theme_registry) {
-  if (!in_array('atrium_preprocess_page', $theme_registry['page']['preprocess functions'])) {
-    $theme_registry['page']['preprocess functions'][] = 'atrium_preprocess_page';
-  }
-  // Yank out og_preprocess_node.
-  if ($key = array_search('og_preprocess_node', $theme_registry['node']['preprocess functions'])) {
-    unset($theme_registry['node']['preprocess functions'][$key]);
-  }
-}
-
-/**
  * Implementation of preprocess_views_view().
  */
 function atrium_preprocess_views_view(&$vars) {
-  if ($feature = context_get('spaces', 'feature')) {
-    $contexts = context_enabled_contexts();
-    $context = isset($contexts["spaces-feature-{$feature}"]) ? $contexts["spaces-feature-{$feature}"] : NULL;
-    $view = $vars['view'];
-    $space = spaces_get_space();
-
-    if ($space && $context && strpos($view->current_display, 'page') !== FALSE && empty($view->result) && empty($vars['empty'])) {
-      // @TODO determine why this can get called more than once for the
-      // relevant view.
-      static $once;
-      if (!$once) {
-        $once = TRUE;
-
-        $output = '';
-        global $user;
-
-        // Get the first nodetype
-        if (!empty($context->node)) {
-          reset($context->node);
-          $nodetype = current($context->node);
-        }
-
-        // Assemble a reasonable empty message
-        if (!empty($nodetype) && node_access('create', $nodetype) && ($space->type == 'og')) {
-          $types = node_get_types();
-          if ($type = $types[$nodetype]) {
-            $output .= t('Please add your first !type to get started.', array('!type' => $type->name));
-            $output .= "<div class='buttons'>". theme('context_links', context_links()) ."</div>";
-          }
-        }
-        else {
-          $output .= t('There is currently no content to view in this section.');
-        }
-        $vars['empty'] = $output;
+  $view = $vars['view'];
+  $map = spaces_features_map();
+  $feature = isset($map['views'][$view->name]) ? $map['views'][$view->name] : NULL;
+  if ($feature && strpos($view->current_display, 'page') !== FALSE && empty($view->result) && empty($vars['empty'])) {
+    if ($type = array_search($feature, $map['node'])) {
+      $item = menu_get_item('node/add/'. strtr($type, array('_' => '-')));
+      if ($item && $item['access']) {
+        $output = t('Please add your first @type to get started.', array('@type' => node_get_types('name', $type)));
+        $output .= "<div class='buttons'>". theme('links', context_links()) ."</div>";
       }
     }
+    $vars['empty'] = !empty($output) ? $output : t('There is currently no content to view in this section.');
   }
 }
