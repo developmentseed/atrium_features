@@ -1,6 +1,197 @@
 <?php
 
 /**
+ * Form alter callback for node form.
+ */
+function _atrium_form_node_form_alter(&$form, $form_state) {
+  $node = $form['#node'];
+
+  // Book mods
+  if ($form['#id'] == 'node-form' && book_type_is_allowed($form['#node']->type)) {
+    $node = $form['#node'];
+
+    if (!empty($form['book'])) {
+      // Fieldset mods
+      $form['book']['#weight'] = !empty($form['body_field']['#weight']) ? $form['body_field']['#weight'] : 0;
+      $form['book']['#collapsible'] =
+      $form['book']['#collapsed'] = FALSE;
+
+      if (!empty($form['book']['bid']['#options'])) {
+        // Remove "none" option -- do not allow book pages to be orphaned
+        unset($form['book']['bid']['#options'][0]);
+        // Filter book options by current space
+        if ($view = views_get_view('atrium_book_current')) {
+          $view->set_display();
+          $view->set_items_per_page(0);
+          $view->execute();
+
+          // Collect books in this space into an array
+          $books = array();
+          $books[$node->nid] = 1;
+          if (is_array($view->result) && count($view->result)) {
+            foreach($view->result as $row) {
+              $books[$row->nid] = 1;
+            }
+          }
+
+          // Use collected array to filter options
+          foreach ($form['book']['bid']['#options'] as $k => $v) {
+            if (is_numeric($k) && !isset($books[$k])) {
+              unset($form['book']['bid']['#options'][$k]);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  $space = spaces_get_space();
+
+  // Determine whether this node is archivable
+  $archivable = in_array($node->type, variable_get('atrium_archivable', array()));
+  $archivable = !empty($node->nid) && $archivable;
+
+  // Only allow root books to be archived.
+  if (book_type_is_allowed($node->type)) {
+    $archivable = $archivable && (!empty($node->book) && $node->book['plid'] == 0);
+  }
+
+  // Add a link to archive/reactive the space
+  if ($archivable) {
+    // Add archive / reactivate buttons
+    if ($node->status) {
+      $archive_help = t('This !type is currently <strong>active</strong>. You can archive it to hide it from listings and prevent others from adding to or altering its content. You can always undo this action by reactivating the !type.', array('!type' => node_get_types('name', $node->type)));
+    }
+    else {
+      $archive_help = t('This !type is currently <strong>archived</strong>. You can reactivate it to allow others to add and alter its content.', array('!type' => node_get_types('name', $node->type)));
+    }
+    $form['archive'] = array(
+      '#type' => 'fieldset',
+      '#description' => $archive_help,
+      '#weight' => 100,
+    );
+    $form['archive']['button'] = array(
+      '#type' => 'submit',
+      '#value' => $node->status ? t('Archive this !type', array('!type' => node_get_types('name', $node->type))) : t('Reactivate'),
+      '#submit' => $node->status ? array('atrium_archive_submit') : array('atrium_reactivate_submit'),
+    );
+  }
+  // Disable other node forms in archived spaces
+  else if (atrium_is_archived($space)) {
+    drupal_access_denied(); exit;
+  }
+
+  // Even if you have the perms, we don't want you messing with this stuff
+  $disable = array('menu', 'comment_settings');
+  foreach ($disable as $key) {
+    if (!empty($form[$key])) {
+      $form[$key]['#access'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_form_alter for spaces_features_form.
+ */
+function _atrium_form_spaces_features_form_alter(&$form, $form_state) {
+  $space = spaces_get_space();
+  if (!$space) {
+    $form['atrium'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Site settings'),
+      '#tree' => FALSE,
+    );
+    $form['atrium']['user_register'] = array(
+      '#title' => t('Site mode'),
+      '#type' => 'select',
+      '#description' => t('Choose the access level for the site.'),
+      '#options' => array(
+        0 => t('Private access only'),
+        1 => t('Public access, open registration'),
+        2 => t('Public access, moderated registration'),
+      ),
+      '#default_value' => variable_get('user_register', 0),
+    );
+    $form['atrium']['atrium_members'] = array(
+      '#title' => t('Members'),
+      '#type' => 'select',
+      '#description' => t('Choose the access mode for the member directory and profiles. Administrators and managers will be able to see all members regardless of this setting.'),
+      '#options' => array(
+        ATRIUM_MEMBERS_ALL=> t('Users can view all members'),
+        ATRIUM_MEMBERS_GROUP => t('Users can only view members that belong to their groups')
+      ),
+      '#default_value' => variable_get('atrium_members', ATRIUM_MEMBERS_ALL),
+    );
+    $form['#submit'][] = 'atrium_form_spaces_features_form_submit';
+  }
+}
+
+/**
+ * Implementation of hook_form_alter for system_themes_form.
+ * Limit options to themes that implement atrium compatibility.
+ */
+function _atrium_form_system_themes_form_alter(&$form, $form_state) {
+  $themes = system_theme_data();
+  foreach ($themes as $key => $theme) {
+    if (empty($theme->info['atrium'])) {
+      unset($form[$key]);
+      unset($form['status']['#options'][$key]);
+      unset($form['theme_default']['#options'][$key]);
+    }
+  }
+}
+
+/**
+ *  Implementation of hook_form_alter for node_type_form.
+ */
+function _atrium_form_node_type_form_alter(&$form, $form_state) {
+  if (isset($form['identity']['type'])) {
+    $form['atrium'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Atrium'),
+      '#tree' => FALSE,
+      '#collapsible' => FALSE,
+      '#collapsed' => FALSE,
+    );
+    $form['atrium']['atrium_update_type'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show in recent activity views'),
+      '#description' => t('Show this content type in activity streams, update lists, etc.'),
+      '#default_value' => variable_get('atrium_update_type_'. $form['#node_type']->type, TRUE),
+    );
+  }
+}
+
+/**
+ * Form alter for views exposed forms.
+ */
+function _atrium_form_views_exposed_form_alter(&$form, $form_state) {
+  // Quick check that this is the right view
+  $view = views_get_current_view();
+  if ($view && $view->name === 'atrium_search' && !empty($form['created'])) {
+    $options = array(
+      '-14 days' => t('2 weeks ago'),
+      '-30 days' => t('1 month ago'),
+      '-180 days' => t('6 month ago'),
+      '' => t('Anytime'),
+    );
+    $form['created']['#type'] = 'select';
+    $form['created']['#options'] = $options;
+    unset($form['created']['#size']);
+  }
+}
+
+/**
+ * Menu callback for reactivation confirmation form.
+ */
+function atrium_reactivate($form_state, $node) {
+  $form = array();
+  $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
+  $form['#submit'] = array('atrium_reactivate_submit');
+  return confirm_form($form, t('Are you sure you want to reactivate %title?', array('%title' => $node->title)), "node/{$node->nid}", '', t('Reactivate'), t('Cancel'));
+}
+
+/**
  * Custom welcome/login page.
  */
 function atrium_welcome() {
@@ -42,8 +233,8 @@ function atrium_welcome() {
 
           $output = "<div class='view-empty'>";
           if (node_access('create', 'group')) {
-            $output .= t('Create your first !type to get started.', array('!type' => atrium_get_typename('group')));
-            $output .= "<div class='buttons'>". l(t('Create !type', array('!type' => atrium_get_typename('group'))), 'node/add/group', array('attributes' => array('class' => 'button'))) ."</div>";
+            $output .= t('Create your first !type to get started.', array('!type' => node_get_types('name', 'group')));
+            $output .= "<div class='buttons'>". l(t('Create !type', array('!type' => node_get_types('name', 'group'))), 'node/add/group', array('attributes' => array('class' => 'button'))) ."</div>";
           }
           else {
             $output .= t('The site administator has not finished setting up this site. Please be patient and try again later.');
@@ -131,4 +322,19 @@ function atrium_taxonomy_autocomplete($vid, $string = '') {
     }
   }
   drupal_json($matches);
+}
+
+/**
+ * 403 page.
+ */
+function atrium_403() {
+  // If we're in intranet mode, send anonymous users to a login screen.
+  global $user;
+  if (!$user->uid && !user_access('access content')) {
+    // drupal_access_denied() sets the $_REQUEST['destination'] which will
+    // prevent drupal_goto from behaving as expected. So we unset it.
+    unset($_REQUEST['destination']);
+    drupal_goto('user/login', 'destination='. $_REQUEST['q']);
+  }
+  return "<div class='access-denied'>". t('You are not authorized to access this page.') ."</div>";
 }

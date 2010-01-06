@@ -315,13 +315,7 @@ function _atrium_profile_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'content_profile_profile';
-  $strongarm->value = array(
-    'weight' => '0',
-    'user_display' => 'full',
-    'edit_link' => 0,
-    'edit_tab' => 'sub',
-    'add_link' => 0,
-  );
+  $strongarm->value = array();
 
   $export['content_profile_profile'] = $strongarm;
   $strongarm = new stdClass;
