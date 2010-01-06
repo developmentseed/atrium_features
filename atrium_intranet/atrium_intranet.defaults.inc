@@ -27,9 +27,9 @@ function _atrium_intranet_context_default_contexts() {
           'region' => 'header',
           'weight' => 0,
         ),
-        'views-atrium_groups-block_1' => array(
-          'module' => 'views',
-          'delta' => 'atrium_groups-block_1',
+        'atrium_intranet-user_links' => array(
+          'module' => 'atrium_intranet',
+          'delta' => 'user_links',
           'region' => 'header',
           'weight' => 1,
         ),
@@ -44,6 +44,12 @@ function _atrium_intranet_context_default_contexts() {
           'delta' => 'admin_links',
           'region' => 'space_tools',
           'weight' => 1,
+        ),
+        'atrium_intranet-search' => array(
+          'module' => 'atrium_intranet',
+          'delta' => 'search',
+          'region' => 'space_tools',
+          'weight' => 2,
         ),
         'xref-create' => array(
           'module' => 'xref',
@@ -84,6 +90,7 @@ function _atrium_intranet_context_default_contexts() {
         'node/*/edit' => 'node/*/edit',
         'admin/*' => 'admin/*',
         'user/*/edit' => 'user/*/edit',
+        'user/*/edit/*' => 'user/*/edit/*',
       ),
     ),
   );
@@ -509,6 +516,7 @@ function _atrium_intranet_strongarm() {
     'layout' => 'vertical',
     'position' => 'nw',
     'blocks' => array(
+      'spaces-menu_editor' => 'spaces-menu_editor',
       'spaces_dashboard-editor' => 'spaces_dashboard-editor',
       'admin-create' => 'admin-create',
       'admin-menu' => 'admin-menu',

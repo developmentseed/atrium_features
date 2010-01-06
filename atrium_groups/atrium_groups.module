@@ -118,15 +118,10 @@ function atrium_groups_context_page_reaction() {
  * Implementation of hook_context_links_alter().
  */
 function atrium_groups_context_links_alter(&$links) {
-  $feature = context_get('spaces', 'feature');
-  switch ($feature) {
-    case 'groups':
-      if (node_access('create', 'group')) {
-        $links['atrium_groups'] = array(
-          'title' => t('Group'),
-          'href' => 'node/add/group',
-        );
-      }
-      break;
+  if (context_get('context', 'spaces-feature-groups')) {
+    $item = menu_get_item('node/add/group');
+    if ($item['access']) {
+      $links['atrium_groups'] = array('title' => t('Add @type', array('@type' => $item['title'])), 'href' => $item['href']);
+    }
   }
 }

@@ -38,16 +38,14 @@ function atrium_members_menu_alter(&$items) {
  * Implementation of hook_context_links_alter().
  */
 function atrium_members_context_links_alter(&$links) {
-  $feature = context_get('spaces', 'feature');
-  switch ($feature) {
-    case 'members':
-      if (module_exists('ucreate') && user_access('create users')) {
-        $links['atrium_users'] = array(
-          'title' => t('User account'),
-          'href' => 'user/add',
-        );
-      }
-      break;
+  if (context_get('context', 'spaces-feature-members') && module_exists('ucreate') && user_access('create users')) {
+    $item = menu_get_item('user/add');
+    if ($item['access']) {
+      $links['atrium_users'] = array(
+        'title' => $item['title'],
+        'href' => $item['href'],
+      );
+    }
   }
 }
 
@@ -65,7 +63,7 @@ function atrium_members_context_page_reaction() {
     );
     drupal_set_breadcrumb($breadcrumb);
   }
-  else if ($space->type == 'site' && context_get('spaces', 'feature') == 'members') {
+  else if (context_get('context', 'spaces-feature-members')) {
     $breadcrumb = array(
       l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
       l(t('Members'), 'members', array('purl' =>array('disabled' => TRUE))),

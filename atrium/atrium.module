@@ -161,11 +161,11 @@ function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
  * Implementation of hook_context_links_alter();
  */
 function atrium_context_links_alter(&$links) {
-  if (context_get('spaces', 'feature') == 'book' && isset($links['book']) && $space = spaces_get_space()) {
-    if ($space->feature_access('book') && $node = menu_get_object()) {
-      if (!empty($node->book['mlid'])) {
-        $links['book']['query'] = 'parent='. $node->book['mlid'];
-      }
+  if (context_get('context', 'spaces-feature-book') && isset($links['book']) && $space = spaces_get_space()) {
+    $item = menu_get_item('node/add/book');
+    $node = menu_get_object();
+    if ($item['access'] && !empty($node->book['mlid'])) {
+      $links['book']['query'] = "parent={$node->book['mlid']}";
     }
   }
 }
@@ -625,16 +625,6 @@ function atrium_theme_registry_alter(&$theme_registry) {
   // Yank out og_preprocess_node.
   if ($key = array_search('og_preprocess_node', $theme_registry['node']['preprocess functions'])) {
     unset($theme_registry['node']['preprocess functions'][$key]);
-  }
-}
-
-/**
- * Implementation of preprocess_page().
- */
-function atrium_preprocess_page(&$vars) {
-  if (user_access('access content') && user_access('search content')) {
-    $search = drupal_get_form('atrium_search_form');
-    $vars['search_box'] = "<div class='search clear-block'>{$search}</div>";;
   }
 }
 
