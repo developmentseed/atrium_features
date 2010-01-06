@@ -161,11 +161,11 @@ function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
  * Implementation of hook_context_links_alter();
  */
 function atrium_context_links_alter(&$links) {
-  if (context_get('spaces', 'feature') == 'book' && isset($links['book']) && $space = spaces_get_space()) {
-    if ($space->feature_access('book') && $node = menu_get_object()) {
-      if (!empty($node->book['mlid'])) {
-        $links['book']['query'] = 'parent='. $node->book['mlid'];
-      }
+  if (context_get('context', 'spaces-feature-book') && isset($links['book']) && $space = spaces_get_space()) {
+    $item = menu_get_item('node/add/book');
+    $node = menu_get_object();
+    if ($item['access'] && !empty($node->book['mlid'])) {
+      $links['book']['query'] = "parent={$node->book['mlid']}";
     }
   }
 }
