@@ -27,6 +27,12 @@ function _atrium_intranet_context_default_contexts() {
           'region' => 'header',
           'weight' => 0,
         ),
+        'atrium_intranet-user_links' => array(
+          'module' => 'atrium_intranet',
+          'delta' => 'user_links',
+          'region' => 'header',
+          'weight' => 1,
+        ),
         'atrium_intranet-create' => array(
           'module' => 'atrium_intranet',
           'delta' => 'create',
