@@ -415,7 +415,8 @@ function _atrium_members_views_default_views() {
     ),
   ));
   $handler->override_option('access', array(
-    'type' => 'perm',
+    'type' => 'atrium_feature',
+    'spaces_feature' => 'atrium_members',
     'perm' => 'access content',
   ));
   $handler->override_option('title', 'Member directory');
