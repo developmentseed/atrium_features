@@ -43,6 +43,7 @@ function _atrium_book_context_default_contexts() {
         ),
       ),
     ),
+    'menu' => 'documents',
   );
 
   $export['spaces-feature-book'] = $context;
