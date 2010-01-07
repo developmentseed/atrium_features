@@ -75,3 +75,37 @@ function atrium_update_6005() {
   }
   return $return;
 }
+
+/**
+ * Update 6006: Older, gravlax era, Atrium installations may have erroneous
+ * values in the system table for Atrium's feature modules. This updates
+ * corrects those and runs an update that would otherwise be missed.
+ */
+function atrium_update_6006() {
+  $return = array();
+  $result = db_query("SELECT name, schema_version FROM {system} WHERE type = 'module' AND status = 1 AND schema_version = -1");
+  $atrium_features = array(
+    'atrium_blog' => 0,
+    'atrium_book' => 0,
+    'atrium_calendar' => 0,
+    'atrium_casetracker' => 6002,
+    'atrium_profile' => 0,
+    'atrium_shoutbox' => 0,
+  );
+  while ($row = db_fetch_object($result)) {
+    if (isset($atrium_features[$row->name])) {
+      db_query("UPDATE {system} set schema_version = %d WHERE name = '%s'", $atrium_features[$row->name], $row->name);
+      $return[] = array('success' => true, 'query' => "UPDATE {system} set schema_version = " . $atrium_features[$row->name] . " WHERE name = '" . $row->name . "'");
+
+      if ($row->name == 'atrium_casetracker') {
+        module_load_include('install','atrium_casetracker', 'atrium_casetracker');
+        $return += atrium_casetracker_update_6002();
+      }
+    }
+    else {
+      watchdog('Atrium', t('The module %module appears to have an invalid schema_version entry'), array('%module' => $row->name), WATCHDOG_WARNING);
+    }
+  }
+
+  return $return;
+}
