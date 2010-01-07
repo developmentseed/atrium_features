@@ -128,12 +128,42 @@ function _atrium_members_spaces_presets() {
   $spaces_presets->value = array(
     'variable' => array(
       'spaces_features' => array(
-        'atrium_blog' => '1',
-        'atrium_book' => '0',
-        'atrium_calendar' => '1',
-        'atrium_dashboard' => '1',
+        'spaces_dashboard' => '1',
+      ),
+      'spaces_dashboard_custom' => array(
+        'custom-1' => 'Dashboard',
       ),
       'spaces_setting_home' => 'profile',
+    ),
+    'context' => array(
+      'spaces_dashboard-custom-1:reaction:block' => array(
+        'blocks' => array(
+          'views-atrium_intranet-block_3' => array(
+            'module' => 'views',
+            'delta' => 'atrium_intranet-block_3',
+            'region' => 'content',
+            'weight' => 0,
+          ),
+          'views-atrium_blog_comments-block_1' => array(
+            'module' => 'views',
+            'delta' => 'atrium_blog_comments-block_1',
+            'region' => 'right',
+            'weight' => 0,
+          ),
+        ),
+      ),
+      'spaces_dashboard-custom-2:reaction:block' => array(
+        'blocks' => array(),
+      ),
+      'spaces_dashboard-custom-3:reaction:block' => array(
+        'blocks' => array(),
+      ),
+      'spaces_dashboard-custom-4:reaction:block' => array(
+        'blocks' => array(),
+      ),
+      'spaces_dashboard-custom-5:reaction:block' => array(
+        'blocks' => array(),
+      ),
     ),
   );
 
@@ -216,5 +246,12 @@ function _atrium_members_strongarm() {
   $strongarm->value = 'user-s';
 
   $export['seed_imagecache_user_picture'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'spaces_preset_user';
+  $strongarm->value = 'atrium_user_simple';
+
+  $export['spaces_preset_user'] = $strongarm;
   return $export;
 }
