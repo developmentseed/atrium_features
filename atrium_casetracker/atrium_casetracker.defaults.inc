@@ -141,7 +141,7 @@ function _atrium_casetracker_user_default_permissions() {
     ),
   );
 
-  // Exported permission: create cases
+  // Exported permission: create casetracker_basic_case content
   $permissions[] = array(
     'name' => 'create casetracker_basic_case content',
     'roles' => array(
@@ -151,7 +151,7 @@ function _atrium_casetracker_user_default_permissions() {
     ),
   );
 
-  // Exported permission: create projects
+  // Exported permission: create casetracker_basic_project content
   $permissions[] = array(
     'name' => 'create casetracker_basic_project content',
     'roles' => array(
@@ -160,7 +160,7 @@ function _atrium_casetracker_user_default_permissions() {
     ),
   );
 
-  // Exported permission: edit own cases
+  // Exported permission: edit own casetracker_basic_case content
   $permissions[] = array(
     'name' => 'edit own casetracker_basic_case content',
     'roles' => array(
@@ -170,7 +170,7 @@ function _atrium_casetracker_user_default_permissions() {
     ),
   );
 
-  // Exported permission: edit own projects
+  // Exported permission: edit own casetracker_basic_project content
   $permissions[] = array(
     'name' => 'edit own casetracker_basic_project content',
     'roles' => array(

@@ -67,7 +67,7 @@ function atrium_calendar_context_links_alter(&$links) {
 function atrium_calendar_block($op = 'list', $delta = 0, $edit = array()) {
   switch ($op) {
     case 'list':
-      return array('mini' => array('info' => t('Atrium calendar: Mini calendar')));
+      return array('mini' => array('info' => t('Mini calendar')));
     default:
       $function = "_atrium_calendar_block_{$delta}";
       if (function_exists($function)) {

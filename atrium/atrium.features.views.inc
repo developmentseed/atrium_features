@@ -380,7 +380,7 @@ function _atrium_views_default_views() {
     'default' => 'last_updated_1',
   ));
   $handler = $view->new_display('block', 'Recent activity', 'block_1');
-  $handler->override_option('block_description', '');
+  $handler->override_option('block_description', 'Recent activity');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('block', 'Files', 'block_2');
   $handler->override_option('relationships', array(
@@ -557,70 +557,14 @@ function _atrium_views_default_views() {
     ),
     'default' => 'last_updated_1',
   ));
-  $handler->override_option('block_description', '');
-  $handler->override_option('block_caching', -1);
-  $handler = $view->new_display('block', 'All activity (block)', 'block_3');
-  $handler->override_option('filters', array(
-    'status' => array(
-      'operator' => '=',
-      'value' => 1,
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'status',
-      'table' => 'node',
-      'field' => 'status',
-      'relationship' => 'none',
-    ),
-    'current' => array(
-      'operator' => 'active',
-      'value' => '',
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'current',
-      'table' => 'spaces',
-      'field' => 'current',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-    ),
-    'update_type' => array(
-      'operator' => '=',
-      'value' => '',
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'update_type',
-      'table' => 'node',
-      'field' => 'update_type',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('use_ajax', TRUE);
-  $handler->override_option('items_per_page', 15);
-  $handler->override_option('use_pager', '0');
-  $handler->override_option('block_description', '');
+  $handler->override_option('block_description', 'Latest files');
   $handler->override_option('block_caching', -1);
   $translatables['atrium_intranet'] = array(
     t('Defaults'),
     t('Recent activity'),
     t('No recent activity found.'),
     t('Files'),
-    t('All activity (block)'),
+    t('Latest files'),
   );
 
   $views[$view->name] = $view;

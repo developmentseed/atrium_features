@@ -1105,7 +1105,7 @@ function _atrium_casetracker_views_default_views() {
   $handler->override_option('use_pager', '0');
   $handler->override_option('use_more', 1);
   $handler->override_option('link_display', 'page_3');
-  $handler->override_option('block_description', '');
+  $handler->override_option('block_description', 'Project cases (newest)');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('block', 'My cases', 'block_2');
   $handler->override_option('fields', array(
@@ -1208,7 +1208,7 @@ function _atrium_casetracker_views_default_views() {
   $handler->override_option('items_per_page', 5);
   $handler->override_option('use_pager', '0');
   $handler->override_option('style_plugin', 'list');
-  $handler->override_option('block_description', '');
+  $handler->override_option('block_description', 'My cases');
   $handler->override_option('block_caching', -1);
   $translatables['atrium_casetracker'] = array(
     t('Defaults'),

@@ -431,7 +431,7 @@ function _atrium_blog_views_default_views() {
   $handler->override_option('items_per_page', 1);
   $handler->override_option('use_pager', '0');
   $handler->override_option('use_more', 0);
-  $handler->override_option('block_description', '');
+  $handler->override_option('block_description', 'Blog teaser');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('attachment', 'Blog teaser (list)', 'attachment_1');
   $handler->override_option('fields', array(
@@ -908,7 +908,7 @@ function _atrium_blog_views_default_views() {
     'type' => 'ul',
   ));
   $handler = $view->new_display('block', 'Recent comments', 'block_1');
-  $handler->override_option('block_description', '');
+  $handler->override_option('block_description', 'Recent comments');
   $handler->override_option('block_caching', '-1');
   $translatables['atrium_blog_comments'] = array(
     t('Defaults'),

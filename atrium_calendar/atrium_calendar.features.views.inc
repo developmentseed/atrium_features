@@ -210,7 +210,7 @@ function _atrium_calendar_views_default_views() {
     'style' => 'full',
     'quickadd' => 'event:field_date',
   ));
-  $handler = $view->new_display('page', 'Page', 'page_1');
+  $handler = $view->new_display('page', 'Calendar', 'page_1');
   $handler->override_option('path', 'calendar/view');
   $handler->override_option('menu', array(
     'type' => 'default tab',
@@ -231,12 +231,11 @@ function _atrium_calendar_views_default_views() {
     'style' => 'compact',
     'quickadd' => 'event:field_date',
   ));
-  $handler->override_option('block_description', '');
+  $handler->override_option('block_description', 'Calendar');
   $handler->override_option('block_caching', -1);
   $translatables['atrium_calendar'] = array(
     t('Defaults'),
     t('Calendar'),
-    t('Page'),
     t('Block'),
   );
 
@@ -765,7 +764,7 @@ function _atrium_calendar_views_default_views() {
   $handler->override_option('items_per_page', 25);
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
-  $handler = $view->new_display('page', 'Page', 'page_1');
+  $handler = $view->new_display('page', 'Page: Upcoming events', 'page_1');
   $handler->override_option('path', 'calendar/upcoming');
   $handler->override_option('menu', array(
     'type' => 'tab',
@@ -780,7 +779,7 @@ function _atrium_calendar_views_default_views() {
     'description' => '',
     'weight' => 0,
   ));
-  $handler = $view->new_display('block', 'Block', 'block_1');
+  $handler = $view->new_display('block', 'Block: Upcoming events', 'block_1');
   $handler->override_option('fields', array(
     'field_date_value' => array(
       'label' => '',
@@ -862,13 +861,13 @@ function _atrium_calendar_views_default_views() {
     'grouping' => '',
     'type' => 'ul',
   ));
-  $handler->override_option('block_description', '');
+  $handler->override_option('block_description', 'Upcoming events');
   $handler->override_option('block_caching', -1);
   $translatables['atrium_calendar_upcoming'] = array(
     t('Defaults'),
     t('Upcoming events'),
-    t('Page'),
-    t('Block'),
+    t('Page: Upcoming events'),
+    t('Block: Upcoming events'),
     t('No upcoming events found.'),
   );
 
