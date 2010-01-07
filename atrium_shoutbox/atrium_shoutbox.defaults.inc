@@ -1,71 +1,86 @@
 <?php
 
 /**
- * Helper to implementation of hook_ctools_plugin_api().
+ * Helper to implementation of hook_context_default_contexts().
  */
 function _atrium_shoutbox_context_default_contexts() {
-  $items = array();
-/*
-  $items[] = array(
-    'namespace' => 'spaces',
-    'attribute' => 'shoutbox',
-    'value' => 'og',
-    'description' => '',
-    'node' => array(
-      '0' => 'shoutbox',
-    ),
+  $export = array();
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'spaces-shoutbox-og';
+  $context->description = '';
+  $context->tag = 'Shoutbox';
+  $context->conditions = array(
     'views' => array(
-      '0' => 'atrium_shoutbox_shouts:page_1',
-      '1' => 'atrium_shoutbox_shouts:page_3',
-    ),
-    'menu' => 'shoutbox',
-    'block' => array(
-      'views_468d4512633362842c0ff768ac59efad' => array(
-        'module' => 'views',
-        'delta' => '468d4512633362842c0ff768ac59efad',
-        'weight' => 20,
-        'region' => 'right',
-        'status' => '0',
-        'label' => 'Exposed form: atrium_shoutbox_shouts-page_1',
-        'type' => 'context_ui',
-      ),
-      'views_atrium_shoutbox_users-block_1' => array(
-        'module' => 'views',
-        'delta' => 'atrium_shoutbox_users-block_1',
-        'weight' => 21,
-        'region' => 'right',
-        'status' => '0',
-        'label' => 'atrium_shoutbox_users: Block',
-        'type' => 'context_ui',
+      'values' => array(
+        'atrium_shoutbox_shouts:page_1' => 'atrium_shoutbox_shouts:page_1',
       ),
     ),
   );
-  $items[] = array(
-    'namespace' => 'spaces',
-    'attribute' => 'shoutbox',
-    'value' => 'user',
-    'description' => '',
-    'node' => array(
-      '0' => 'shoutbox',
-    ),
-    'views' => array(
-      '0' => 'atrium_shoutbox_shouts:page_2',
-    ),
-    'menu' => 'shoutbox',
+  $context->reactions = array(
     'block' => array(
-      'views_584a7dacb1e0f4c880cbacb19e2d0e93' => array(
-        'module' => 'views',
-        'delta' => '584a7dacb1e0f4c880cbacb19e2d0e93',
-        'weight' => 20,
-        'region' => 'right',
-        'status' => '0',
-        'label' => 'Exposed form: atrium_shoutbox_shouts-page_2',
-        'type' => 'context_ui',
+      'blocks' => array(
+        'views-468d4512633362842c0ff768ac59efad' => array(
+          'module' => 'views',
+          'delta' => '468d4512633362842c0ff768ac59efad',
+          'region' => 'right',
+          'weight' => 0,
+        ),
+        'views-atrium_shoutbox_users-block_1' => array(
+          'module' => 'views',
+          'delta' => 'atrium_shoutbox_users-block_1',
+          'region' => 'right',
+          'weight' => 1,
+        ),
       ),
     ),
   );
-*/
-  return $items;
+
+  $export['spaces-shoutbox-og'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'spaces-shoutbox-user';
+  $context->description = '';
+  $context->tag = 'Shoutbox';
+  $context->conditions = array(
+    'views' => array(
+      'values' => array(
+        'atrium_shoutbox_shouts:page_2' => 'atrium_shoutbox_shouts:page_2',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-584a7dacb1e0f4c880cbacb19e2d0e93' => array(
+          'module' => 'views',
+          'delta' => '584a7dacb1e0f4c880cbacb19e2d0e93',
+          'region' => 'right',
+          'weight' => 0,
+        ),
+      ),
+    ),
+  );
+
+  $export['spaces-shoutbox-user'] = $context;
+  return $export;
+}
+
+/**
+ * Helper to implementation of hook_ctools_plugin_api().
+ */
+function _atrium_shoutbox_ctools_plugin_api() {
+  $args = func_get_args();
+  $module = array_shift($args);
+  $api = array_shift($args);
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
+  else if ($module == "system" && $api == "strongarm") {
+    return array("version" => 1);
+  }
 }
 
 /**
@@ -113,21 +128,6 @@ function _atrium_shoutbox_user_default_permissions() {
   );
 
   return $permissions;
-}
-
-/**
- * Helper to implementation of hook_ctools_plugin_api().
- */
-function _atrium_shoutbox_ctools_plugin_api() {
-  $args = func_get_args();
-  $module = array_shift($args);
-  $api = array_shift($args);
-  if ($module == "context" && $api == "context") {
-    return array("version" => 3);
-  }
-  else if ($module == "system" && $api == "strongarm") {
-    return array("version" => 1);
-  }
 }
 
 /**
