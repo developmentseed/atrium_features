@@ -256,6 +256,16 @@ function atrium_context_links_alter(&$links) {
       $links['book']['query'] = "parent={$node->book['mlid']}";
     }
   }
+  else if (context_get('context', 'spaces_dashboard') && spaces_access_admin()) {
+    $links['spaces-dashboard'] = array(
+      'title' => t('Customize dashboard'),
+      'href' => $_GET['q'],
+      'fragment' => 'block-spaces_dashboard-editor',
+      'attributes' => array(
+        'class' => 'palette-toggle',
+      ),
+    );
+  }
 }
 
 /**
@@ -428,9 +438,16 @@ function atrium_admin_links($space = NULL) {
   $links = array();
   $space = !isset($space) ? spaces_get_space() : $space;
 
+  $reorder = array(
+    'title' => t('Reorder menu'),
+    'href' => $_GET['q'],
+    'fragment' => 'block-spaces-menu_editor',
+    'attributes' => array('class' => 'palette-toggle'),
+  );
+
   // Within a space
   if ($space) {
-    if ($space->type == 'og' && $space->access_admin()) {
+    if ($space->type == 'og' && spaces_access_admin()) {
       $item = menu_get_item("og/users/{$space->id}/faces");
       if ($item && $item['access']) {
         $links['members'] = array(
@@ -455,6 +472,8 @@ function atrium_admin_links($space = NULL) {
           'href' => "node/{$space->id}/features",
         );
       }
+
+      $links['reorder'] = $reorder;
     }
   }
   // Sitewide
@@ -463,6 +482,7 @@ function atrium_admin_links($space = NULL) {
       'title' => t('Customize features'),
       'href' => "features",
     );
+    $links['reorder'] = $reorder;
   }
   drupal_alter('atrium_admin_links', $links, $space);
   return $links;

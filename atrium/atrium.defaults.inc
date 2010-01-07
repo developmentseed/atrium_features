@@ -21,31 +21,31 @@ function _atrium_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'atrium_account' => array(
+        'atrium-account' => array(
           'module' => 'atrium',
           'delta' => 'account',
           'region' => 'header',
           'weight' => 0,
         ),
-        'atrium_user_links' => array(
+        'atrium-user_links' => array(
           'module' => 'atrium',
           'delta' => 'user_links',
           'region' => 'header',
           'weight' => 1,
         ),
-        'atrium_create' => array(
+        'atrium-create' => array(
           'module' => 'atrium',
           'delta' => 'create',
           'region' => 'space_tools',
           'weight' => 0,
         ),
-        'atrium_admin_links' => array(
+        'atrium-admin_links' => array(
           'module' => 'atrium',
           'delta' => 'admin_links',
           'region' => 'space_tools',
           'weight' => 1,
         ),
-        'atrium_search' => array(
+        'atrium-search' => array(
           'module' => 'atrium',
           'delta' => 'search',
           'region' => 'space_tools',
@@ -56,6 +56,18 @@ function _atrium_context_default_contexts() {
           'delta' => 'create',
           'region' => 'page_tools',
           'weight' => 0,
+        ),
+        'spaces_dashboard-editor' => array(
+          'module' => 'spaces_dashboard',
+          'delta' => 'editor',
+          'region' => 'palette',
+          'weight' => 0,
+        ),
+        'spaces-menu_editor' => array(
+          'module' => 'spaces',
+          'delta' => 'menu_editor',
+          'region' => 'palette',
+          'weight' => 1,
         ),
       ),
     ),
@@ -535,11 +547,13 @@ function _atrium_strongarm() {
     'layout' => 'vertical',
     'position' => 'nw',
     'blocks' => array(
-      'spaces-menu_editor' => 'spaces-menu_editor',
-      'spaces_dashboard-editor' => 'spaces_dashboard-editor',
       'admin-create' => 'admin-create',
       'admin-menu' => 'admin-menu',
       'context_ui-editor' => 0,
+      'context_ui-devel' => 0,
+      'spaces_dashboard-editor' => 0,
+      'admin-devel' => 0,
+      'spaces-menu_editor' => 0,
     ),
   );
 
