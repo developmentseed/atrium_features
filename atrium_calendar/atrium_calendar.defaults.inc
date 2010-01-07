@@ -14,7 +14,7 @@ function _atrium_calendar_content_default_fields() {
       'weight' => '-3',
       'parent' => '',
       'label' => array(
-        'format' => 'above',
+        'format' => 'inline',
       ),
       'teaser' => array(
         'format' => 'long',
@@ -70,15 +70,17 @@ function _atrium_calendar_content_default_fields() {
     'field_name' => 'field_date',
     'type_name' => 'feed_ical_item',
     'display_settings' => array(
+      'weight' => '-3',
+      'parent' => '',
       'label' => array(
-        'format' => 'above',
-      ),
-      'full' => array(
-        'format' => 'field_date_long',
-        'exclude' => 0,
+        'format' => 'inline',
       ),
       'teaser' => array(
-        'format' => 'field_date_long',
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'full' => array(
+        'format' => 'default',
         'exclude' => 0,
       ),
     ),

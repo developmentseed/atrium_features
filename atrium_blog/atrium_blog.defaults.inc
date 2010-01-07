@@ -11,14 +11,16 @@ function _atrium_blog_content_default_fields() {
     'field_name' => 'field_referenced_book_page',
     'type_name' => 'blog',
     'display_settings' => array(
+      'weight' => 0,
+      'parent' => '',
       'label' => array(
-        'format' => 'above',
+        'format' => 'inline',
       ),
-      'full' => array(
+      'teaser' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
-      'teaser' => array(
+      'full' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
