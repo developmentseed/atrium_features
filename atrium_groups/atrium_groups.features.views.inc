@@ -104,6 +104,7 @@ function _atrium_groups_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'My groups');
+  $handler->override_option('items_per_page', 20);
   $handler->override_option('use_more', 1);
   $handler->override_option('use_more_text', 'View more');
   $handler->override_option('link_display', 'page_1');
