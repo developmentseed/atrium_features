@@ -256,7 +256,7 @@ function atrium_context_links_alter(&$links) {
       $links['book']['query'] = "parent={$node->book['mlid']}";
     }
   }
-  else if (context_get('context', 'spaces_dashboard') && spaces_access_admin()) {
+  else if (context_get('spaces', 'dashboard') && spaces_access_admin()) {
     $links['spaces-dashboard'] = array(
       'title' => t('Customize dashboard'),
       'href' => $_GET['q'],
@@ -272,22 +272,6 @@ function atrium_context_links_alter(&$links) {
  * Implementation of hook_context_default_contexts_alter().
  */
 function atrium_context_default_contexts_alter(&$contexts) {
-  if (module_exists('spaces_dashboard')) {
-    $contexts['spaces_dashboard']->reactions['block']['blocks'] = array(
-      'views-atrium_intranet-block_3' => array(
-        'module' => 'views',
-        'delta' => 'atrium_intranet-block_3',
-        'region' => 'content',
-        'weight' => 0,
-      ),
-      'views-atrium_groups-block_2' => array(
-        'module' => 'views',
-        'delta' => 'atrium_groups-block_2',
-        'region' => 'right',
-        'weight' => 0,
-      ),
-    );
-  }
   // Conditionally add the notifications UI subscription block.
   if (module_exists('notifications_ui') && !empty($contexts['atrium-intranet-global'])) {
     $contexts['atrium-intranet-global']->reactions['block']['blocks']['notifications_ui_0'] = array(

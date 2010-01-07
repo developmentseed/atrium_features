@@ -87,6 +87,9 @@ function _atrium_groups_spaces_presets() {
         'atrium_casetracker' => '0',
         'spaces_dashboard' => '1',
       ),
+      'spaces_dashboard_custom' => array(
+        'custom-1' => 'Dashboard',
+      ),
       'spaces_setting_home' => 'dashboard',
       'spaces_og_selective' => 3,
       'spaces_og_directory' => 0,
@@ -98,7 +101,7 @@ function _atrium_groups_spaces_presets() {
       'site_frontpage' => 'dashboard',
     ),
     'context' => array(
-      'spaces_dashboard:reaction:block' => array(
+      'spaces_dashboard-custom-1:reaction:block' => array(
         'blocks' => array(
           'views-atrium_intranet-block_3' => array(
             'module' => 'views',
@@ -113,6 +116,18 @@ function _atrium_groups_spaces_presets() {
             'weight' => 0,
           ),
         ),
+      ),
+      'spaces_dashboard-custom-2:reaction:block' => array(
+        'blocks' => array(),
+      ),
+      'spaces_dashboard-custom-3:reaction:block' => array(
+        'blocks' => array(),
+      ),
+      'spaces_dashboard-custom-4:reaction:block' => array(
+        'blocks' => array(),
+      ),
+      'spaces_dashboard-custom-5:reaction:block' => array(
+        'blocks' => array(),
       ),
     ),
   );
@@ -135,6 +150,9 @@ function _atrium_groups_spaces_presets() {
         'spaces_dashboard' => '1',
       ),
       'site_frontpage' => 'dashboard',
+      'spaces_dashboard_custom' => array(
+        'custom-1' => 'Dashboard',
+      ),
       'spaces_og_selective' => 0,
       'spaces_og_directory' => 1,
       'spaces_og_register' => 1,
@@ -144,7 +162,7 @@ function _atrium_groups_spaces_presets() {
       ),
     ),
     'context' => array(
-      'spaces_dashboard:reaction:block' => array(
+      'spaces_dashboard-custom-1:reaction:block' => array(
         'blocks' => array(
           'views-atrium_intranet-block_3' => array(
             'module' => 'views',
@@ -159,6 +177,18 @@ function _atrium_groups_spaces_presets() {
             'weight' => 0,
           ),
         ),
+      ),
+      'spaces_dashboard-custom-2:reaction:block' => array(
+        'blocks' => array(),
+      ),
+      'spaces_dashboard-custom-3:reaction:block' => array(
+        'blocks' => array(),
+      ),
+      'spaces_dashboard-custom-4:reaction:block' => array(
+        'blocks' => array(),
+      ),
+      'spaces_dashboard-custom-5:reaction:block' => array(
+        'blocks' => array(),
       ),
     ),
   );

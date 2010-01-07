@@ -141,6 +141,33 @@ function _atrium_context_default_contexts() {
   );
 
   $export['layout_wide'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'spaces_dashboard-custom-1';
+  $context->description = 'Dashboard';
+  $context->tag = 'Dashboard';
+  $context->conditions = array();
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-atrium_intranet-block_1' => array(
+          'module' => 'views',
+          'delta' => 'atrium_intranet-block_1',
+          'region' => 'content',
+          'weight' => 0,
+        ),
+        'views-atrium_groups-block_2' => array(
+          'module' => 'views',
+          'delta' => 'atrium_groups-block_2',
+          'region' => 'right',
+          'weight' => 0,
+        ),
+      ),
+    ),
+  );
+
+  $export['spaces_dashboard-custom-1'] = $context;
   return $export;
 }
 
