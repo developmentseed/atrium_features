@@ -101,6 +101,17 @@ function atrium_groups_block($op, $delta = 0) {
 }
 
 /**
+ * Implementation of spaces_og_breadcrumb_alter().
+ * Point link to group at group homepage rather than the node.
+ */
+function atrium_groups_spaces_og_breadcrumb_alter(&$bc) {
+  if (isset($bc[2])) {
+    $space = spaces_get_space();
+    $bc[2] = l(check_plain($space->title()), '<front>');
+  }
+}
+
+/**
  * Implementation of hook_context_page_reaction().
  * Good occasion to set the breadcrumb.
  */
