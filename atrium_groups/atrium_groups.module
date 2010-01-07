@@ -64,43 +64,6 @@ function atrium_groups_menu_alter(&$items) {
 }
 
 /**
- * Implementation of hook_block
- */
-function atrium_groups_block($op, $delta = 0) {
-  if ($op == 'list') {
-    return array(
-      'user_links' => array(
-        'info' => t('Atrium groups: user links'),
-      ),
-      'admin_links' => array(
-        'info' => t('Atrium groups: administrator links'),
-      ),
-    );
-  }
-  elseif ($op == 'view') {
-    switch ($delta) {
-      case 'user_links':
-         if ($links = atrium_groups_user_links()) {
-          return array(
-            'subject' => t('Membership'),
-            'content' => theme('links', $links),
-          );
-        }
-      break;
-      case 'admin_links':
-        if ($links = atrium_groups_admin_links()) {
-          return array(
-            'subject' => t('Settings'),
-            'content' => theme('links', $links),
-          );
-        }
-      break;
-    }
-    return array(); 
-  }
-}
-
-/**
  * Implementation of spaces_og_breadcrumb_alter().
  * Point link to group at group homepage rather than the node.
  */
