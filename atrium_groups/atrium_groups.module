@@ -101,6 +101,17 @@ function atrium_groups_block($op, $delta = 0) {
 }
 
 /**
+ * Implementation of spaces_og_breadcrumb_alter().
+ * Point link to group at group homepage rather than the node.
+ */
+function atrium_groups_spaces_og_breadcrumb_alter(&$bc) {
+  if (isset($bc[2])) {
+    $space = spaces_get_space();
+    $bc[2] = l(check_plain($space->title()), '<front>');
+  }
+}
+
+/**
  * Implementation of hook_context_page_reaction().
  * Good occasion to set the breadcrumb.
  */
@@ -121,7 +132,7 @@ function atrium_groups_context_links_alter(&$links) {
   if (context_get('context', 'spaces-feature-groups')) {
     $item = menu_get_item('node/add/group');
     if ($item['access']) {
-      $links['atrium_groups'] = array('title' => $item['title'], 'href' => $item['href']);
+      $links['atrium_groups'] = array('title' => t('Add @type', array('@type' => $item['title'])), 'href' => $item['href']);
     }
   }
 }

@@ -104,6 +104,7 @@ function _atrium_groups_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'My groups');
+  $handler->override_option('items_per_page', 20);
   $handler->override_option('use_more', 1);
   $handler->override_option('use_more_text', 'View more');
   $handler->override_option('link_display', 'page_1');
@@ -117,51 +118,10 @@ function _atrium_groups_views_default_views() {
     'separator' => '',
   ));
   $handler = $view->new_display('block', 'Block: My groups (sidebar)', 'block_2');
-  $handler->override_option('fields', array(
-    'post_count_new' => array(
-      'label' => '',
-      'set_precision' => FALSE,
-      'precision' => 0,
-      'decimal' => '.',
-      'separator' => ',',
-      'prefix' => '',
-      'suffix' => '',
-      'exclude' => 0,
-      'id' => 'post_count_new',
-      'table' => 'og',
-      'field' => 'post_count_new',
-      'relationship' => 'none',
-    ),
-    'atrium_group' => array(
-      'label' => '',
-      'alter' => array(
-        'alter_text' => FALSE,
-        'text' => '',
-        'make_link' => FALSE,
-        'path' => '',
-        'alt' => '',
-        'link_class' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'trim' => FALSE,
-        'max_length' => '',
-        'word_boundary' => TRUE,
-        'ellipsis' => TRUE,
-        'strip_tags' => FALSE,
-        'html' => FALSE,
-      ),
-      'exclude' => 0,
-      'id' => 'atrium_group',
-      'table' => 'node',
-      'field' => 'atrium_group',
-      'relationship' => 'none',
-    ),
-  ));
   $handler->override_option('access', array(
     'type' => 'perm',
     'perm' => 'access content',
   ));
-  $handler->override_option('items_per_page', 15);
   $handler->override_option('block_description', 'My groups');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('page', 'Page: My groups', 'page_1');

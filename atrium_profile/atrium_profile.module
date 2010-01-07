@@ -3,12 +3,23 @@
 include_once('atrium_profile.features.inc');
 
 /**
+ * Implementation of hook_menu_alter().
+ */
+function atrium_profile_menu_alter(&$items) {
+  if (isset($items['user/%user/view'])) {
+    $items['user/%user/view']['title'] = t('Profile');
+  }
+  if (isset($items['user/%user/view'])) {
+    $items['user/%user/openid']['title'] = t('OpenID');
+  }
+}
+
+/**
  * Implementation of hook_views_pre_view().
  */
 function atrium_profile_views_pre_build(&$view) {
   // Remove email display if site is in public mode.
-  $space = spaces_load('site', 1);
-  if ($view->name == 'atrium_profile' && isset($space->settings['atrium_sitemode']) && $space->settings['atrium_sitemode'] == ATRIUM_SITEMODE_PUBLIC) {
+  if ($view->name == 'atrium_profile' && variable_get('user_register', 0)) {
     $fields = $view->display_handler->get_option('fields');
     if (isset($fields['mail'])) {
       unset($fields['mail']);
@@ -18,50 +29,19 @@ function atrium_profile_views_pre_build(&$view) {
 }
 
 /**
- * Implementation of hook_spaces_admin_links_alter().
- */
-function atrium_profile_spaces_admin_links_alter(&$links, $space) {
-  global $user;
-  if ($space->type == 'user' && $space->sid == $user->uid && node_access('create', 'profile')) {
-    $prepend = array(
-      'profile' => array(
-        'title' => t('Edit my profile'),
-        'href' => "user/{$space->sid}/edit/profile",
-      ),
-    );
-    $links = $prepend + $links;
-  }
-}
-
-/**
  * Implementation of hook_context_links_alter().
  */
 function atrium_profile_context_links_alter(&$links) {
   global $user;
   $space = spaces_get_space();
-  if ($space && $space->type == 'user' && $space->sid == $user->uid && node_access('create', 'profile')) {
+  if ($space && $space->type == 'user' && $space->id == $user->uid && node_access('create', 'profile')) {
     $prepend = array(
       'profile' => array(
         'title' => t('Edit my profile'),
-        'href' => "user/{$space->sid}/edit/profile",
+        'href' => "user/{$space->id}/edit/profile",
         'custom' => TRUE,
       ),
     );
     $links = $prepend + $links;
   }
-}
-
-/**
- * Implementation of hook_atrium_dashboard().
- */
-function atrium_profile_atrium_dashboard() {
-  $blocks = array();
-  $blocks[] = array(
-    'module' => 'views',
-    'delta' => 'atrium_profile-block_1',
-    'region' => 'content',
-    'weight' => -20,
-    'spaces' => array('user'),
-  );
-  return $blocks;
 }

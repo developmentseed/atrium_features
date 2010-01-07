@@ -28,6 +28,15 @@ function atrium_casetracker_menu_default_items() {
 }
 
 /**
+ * Implementation of hook_node_info().
+ */
+function atrium_casetracker_node_info() {
+  module_load_include('inc', 'atrium_casetracker', 'atrium_casetracker.features.node');
+  $args = func_get_args();
+  return call_user_func_array('_atrium_casetracker_node_info', $args);
+}
+
+/**
  * Implementation of hook_user_default_permissions().
  */
 function atrium_casetracker_user_default_permissions() {

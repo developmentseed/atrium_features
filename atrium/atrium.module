@@ -3,23 +3,6 @@
 include_once('atrium.features.inc');
 
 /**
- * DEPRECATED and slated for removal use 'user_registration' variable instead
- */
-define('ATRIUM_SITEMODE_PRIVATE', 0);
-
-/**
- * Anonymous users may view public content and user registration is
- * open to the public.
- */
-define('ATRIUM_SITEMODE_PUBLIC', 1);
-
-/**
- * Anonymous users may view public content and user registration is
- * moderated.
- */
-define('ATRIUM_SITEMODE_CONTROLLED', 2);
-
-/**
  * Users may view all members of the site.
  */
 define('ATRIUM_MEMBERS_ALL', 0);
@@ -29,67 +12,6 @@ define('ATRIUM_MEMBERS_ALL', 0);
  */
 define('ATRIUM_MEMBERS_GROUP', 1);
 
-
-/**
- * Implementation of hook_user_default_permissions().
- */
-function atrium_user_default_permissions() {
-  $permissions = array();
-
-  if (!variable_get('user_register', FALSE)) {
-    $permissions[] = array(
-      'name' => 'access user profiles',
-      'roles' => array('authenticated user'),
-    );
-    $permissions[] = array(
-      'name' => 'access content',
-      'roles' => array('authenticated user'),
-    );
-    $permissions[] = array(
-      'name' => 'access comments',
-      'roles' => array('authenticated user'),
-    );
-    $permissions[] = array(
-      'name' => 'view revisions',
-      'roles' => array('authenticated user'),
-    );
-  }
-  else {
-    $permissions[] = array(
-      'name' => 'access user profiles',
-      'roles' => array('anonymous user', 'authenticated user'),
-    );
-    $permissions[] = array(
-      'name' => 'access content',
-      'roles' => array('anonymous user', 'authenticated user'),
-    );
-    $permissions[] = array(
-      'name' => 'access comments',
-      'roles' => array('anonymous user', 'authenticated user'),
-    );
-    $permissions[] = array(
-      'name' => 'view revisions',
-      'roles' => array('anonymous user', 'authenticated user'),
-    );
-  }
-  switch (variable_get('atrium_members', ATRIUM_MEMBERS_GROUP)) {
-    case ATRIUM_MEMBERS_ALL:
-      $permissions[] = array(
-        'name' => 'view users outside groups',
-        'roles' => array('anonymous user', 'authenticated user', 'manager', 'admin'),
-      );
-      break;
-    case ATRIUM_MEMBERS_GROUP:
-      $permissions[] = array(
-        'name' => 'view users outside groups',
-        'roles' => array('manager', 'admin'),
-      );
-      break;
-  }
-
-  return $permissions;
-}
-
 /**
  * Implementation of hook_init().
  */
@@ -97,86 +19,12 @@ function atrium_init() {
   // Alert the user that they are browsing an archived group.
   $space = spaces_get_space();
   if ($space && atrium_is_archived($space)) {
-    $message = t('This !type is <strong>archived</strong>. You may not add or alter any of its content.', array('!type' => atrium_get_typename('group')));
+    $message = t('This !type is <strong>archived</strong>. You may not add or alter any of its content.', array('!type' => node_get_types('name', 'group')));
     if (node_access('update', $space->group)) {
-      $message .= ' '. t('To reactivate this !type, !link.', array('!type' => atrium_get_typename('group'), '!link' => l(t('click here'), "node/$space->sid/reactivate")));
+      $message .= ' '. t('To reactivate this !type, !link.', array('!type' => node_get_types('name', 'group'), '!link' => l(t('click here'), "node/$space->id/reactivate")));
     }
     drupal_set_message($message);
   }
-}
-
-/**
- * Function that checks whether a group has been archived.
- */
-function atrium_is_archived($space = NULL) {
-  switch ($space->type) {
-    case 'og':
-      return !$space->group->status;
-  }
-  return FALSE;
-}
-
-/**
- * Implementation of hook_views_api().
- */
-function atrium_views_api() {
-  return array(
-    'api' => 2,
-    'path' => drupal_get_path('module', 'atrium') .'/includes',
-  );
-}
-
-/**
- * Implemenation of hook_nodeapi().
- */
-function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
-  switch ($op) {
-    case 'prepare':
-    case 'view':
-      // Confirm we are actually on a page of relevance
-      if (menu_get_object() === $node) {
-        // Set the context for the root book node type when on a book child page
-        if (!empty($node->book['bid'])) {
-          $type = db_result(db_query("SELECT type FROM {node} WHERE nid = %d", $node->book['bid']));
-
-          // @TODO: Write a condition plugin for this rather than using nodeapi.
-          if ($plugin = context_get_plugin('condition', 'node')) {
-            $plugin->execute($node, 'view');
-          }
-        }
-        // Display a message for archived content
-        if ($op == 'view' && $node->status == 0) {
-          $message = t('This !type is <strong>archived</strong>.', array('!type' => atrium_get_typename($node->type)));
-          if (node_access('update', $node)) {
-            $message .= ' '. t('To reactivate this !type, !link.', array('!type' => atrium_get_typename($node->type), '!link' => l(t('click here'), "node/{$node->nid}/reactivate")));
-          }
-          drupal_set_message($message);
-        }
-      }
-      break;
-  }
-}
-
-/**
- * Implementation of hook_context_links_alter();
- */
-function atrium_context_links_alter(&$links) {
-  if (context_get('context', 'spaces-feature-book') && isset($links['book']) && $space = spaces_get_space()) {
-    $item = menu_get_item('node/add/book');
-    $node = menu_get_object();
-    if ($item['access'] && !empty($node->book['mlid'])) {
-      $links['book']['query'] = "parent={$node->book['mlid']}";
-    }
-  }
-}
-
-/**
- * Implementation of hook_features_menu_links_alter().
- *
- * Make features menu skinnable
- */
-function atrium_features_menu_links_alter(&$links) {
-  $links = atrium_skin_links($links, TRUE);
 }
 
 /**
@@ -209,16 +57,9 @@ function atrium_menu() {
     'access callback' => 'node_access',
     'access arguments' => array('update', 1),
     'type' => MENU_CALLBACK,
+    'file' => 'atrium.pages.inc',
   );
   return $items;
-}
-
-/**
- * Implementation of hook_perm().
- */
-function atrium_perm() {
-  // Gives users access to all "easy administration" tools in Atrium.
-  return array('administer atrium');
 }
 
 /**
@@ -247,6 +88,23 @@ function atrium_menu_alter(&$callbacks) {
   // Hijack the /node callback for use as our welcome page
   $callbacks['node']['page callback'] = 'drupal_goto';
   $callbacks['node']['page arguments'] = array('welcome');
+
+  // Kill undesirable menu items
+  $yank = array(
+    'book',
+    'rss.xml',
+    'node/%node/outline',
+  );
+  foreach ($yank as $path) {
+    if (!empty($items[$path])) {
+      unset($items[$path]);
+    }
+  }
+
+  // Replace default 403
+  $items['access-denied']['page callback'] = 'atrium_403';
+  $items['access-denied']['module'] = 'atrium';
+  $items['access-denied']['file'] = 'atrium.pages.inc';
 }
 
 /**
@@ -255,10 +113,16 @@ function atrium_menu_alter(&$callbacks) {
 function atrium_block($op = 'list', $delta = 0) {
   switch ($op) {
     case 'list':
-      $blocks = array();
-      $blocks['book'] = array('info' => t('Atrium: Book'));
-      return $blocks;
+      return array(
+        'account' => array('info' => t('Atrium: User account')),
+        'admin_links' => array('info' => t('Atrium: Admin links')),
+        'book' => array('info' => t('Atrium: Book')),
+        'create' => array('info' => t('Atrium: Create content')),
+        'search' => array('info' => t('Atrium: Search form')),
+        'user_links' => array('info' => t('Atrium: User links')),
+      );
     case 'view':
+      module_load_include('inc', 'atrium', 'atrium.block');
       $function = "_atrium_block_{$delta}";
       if (function_exists($function)) {
         return call_user_func($function);
@@ -271,216 +135,354 @@ function atrium_block($op = 'list', $delta = 0) {
  * Implementation of hook_form_alter().
  */
 function atrium_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id) {
+    // Set login layout via context
+    case 'user_login':
+    case 'user_pass':
+    case 'user_register':
+      context_set('context', 'layout_login', context_load('layout_login'));
+      break;
+    // Form alter handling via callbacks
+    case 'spaces_features_form':
+    case 'system_themes_form':
+    case 'node_type_form':
+    case 'views_exposed_form':
+      module_load_include('inc', 'atrium', 'atrium.pages');
+      $function = "_atrium_form_{$form_id}_alter";
+      if (function_exists($function)) {
+        $function($form, $form_state);
+      }
+      break;
+  }
+
+  //  Crappy exception for node form.
   if ($form['#id'] == 'node-form') {
-    $node = $form['#node'];
+    module_load_include('inc', 'atrium', 'atrium.pages');
+    $function = "_atrium_form_node_form_alter";
+    if (function_exists($function)) {
+      $function($form, $form_state);
+    }
+  }
 
-    // Book mods
-    if ($form['#id'] == 'node-form' && book_type_is_allowed($form['#node']->type)) {
-      $node = $form['#node'];
+  // Disable notifications when editing a post outside of a group space
+  if ((!empty($form['#node']) || $form_id == 'comment_form') && isset($form['notifications'])) {
+    $space = spaces_get_space();
+    if (empty($space) || $space->type != 'og') {
+      $form['notifications']['#access'] = FALSE;
+    }
+  }
+}
 
-      if (!empty($form['book'])) {
-        // Fieldset mods
-        $form['book']['#weight'] = !empty($form['body_field']['#weight']) ? $form['body_field']['#weight'] : 0;
-        $form['book']['#collapsible'] =
-        $form['book']['#collapsed'] = FALSE;
+/**
+ * Implementation of hook_link_alter().
+ */
+function atrium_link_alter(&$links, $node) {
+  if (!empty($links['comment_new_comments']) && !empty($links['comment_comments'])) {
+    unset($links['comment_comments']);
+  }
+}
 
-        if (!empty($form['book']['bid']['#options'])) {
-          // Remove "none" option -- do not allow book pages to be orphaned
-          unset($form['book']['bid']['#options'][0]);
-          // Filter book options by current space
-          if ($view = views_get_view('atrium_book_current')) {
-            $view->set_display();
-            $view->set_items_per_page(0);
-            $view->execute();
+/**
+ * Implementation of hook_litenode().
+ */
+function atrium_litenode() {
+  $info = array();
+  $info['atrium'] = array();
+  $info['atrium']['module'] = t('Atrium');
+  $info['atrium']['map'] = array();
+  $info['atrium']['fields'] = array(
+    'timestamp_1' => array(
+      'id' => 'timestamp_1',
+      'table' => 'history_user',
+      'field' => 'timestamp',
+    ),
+  );
+  return $info;
+}
 
-            // Collect books in this space into an array
-            $books = array();
-            $books[$node->nid] = 1;
-            if (is_array($view->result) && count($view->result)) {
-              foreach($view->result as $row) {
-                $books[$row->nid] = 1;
-              }
-            }
+/**
+ * Implementation of hook_litenode_alter().
+ */
+function atrium_litenode_alter(&$node, $row) {
+  $node->new = atrium_get_readstate($row->history_user_timestamp, $node->changed);
+}
 
-            // Use collected array to filter options
-            foreach ($form['book']['bid']['#options'] as $k => $v) {
-              if (is_numeric($k) && !isset($books[$k])) {
-                unset($form['book']['bid']['#options'][$k]);
-              }
-            }
+/**
+ * Implemenation of hook_nodeapi().
+ */
+function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
+  switch ($op) {
+    case 'prepare':
+    case 'view':
+      // Load the node's read state.
+      if ($op === 'view' && !isset($node->new)) {
+        global $user;
+        $readtime = db_result(db_query("SELECT timestamp FROM {history} WHERE uid = %d AND nid = %d", $user->uid, $node->nid));
+        $node->new = atrium_get_readstate($readtime, $node->changed);
+      }
+
+      // Confirm we are actually on a page of relevance
+      if (menu_get_object() === $node) {
+        // Set the context for the root book node type when on a book child page
+        if (!empty($node->book['bid'])) {
+          $type = db_result(db_query("SELECT type FROM {node} WHERE nid = %d", $node->book['bid']));
+
+          // @TODO: Write a condition plugin for this rather than using nodeapi.
+          if ($plugin = context_get_plugin('condition', 'node')) {
+            $plugin->execute($node, 'view');
           }
         }
+        // Display a message for archived content
+        if ($op == 'view' && $node->status == 0) {
+          $message = t('This !type is <strong>archived</strong>.', array('!type' => node_get_types('name', $node->type)));
+          if (node_access('update', $node)) {
+            $message .= ' '. t('To reactivate this !type, !link.', array('!type' => node_get_types('name', $node->type), '!link' => l(t('click here'), "node/{$node->nid}/reactivate")));
+          }
+          drupal_set_message($message);
+        }
       }
-    }
+      break;
+  }
+}
 
-    $space = spaces_get_space();
-
-    // Determine whether this node is archivable
-    $archivable = in_array($node->type, variable_get('atrium_archivable', array()));
-    $archivable = !empty($node->nid) && $archivable;
-
-    // Only allow root books to be archived.
-    if (book_type_is_allowed($node->type)) {
-      $archivable = $archivable && (!empty($node->book) && $node->book['plid'] == 0);
-    }
-
-    // Add a link to archive/reactive the space
-    if ($archivable) {
-      // Add archive / reactivate buttons
-      if ($node->status) {
-        $archive_help = t('This !type is currently <strong>active</strong>. You can archive it to hide it from listings and prevent others from adding to or altering its content. You can always undo this action by reactivating the !type.', array('!type' => atrium_get_typename($node->type)));
-      }
-      else {
-        $archive_help = t('This !type is currently <strong>archived</strong>. You can reactivate it to allow others to add and alter its content.', array('!type' => atrium_get_typename($node->type)));
-      }
-      $form['archive'] = array(
-        '#type' => 'fieldset',
-        '#description' => $archive_help,
-        '#weight' => 100,
-      );
-      $form['archive']['button'] = array(
-        '#type' => 'submit',
-        '#value' => $node->status ? t('Archive this !type', array('!type' => atrium_get_typename($node->type))) : t('Reactivate'),
-        '#submit' => $node->status ? array('atrium_archive_submit') : array('atrium_reactivate_submit'),
-      );
-    }
-    // Disable other node forms in archived spaces
-    else if (atrium_is_archived($space)) {
-      drupal_access_denied(); exit;
+/**
+ * Implementation of hook_context_links_alter();
+ */
+function atrium_context_links_alter(&$links) {
+  if (context_get('context', 'spaces-feature-book') && isset($links['book']) && $space = spaces_get_space()) {
+    $item = menu_get_item('node/add/book');
+    $node = menu_get_object();
+    if ($item['access'] && !empty($node->book['mlid'])) {
+      $links['book']['query'] = "parent={$node->book['mlid']}";
     }
   }
 }
 
 /**
- * Implementation of hook_form_alter for spaces_features_form.
+ * Implementation of hook_context_default_contexts_alter().
  */
-function atrium_form_spaces_features_form_alter(&$form, $form_state) {
-  $space = spaces_get_space();
-  if (!$space) {
-    $form['atrium'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Site settings'),
-      '#tree' => FALSE,
-    );
-    $form['atrium']['user_register'] = array(
-      '#title' => t('Site mode'),
-      '#type' => 'select',
-      '#description' => t('Choose the access level for the site.'),
-      '#options' => array(
-        0 => t('Private access only'),
-        1 => t('Public access, open registration'),
-        2 => t('Public access, moderated registration'),
+function atrium_context_default_contexts_alter(&$contexts) {
+  if (module_exists('spaces_dashboard')) {
+    $contexts['spaces_dashboard']->reactions['block']['blocks'] = array(
+      'views-atrium_intranet-block_3' => array(
+        'module' => 'views',
+        'delta' => 'atrium_intranet-block_3',
+        'region' => 'content',
+        'weight' => 0,
       ),
-      '#default_value' => variable_get('user_register', 0),
-    );
-    $form['atrium']['atrium_members'] = array(
-      '#title' => t('Members'),
-      '#type' => 'select',
-      '#description' => t('Choose the access mode for the member directory and profiles. Administrators and managers will be able to see all members regardless of this setting.'),
-      '#options' => array(
-        ATRIUM_MEMBERS_ALL=> t('Users can view all members'),
-        ATRIUM_MEMBERS_GROUP => t('Users can only view members that belong to their groups')
+      'views-atrium_groups-block_2' => array(
+        'module' => 'views',
+        'delta' => 'atrium_groups-block_2',
+        'region' => 'right',
+        'weight' => 0,
       ),
-      '#default_value' => variable_get('atrium_members', ATRIUM_MEMBERS_ALL),
     );
-    $form['#submit'][] = 'atrium_form_spaces_features_form_submit';
+  }
+  // Conditionally add the notifications UI subscription block.
+  if (module_exists('notifications_ui') && !empty($contexts['atrium-intranet-global'])) {
+    $contexts['atrium-intranet-global']->reactions['block']['blocks']['notifications_ui_0'] = array(
+      'module' => 'notifications_ui',
+      'delta' => '0',
+      'weight' => 48,
+      'region' => 'page_tools',
+    );
   }
 }
 
 /**
- * Trigger a features rebuild.
+ * Implementation of hook_views_api().
  */
-function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
-  features_rebuild();
+function atrium_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'atrium') .'/includes',
+  );
 }
 
 /**
- * Implementation of hook_form_alter for system_themes_form.
- * Limit options to themes that implement atrium compatibility.
+ * Implementation of preprocess_views_view().
  */
-function atrium_form_system_themes_form_alter(&$form, $form_state) {
-  $themes = system_theme_data();
-  foreach ($themes as $key => $theme) {
-    if (empty($theme->info['atrium'])) {
-      unset($form[$key]);
-      unset($form['status']['#options'][$key]);
-      unset($form['theme_default']['#options'][$key]);
+function atrium_preprocess_views_view(&$vars) {
+  $view = $vars['view'];
+  $map = spaces_features_map();
+  $feature = isset($map['views'][$view->name]) ? $map['views'][$view->name] : NULL;
+  if ($feature && strpos($view->current_display, 'page') !== FALSE && empty($view->result) && empty($vars['empty'])) {
+    if ($type = array_search($feature, $map['node'])) {
+      $item = menu_get_item('node/add/'. strtr($type, array('_' => '-')));
+      if ($item && $item['access']) {
+        $output = t('Please add your first @type to get started.', array('@type' => node_get_types('name', $type)));
+        $output .= "<div class='buttons'>". theme('links', context_links()) ."</div>";
+      }
+    }
+    $vars['empty'] = !empty($output) ? $output : t('There is currently no content to view in this section.');
+  }
+}
+
+/**
+ * Extra permissions that are dependent upon variable settings.
+ * This function is called by atrium_user_default_permissions() and
+ * the call to it needs to be manually retained when this feature is
+ * updated.
+ */
+function atrium_user_default_permissions_extra() {
+  if (context_get('atrium', 'access_perms')) {
+    if (!variable_get('user_register', FALSE)) {
+      $permissions = array(
+        array(
+          'name' => 'access user profiles',
+          'roles' => array('authenticated user'),
+        ),
+        array(
+          'name' => 'access content',
+          'roles' => array('authenticated user'),
+        ),
+        array(
+          'name' => 'access comments',
+          'roles' => array('authenticated user'),
+        ),
+        array(
+          'name' => 'view revisions',
+          'roles' => array('authenticated user'),
+        ),
+      );
+    }
+    else {
+      $permissions = array(
+        array(
+          'name' => 'access user profiles',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+        array(
+          'name' => 'access content',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+        array(
+          'name' => 'access comments',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+        array(
+          'name' => 'view revisions',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+      );
+    }
+    switch (variable_get('atrium_members', ATRIUM_MEMBERS_GROUP)) {
+      case ATRIUM_MEMBERS_ALL:
+        $permissions[] = array(
+          'name' => 'view users outside groups',
+          'roles' => array('anonymous user', 'authenticated user', 'manager', 'admin'),
+        );
+        break;
+      case ATRIUM_MEMBERS_GROUP:
+        $permissions[] = array(
+          'name' => 'view users outside groups',
+          'roles' => array('manager', 'admin'),
+        );
+        break;
+    }
+    return $permissions;
+  }
+  module_load_include('inc', 'atrium', 'atrium.defaults');
+  return _atrium_user_default_permissions();
+}
+
+/**
+ * API Functions ======================================================
+ */
+
+/**
+ * Generates an array of account links suitable for use in theme_links().
+ */
+function atrium_account_links() {
+  global $user;
+  $links = array();
+
+  // @TODO: If menu.inc had a real API function for this we would use it, but
+  // as of now we'd have a copy hand paste hack job of menu_local_tasks()...
+  $paths = array(
+    "user/{$user->uid}/edit" => t('Account settings'),
+    "user/{$user->uid}/groups" => '',
+    "user/{$user->uid}/notifications" => '',
+    "user/{$user->uid}/openid" => '',
+    'logout' => '',
+  );
+  foreach ($paths as $path => $title) {
+    $item = menu_get_item($path);
+    if ($item && $item['access']) {
+      $class = seed_id_safe($item['href']);
+      $links[$class] = array(
+        'title' => !empty($title) ? $title : $item['title'],
+        'href' => $item['href'],
+      );
     }
   }
+  drupal_alter('atrium_account_links', $links, $space);
+  return $links;
 }
 
 /**
- *  Implementation of hook_form_alter for node_type_form.
+ * Generates an array of admin links for the current space suitable
+ * for use in theme_links().
  */
-function atrium_form_node_type_form_alter(&$form, $form_state) {
-  if (isset($form['identity']['type'])) {
-    $form['atrium'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Atrium'),
-      '#tree' => FALSE,
-      '#collapsible' => FALSE,
-      '#collapsed' => FALSE,
-    );
-    $form['atrium']['atrium_update_type'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Show in recent activity views'),
-      '#description' => t('Show this content type in activity streams, update lists, etc.'),
-      '#default_value' => variable_get('atrium_update_type_'. $form['#node_type']->type, TRUE),
+function atrium_admin_links($space = NULL) {
+  $links = array();
+  $space = !isset($space) ? spaces_get_space() : $space;
+
+  // Within a space
+  if ($space) {
+    if ($space->type == 'og' && $space->access_admin()) {
+      $item = menu_get_item("og/users/{$space->id}/faces");
+      if ($item && $item['access']) {
+        $links['members'] = array(
+          'title' => t('Members'),
+          'href' => "og/users/{$space->id}/faces",
+        );
+      }
+
+      $item = menu_get_item("node/{$space->sid}/edit");
+      if ($item && $item['access']) {
+        // Add settings link for administering spaces
+        $links['settings'] = array(
+          'title' => t('@type settings', array('@type' => node_get_types('name', $space->group->type))),
+          'href' => "node/{$space->id}/edit",
+        );
+      }
+
+      $item = menu_get_item("node/{$space->id}/features");
+      if ($item && $item['access']) {
+        $links['features'] = array(
+          'title' => t('Customize features'),
+          'href' => "node/{$space->id}/features",
+        );
+      }
+    }
+  }
+  // Sitewide
+  else if (user_access('administer site configuration')) {
+    $links['features'] = array(
+      'title' => t('Customize features'),
+      'href' => "features",
     );
   }
+  drupal_alter('atrium_admin_links', $links, $space);
+  return $links;
 }
 
 /**
- * Form alter for views exposed forms.
+ * Generates an array of user links for the current space suitable
+ * for use in theme_links().
  */
-function atrium_form_views_exposed_form_alter(&$form, $form_state) {
-  // Quick check that this is the right view
-  $view = views_get_current_view();
-  if ($view && $view->name === 'atrium_search' && !empty($form['created'])) {
-    $options = array(
-      '-14 days' => t('2 weeks ago'),
-      '-30 days' => t('1 month ago'),
-      '-180 days' => t('6 month ago'),
-      '' => t('Anytime'),
-    );
-    $form['created']['#type'] = 'select';
-    $form['created']['#options'] = $options;
-    unset($form['created']['#size']);
+function atrium_user_links($space = NULL) {
+  $space = !isset($space) ? spaces_get_space() : $space;
+  if ($space && $space->type == 'og' && $space->access_space()) {
+    // TODO revist this
+    if ($subscribe = spaces_og_subscription_link()) {
+      $links['subscribe'] = $subscribe;
+    }
+    drupal_alter('atrium_user_links', $links, $space);
+    return $links;
   }
-}
-
-/**
- * OG archive submit handler.
- */
-function atrium_archive_submit($form, &$form_state) {
-  $nid = $form_state['values']['nid'];
-  $node = node_load($nid);
-  $node->status = 0;
-  node_save($node);
-  drupal_set_message(t('The @type @title has been archived.', array('@type' => atrium_get_typename($node->type), '@title' => $node->title)));
-  $form_state['redirect'] = "node/{$node->nid}";
-}
-
-/**
- * Reactivate node submit handler.
- */
-function atrium_reactivate_submit($form, &$form_state) {
-  $nid = $form_state['values']['nid'];
-  $node = node_load($nid);
-  $node->status = 1;
-  node_save($node);
-  drupal_set_message(t('The @type @title has been reactivated.', array('@type' => atrium_get_typename($node->type), '@title' => $node->title)));
-  $form_state['redirect'] = "node/{$node->nid}";
-}
-
-/**
- * Menu callback for reactivation confirmation form.
- */
-function atrium_reactivate($form_state, $node) {
-  $form = array();
-  $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
-  $form['#submit'] = array('atrium_reactivate_submit');
-  return confirm_form($form, t('Are you sure you want to reactivate %title?', array('%title' => $node->title)), "node/{$node->nid}", '', t('Reactivate'), t('Cancel'));
+  return array();
 }
 
 /**
@@ -500,18 +502,6 @@ function atrium_update_types($reset = FALSE) {
 }
 
 /**
- * Small API function to make retrieving the human-readable node type
- * name easier.
- */
-function atrium_get_typename($type, $lower = TRUE) {
-  $types = node_get_types();
-  if (!empty($types[$type])) {
-    return $lower ? strtolower($types[$type]->name) : $types[$type]->name;
-  }
-  return FALSE;
-}
-
-/**
  * Wrapper access callback to provide access check against both a spaces
  * feature and an access perm.
  */
@@ -520,43 +510,27 @@ function atrium_feature_access($feature, $perm = 'access content') {
 }
 
 /**
- * BLOCKS =============================================================
+ * Function that checks whether a group has been archived.
  */
+function atrium_is_archived($space = NULL) {
+  switch ($space->type) {
+    case 'og':
+      return !$space->group->status;
+  }
+  return FALSE;
+}
 
 /**
- * Feature-aware book block.
+ * Helper function to deal with node read state logic.
  */
-function _atrium_block_book() {
-  context_set('atrium', 'book', 'rendering');
-
-  $space = spaces_get_space();
-  $block = array();
-  if ($space) {
-    if ($node = menu_get_object()) {
-      $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
-    }
-    // Set customized title
-    $features = spaces_features();
-    $block['subject'] = t('Documents');
-
-    // Generate book tree per book node in current space
-    $output = '';
-    if ($view = views_get_view('atrium_book_current')) {
-      $view->set_display();
-      $view->set_items_per_page(0);
-      $view->execute();
-      if (is_array($view->result) && count($view->result)) {
-        foreach($view->result as $row) {
-          $output .= menu_tree(book_menu_name($row->nid));
-        }
-      }
-    }
-    $block['content'] = $output;
+function atrium_get_readstate($readtime, $nodetime) {
+  if ($readtime == 0 && $nodetime > NODE_NEW_LIMIT) {
+    return MARK_NEW;
   }
-
-  context_set('atrium', 'book', FALSE);
-
-  return $block;
+  elseif ($nodetime > $readtime && $nodetime > NODE_NEW_LIMIT) {
+    return MARK_UPDATED;
+  }
+  return MARK_READ;
 }
 
 /**
@@ -573,13 +547,11 @@ function atrium_search_form($form_state) {
     '#size' => 30,
     '#required' => true,
     '#default_value' => !empty($default) ? $default : '',
-    '#attributes' => array('class' => 'atrium-skin'),
   );
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Search'),
     '#submit' => array('atrium_search_form_submit'),
-    '#attributes' => array('class' => 'atrium-skin'),
   );
   return $form;
 }
@@ -593,102 +565,38 @@ function atrium_search_form_submit($form, &$form_state) {
 }
 
 /**
- * Helper function to ensure a permission exists in a roles array for a given role/perm.
+ * Form submit handlers ===============================================
  */
-function _atrium_ensure_perm(&$roles, $role, $perm) {
-  if (!isset($roles[$role]['perm']) || !in_array($perm, $roles[$role]['perm'])) {
-    $roles[$role]['perm'][] = $perm;
-  }
+
+/**
+ * Reactivate node submit handler.
+ */
+function atrium_reactivate_submit($form, &$form_state) {
+  $nid = $form_state['values']['nid'];
+  $node = node_load($nid);
+  $node->status = 1;
+  node_save($node);
+  drupal_set_message(t('The @type @title has been reactivated.', array('@type' => node_get_types('name', $node->type), '@title' => $node->title)));
+  purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $nid)));
 }
 
 /**
- * Helper function to remove a permission from a roles array for a given role/perm.
+ * OG archive submit handler.
  */
-function _atrium_remove_perm(&$roles, $role, $perm) {
-  if (in_array($perm, $roles[$role]['perm'])) {
-    $position = array_search($perm, $roles[$role]['perm']);
-    unset($roles[$role]['perm'][$position]);
-  }
+function atrium_archive_submit($form, &$form_state) {
+  $nid = $form_state['values']['nid'];
+  $node = node_load($nid);
+  $node->status = 0;
+  node_save($node);
+  drupal_set_message(t('The @type @title has been archived.', array('@type' => node_get_types('name', $node->type), '@title' => $node->title)));
+  purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $nid)));
 }
 
 /**
- * THEME & UI  FUNCTIONS ==============================================
+ * Trigger a features rebuild.
  */
-
-/**
- * Implementation of hook_theme_registry_alter().
- */
-function atrium_theme_registry_alter(&$theme_registry) {
-  if (!in_array('atrium_preprocess_page', $theme_registry['page']['preprocess functions'])) {
-    $theme_registry['page']['preprocess functions'][] = 'atrium_preprocess_page';
-  }
-  // Yank out og_preprocess_node.
-  if ($key = array_search('og_preprocess_node', $theme_registry['node']['preprocess functions'])) {
-    unset($theme_registry['node']['preprocess functions'][$key]);
-  }
-}
-
-/**
- * Implementation of preprocess_views_view().
- */
-function atrium_preprocess_views_view(&$vars) {
-  if ($feature = context_get('spaces', 'feature')) {
-    $contexts = context_enabled_contexts();
-    $context = isset($contexts["spaces-feature-{$feature}"]) ? $contexts["spaces-feature-{$feature}"] : NULL;
-    $view = $vars['view'];
-    $space = spaces_get_space();
-
-    if ($space && $context && strpos($view->current_display, 'page') !== FALSE && empty($view->result) && empty($vars['empty'])) {
-      // @TODO determine why this can get called more than once for the
-      // relevant view.
-      static $once;
-      if (!$once) {
-        $once = TRUE;
-
-        $output = '';
-        global $user;
-
-        // Get the first nodetype
-        if (!empty($context->node)) {
-          reset($context->node);
-          $nodetype = current($context->node);
-        }
-
-        // Assemble a reasonable empty message
-        if (!empty($nodetype) && node_access('create', $nodetype) && ($space->type == 'og')) {
-          $types = node_get_types();
-          if ($type = $types[$nodetype]) {
-            $output .= t('Please add your first !type to get started.', array('!type' => $type->name));
-            $output .= "<div class='buttons'>". theme('context_links', context_links()) ."</div>";
-          }
-        }
-        else {
-          $output .= t('There is currently no content to view in this section.');
-        }
-        $vars['empty'] = $output;
-      }
-    }
-  }
-}
-
-/**
- * Add an "atrium-skin" class to a links array for skinners.
- */
-function atrium_skin_links($links, $both = FALSE) {
-  $new_links = array();
-  foreach ($links as $k => $v) {
-    if (!isset($v['attributes']['class'])) {
-      $v['attributes']['class'] = 'atrium-skin';
-    }
-    else {
-      $v['attributes']['class'] .= ' atrium-skin';
-    }
-    if ($both) {
-      $new_links["$k atrium-skin"] = $v;
-    }
-    else {
-      $new_links[$k] = $v;
-    }
-  }
-  return $new_links;
+function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
+  context_set('atrium', 'access_perms', TRUE);
+  features_rebuild();
+  context_set('atrium', 'access_perms', FALSE);
 }

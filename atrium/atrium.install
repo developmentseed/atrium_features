@@ -32,3 +32,80 @@ function atrium_update_6003() {
   }
   return $return;
 }
+
+/**
+ * Update 6004: Enable some modules.
+ */
+function atrium_update_6004() {
+  $return = array();
+  drupal_install_modules(array('designkit', 'jquery_ui', 'context_layouts', 'spaces_dashboard'));
+  $return[] = array(
+    'success' => true,
+    'query' => 'Installed designkit, jquery_ui, context_layouts and spaces_dashboard modules'
+  );
+  return $return;
+}
+
+/**
+ * Update 6005: Switch from atrium_dashboard to spaces_dashboard.
+ */
+function atrium_update_6005() {
+  $return = array();
+  // Because we can't absolutely depend on the schema version of the spaces
+  // we need to be flexible.
+  $spaces_schema = drupal_get_installed_schema_version('spaces');
+  if ($spaces_schema < 6301) {
+    $return[] = update_sql("UPDATE {spaces_features} SET id = 'spaces_dashboard' WHERE id = 'atrium_dashboard'");
+  }
+  else {
+    $result = db_query("SELECT type, id, value FROM {spaces_overrides} WHERE object_type = 'variable' and object_id = 'spaces_features'");
+    $cnt = 0;
+    while ($row = db_fetch_object($result)) {
+      $value = unserialize($row->value);
+      if (isset($value['atrium_dashboard'])) {
+        $value['spaces_dashboard'] = $value['atrium_dashboard'];
+        unset($value['atrium_dashboard']);
+        db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = '%s' AND object_type = 'variable' AND object_id = 'spaces_features'", serialize($value), $row->type, $row->id);
+        $cnt++;
+      }
+    }
+    if ($cnt) {
+      $return[] = array('success' => true, 'query' => "Updated dashboard settings for $cnt spaces.");
+    }
+  }
+  return $return;
+}
+
+/**
+ * Update 6006: Older, gravlax era, Atrium installations may have erroneous
+ * values in the system table for Atrium's feature modules. This updates
+ * corrects those and runs an update that would otherwise be missed.
+ */
+function atrium_update_6006() {
+  $return = array();
+  $result = db_query("SELECT name, schema_version FROM {system} WHERE type = 'module' AND status = 1 AND schema_version = -1");
+  $atrium_features = array(
+    'atrium_blog' => 0,
+    'atrium_book' => 0,
+    'atrium_calendar' => 0,
+    'atrium_casetracker' => 6002,
+    'atrium_profile' => 0,
+    'atrium_shoutbox' => 0,
+  );
+  while ($row = db_fetch_object($result)) {
+    if (isset($atrium_features[$row->name])) {
+      db_query("UPDATE {system} set schema_version = %d WHERE name = '%s'", $atrium_features[$row->name], $row->name);
+      $return[] = array('success' => true, 'query' => "UPDATE {system} set schema_version = " . $atrium_features[$row->name] . " WHERE name = '" . $row->name . "'");
+
+      if ($row->name == 'atrium_casetracker') {
+        module_load_include('install','atrium_casetracker', 'atrium_casetracker');
+        $return += atrium_casetracker_update_6002();
+      }
+    }
+    else {
+      watchdog('Atrium', t('The module %module appears to have an invalid schema_version entry'), array('%module' => $row->name), WATCHDOG_WARNING);
+    }
+  }
+
+  return $return;
+}

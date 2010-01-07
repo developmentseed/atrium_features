@@ -54,3 +54,18 @@ function _atrium_casetracker_default_states() {
     variable_set('casetracker_default_case_type', $csid);
   }
 }
+
+/** 
+ * Update 6002, fix what casetracker_basic hath wrought.
+ */
+function atrium_casetracker_update_6002() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {node_type} SET module = 'features' WHERE type = 'casetracker_basic_project'");
+  $ret[] = update_sql("UPDATE {node_type} SET module = 'features' WHERE type = 'casetracker_basic_case'");
+
+  module_disable(array('casetracker_basic'));
+  $ret[] = array('success' => TRUE, 'query' => 'Module "casetracker_basic" was disabled');
+  return $ret;
+}
+
+

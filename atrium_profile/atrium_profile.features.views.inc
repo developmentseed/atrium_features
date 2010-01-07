@@ -12,7 +12,7 @@ function _atrium_profile_views_default_views() {
   $view->description = 'Atrium > Profile';
   $view->tag = 'atrium';
   $view->view_php = '';
-  $view->base_table = 'node';
+  $view->base_table = 'users';
   $view->is_cacheable = FALSE;
   $view->api_version = 2;
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -20,92 +20,244 @@ function _atrium_profile_views_default_views() {
   $handler->override_option('fields', array(
     'picture' => array(
       'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
       'exclude' => 0,
       'id' => 'picture',
       'table' => 'users',
       'field' => 'picture',
       'relationship' => 'none',
     ),
-    'title' => array(
-      'label' => '',
-      'link_to_node' => 0,
-      'exclude' => 0,
-      'id' => 'title',
-      'table' => 'node',
-      'field' => 'title',
-      'relationship' => 'none',
-    ),
     'name' => array(
       'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
       'link_to_user' => 0,
+      'overwrite_anonymous' => 0,
+      'anonymous_text' => '',
       'exclude' => 0,
       'id' => 'name',
       'table' => 'users',
       'field' => 'name',
       'relationship' => 'none',
     ),
+  ));
+  $handler->override_option('arguments', array(
+    'uid' => array(
+      'default_action' => 'default',
+      'style_plugin' => 'default_summary',
+      'style_options' => array(),
+      'wildcard' => 'all',
+      'wildcard_substitution' => 'All',
+      'title' => '',
+      'breadcrumb' => '',
+      'default_argument_type' => 'user',
+      'default_argument' => '',
+      'validate_type' => 'user',
+      'validate_fail' => 'not found',
+      'break_phrase' => 0,
+      'not' => 0,
+      'id' => 'uid',
+      'table' => 'users',
+      'field' => 'uid',
+      'validate_user_argument_type' => 'uid',
+      'validate_user_roles' => array(
+        '2' => 0,
+        '3' => 0,
+        '4' => 0,
+      ),
+      'relationship' => 'none',
+      'default_options_div_prefix' => '',
+      'default_argument_user' => 0,
+      'default_argument_fixed' => '',
+      'default_argument_php' => '',
+      'validate_argument_node_type' => array(
+        'blog' => 0,
+        'book' => 0,
+        'event' => 0,
+        'feed_ical' => 0,
+        'feed_ical_item' => 0,
+        'casetracker_basic_case' => 0,
+        'casetracker_basic_project' => 0,
+        'group' => 0,
+        'profile' => 0,
+        'feed' => 0,
+      ),
+      'validate_argument_node_access' => 0,
+      'validate_argument_nid_type' => 'nid',
+      'validate_argument_vocabulary' => array(
+        '1' => 0,
+      ),
+      'validate_argument_type' => 'tid',
+      'validate_argument_transform' => 0,
+      'validate_user_restrict_roles' => 0,
+      'validate_argument_is_member' => 0,
+      'validate_argument_php' => '',
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'none',
+  ));
+  $handler->override_option('cache', array(
+    'type' => 'none',
+  ));
+  $handler->override_option('items_per_page', 1);
+  $handler = $view->new_display('page', 'Profile', 'page_1');
+  $handler->override_option('path', 'user/%');
+  $handler->override_option('menu', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+  ));
+  $handler = $view->new_display('attachment', 'Profile fields', 'attachment_1');
+  $handler->override_option('relationships', array(
+    'content_profile_rel' => array(
+      'label' => 'Content Profile',
+      'required' => 1,
+      'type' => 'profile',
+      'id' => 'content_profile_rel',
+      'table' => 'users',
+      'field' => 'content_profile_rel',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('fields', array(
     'mail' => array(
-      'label' => '',
+      'label' => 'E-mail',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
       'link_to_user' => 'mailto',
       'exclude' => 0,
       'id' => 'mail',
       'table' => 'users',
       'field' => 'mail',
+      'override' => array(
+        'button' => 'Use default',
+      ),
       'relationship' => 'none',
     ),
-    'field_profile_organization_value' => array(
-      'label' => 'Organization',
-      'link_to_node' => 0,
-      'label_type' => 'widget',
-      'format' => 'default',
-      'multiple' => array(
-        'group' => TRUE,
-        'multiple_number' => '',
-        'multiple_from' => '',
-        'multiple_reversed' => FALSE,
+    'title' => array(
+      'label' => 'Full name',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
       ),
+      'link_to_node' => 0,
       'exclude' => 0,
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'relationship' => 'content_profile_rel',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+    ),
+    'field_profile_organization_value' => array(
       'id' => 'field_profile_organization_value',
       'table' => 'node_data_field_profile_organization',
       'field' => 'field_profile_organization_value',
-      'relationship' => 'none',
+      'relationship' => 'content_profile_rel',
     ),
     'field_profile_telephone_value' => array(
-      'label' => 'Telephone',
-      'link_to_node' => 0,
-      'label_type' => 'widget',
-      'format' => 'default',
-      'multiple' => array(
-        'group' => TRUE,
-        'multiple_number' => '',
-        'multiple_from' => '',
-        'multiple_reversed' => FALSE,
-      ),
-      'exclude' => 0,
       'id' => 'field_profile_telephone_value',
       'table' => 'node_data_field_profile_telephone',
       'field' => 'field_profile_telephone_value',
-      'relationship' => 'none',
+      'relationship' => 'content_profile_rel',
     ),
     'field_profile_url_value' => array(
-      'label' => 'URL',
-      'link_to_node' => 0,
-      'label_type' => 'widget',
-      'format' => 'default',
-      'multiple' => array(
-        'group' => TRUE,
-        'multiple_number' => '',
-        'multiple_from' => '',
-        'multiple_reversed' => FALSE,
-      ),
-      'exclude' => 0,
       'id' => 'field_profile_url_value',
       'table' => 'node_data_field_profile_url',
       'field' => 'field_profile_url_value',
-      'relationship' => 'none',
+      'relationship' => 'content_profile_rel',
     ),
     'field_profile_address_value' => array(
       'label' => 'Address',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
       'link_to_node' => 0,
       'label_type' => 'widget',
       'format' => 'default',
@@ -119,55 +271,30 @@ function _atrium_profile_views_default_views() {
       'id' => 'field_profile_address_value',
       'table' => 'node_data_field_profile_address',
       'field' => 'field_profile_address_value',
-      'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('arguments', array(
-    'uid' => array(
-      'default_action' => 'default',
-      'style_plugin' => 'default_summary',
-      'style_options' => array(),
-      'wildcard' => 'all',
-      'wildcard_substitution' => 'All',
-      'title' => '',
-      'default_argument_type' => 'php',
-      'default_argument' => '',
-      'validate_type' => 'none',
-      'validate_fail' => 'not found',
-      'break_phrase' => 0,
-      'not' => 0,
-      'id' => 'uid',
-      'table' => 'users',
-      'field' => 'uid',
-      'relationship' => 'none',
-      'default_options_div_prefix' => '',
-      'default_argument_user' => 0,
-      'default_argument_fixed' => '',
-      'default_argument_php' => '$space = spaces_get_space();
-            if  ($space && $space->type == \'user\') {
-              return $space->sid;
-            }',
-      'validate_argument_node_type' => array(
-        'casetracker_basic_project' => 0,
-        'casetracker_basic_case' => 0,
-        'shoutbox' => 0,
-        'book' => 0,
-        'feed' => 0,
-        'feed_site' => 0,
-        'group' => 0,
-        'profile' => 0,
+      'relationship' => 'content_profile_rel',
+      'override' => array(
+        'button' => 'Use default',
       ),
-      'validate_argument_node_access' => 0,
-      'validate_argument_nid_type' => 'nid',
-      'validate_argument_vocabulary' => array(
-        '1' => 0,
-      ),
-      'validate_argument_type' => 'tid',
-      'validate_argument_is_member' => 0,
-      'validate_argument_php' => '',
     ),
   ));
   $handler->override_option('filters', array(
+    'nid' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'nid',
+      'table' => 'node_access',
+      'field' => 'nid',
+      'relationship' => 'content_profile_rel',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+    ),
     'status' => array(
       'operator' => '=',
       'value' => '1',
@@ -180,50 +307,27 @@ function _atrium_profile_views_default_views() {
       'id' => 'status',
       'table' => 'node',
       'field' => 'status',
-      'relationship' => 'none',
-    ),
-    'type' => array(
-      'operator' => 'in',
-      'value' => array(
-        'profile' => 'profile',
+      'relationship' => 'content_profile_rel',
+      'override' => array(
+        'button' => 'Use default',
       ),
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'type',
-      'table' => 'node',
-      'field' => 'type',
-      'relationship' => 'none',
     ),
   ));
   $handler->override_option('access', array(
-    'type' => 'none',
+    'type' => 'perm',
+    'perm' => 'access content',
   ));
-  $handler->override_option('cache', array(
-    'type' => 'none',
+  $handler->override_option('attachment_position', 'after');
+  $handler->override_option('inherit_arguments', TRUE);
+  $handler->override_option('inherit_exposed_filters', FALSE);
+  $handler->override_option('displays', array(
+    'default' => 'default',
+    'page_1' => 'page_1',
   ));
-  $handler->override_option('title', 'Profile');
-  $handler->override_option('empty', 'This user has not filled out a profile.');
-  $handler->override_option('items_per_page', 1);
-  $handler->override_option('style_plugin', 'list');
-  $handler->override_option('style_options', array(
-    'grouping' => '',
-    'type' => 'ul',
-  ));
-  $handler->override_option('row_options', array(
-    'inline' => array(),
-    'separator' => '',
-  ));
-  $handler = $view->new_display('block', 'Profile', 'block_1');
-  $handler->override_option('block_description', '');
-  $handler->override_option('block_caching', -1);
   $translatables['atrium_profile'] = array(
     t('Defaults'),
     t('Profile'),
-    t('This user has not filled out a profile.'),
+    t('Profile fields'),
   );
 
   $views[$view->name] = $view;
