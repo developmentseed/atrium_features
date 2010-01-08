@@ -125,7 +125,7 @@ function atrium_update_6007() {
       }
       elseif ($row->id == 'logo') {
         $value = unserialize($row->value);
-        variable_set('designkit_image', serialize(array('logo' => $value['file']->fid)));
+        variable_set('designkit_image', serialize(array('logo' => $value['fid'])));
       }
     }
     else {
@@ -138,11 +138,11 @@ function atrium_update_6007() {
       }
       elseif ($row->id == 'logo') {
         $value = unserialize($row->value);
-        if ($value['file']->fid) {
+        if ($value['fid']) {
           db_query("INSERT INTO {spaces_overrides} (type, id, object_type, object_id, value) VALUES ('%s', '%s', 'variable', 'designkit_image', '%s')",
             $row->type,
             $row->sid,
-            serialize(array('logo' => $value['file']->fid))
+            serialize(array('logo' => $value['fid']))
           );
         }
       }
