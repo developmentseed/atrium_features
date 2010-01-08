@@ -109,3 +109,45 @@ function atrium_update_6006() {
 
   return $return;
 }
+
+/**
+ * Update 6007: Update settings from spaces_design to designkit.
+ */
+function atrium_update_6007() {
+  $return = array();
+  $result = db_query("SELECT * FROM {spaces_settings} WHERE id IN ('color', 'logo')");
+  $cnt = 0;
+  while ($row = db_fetch_object($result)) {
+    $cnt++;
+    if ($row->type == 'site') {
+      if ($row->id == 'color') {
+        variable_set('designkit_color', serialize(array('background' => unserialize($row->value))));
+      }
+      elseif ($row->id == 'logo') {
+        $value = unserialize($row->value);
+        variable_set('designkit_image', serialize(array('logo' => $value['file']->fid)));
+      }
+    }
+    else {
+     if ($row->id == 'color') {
+        db_query("INSERT INTO {spaces_overrides} (type, id, object_type, object_id, value) VALUES ('%s', '%s', 'variable', 'designkit_color', '%s')",
+          $row->type,
+          $row->sid,
+          serialize(array('background' => unserialize($row->value)))
+        );
+      }
+      elseif ($row->id == 'logo') {
+        $value = unserialize($row->value);
+        db_query("INSERT INTO {spaces_overrides} (type, id, object_type, object_id, value) VALUES ('%s', '%s', 'variable', 'designkit_image', '%s')",
+          $row->type,
+          $row->sid,
+          serialize(array('logo' => $value['file']->fid))
+        );
+      }
+    }
+  }
+  if ($cnt) {
+    $return[] = array('success' => true, 'query' => "Migrated $cnt settings from site spaces_design to designkit.");
+  }
+  return $return;
+}
