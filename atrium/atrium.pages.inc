@@ -264,6 +264,17 @@ function atrium_help_page($name = null) {
 }
 
 /**
+ * Redirect the user to their dashboard.
+ */
+function atrium_dashboard_redirect() {
+  global $user;
+  if ($user->uid != 0) {
+   drupal_goto("user/{$user->uid}/dashboard");
+  }
+  drupal_goto("dashboard");
+}
+
+/**
  * Override of taxonomy/autocomplete. Uses a view query that is space-aware.
  */
 function atrium_taxonomy_autocomplete($vid, $string = '') {
