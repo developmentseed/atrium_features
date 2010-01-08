@@ -138,11 +138,13 @@ function atrium_update_6007() {
       }
       elseif ($row->id == 'logo') {
         $value = unserialize($row->value);
-        db_query("INSERT INTO {spaces_overrides} (type, id, object_type, object_id, value) VALUES ('%s', '%s', 'variable', 'designkit_image', '%s')",
-          $row->type,
-          $row->sid,
-          serialize(array('logo' => $value['file']->fid))
-        );
+        if ($value['file']->fid) {
+          db_query("INSERT INTO {spaces_overrides} (type, id, object_type, object_id, value) VALUES ('%s', '%s', 'variable', 'designkit_image', '%s')",
+            $row->type,
+            $row->sid,
+            serialize(array('logo' => $value['file']->fid))
+          );
+        }
       }
     }
   }
