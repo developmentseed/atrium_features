@@ -394,12 +394,19 @@ function atrium_account_links() {
   // @TODO: If menu.inc had a real API function for this we would use it, but
   // as of now we'd have a copy hand paste hack job of menu_local_tasks()...
   $paths = array(
+    "user/{$user->uid}" => t('Profile'),
     "user/{$user->uid}/edit" => t('Account settings'),
-    "user/{$user->uid}/groups" => '',
-    "user/{$user->uid}/notifications" => '',
     "user/{$user->uid}/openid" => '',
     'logout' => '',
   );
+
+  if ($user_space = spaces_load('user', $user->uid)) {
+    $user_features = $user_space->controllers->variable->get('spaces_features');
+    if ($user_features['spaces_dashboard']) {
+      $paths = array_merge(array("user/{$user->uid}/dashboard" => ''), $paths);
+    }
+  }
+
   foreach ($paths as $path => $title) {
     $item = menu_get_item($path);
     if ($item && $item['access']) {
