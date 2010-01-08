@@ -103,9 +103,9 @@ function _atrium_groups_spaces_presets() {
     'context' => array(
       'spaces_dashboard-custom-1:reaction:block' => array(
         'blocks' => array(
-          'views-atrium_intranet-block_3' => array(
+          'views-atrium_intranet-block_1' => array(
             'module' => 'views',
-            'delta' => 'atrium_intranet-block_3',
+            'delta' => 'atrium_intranet-block_1',
             'region' => 'content',
             'weight' => 0,
           ),
@@ -164,9 +164,9 @@ function _atrium_groups_spaces_presets() {
     'context' => array(
       'spaces_dashboard-custom-1:reaction:block' => array(
         'blocks' => array(
-          'views-atrium_intranet-block_3' => array(
+          'views-atrium_intranet-block_1' => array(
             'module' => 'views',
-            'delta' => 'atrium_intranet-block_3',
+            'delta' => 'atrium_intranet-block_1',
             'region' => 'content',
             'weight' => 0,
           ),
