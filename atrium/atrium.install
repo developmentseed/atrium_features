@@ -153,3 +153,11 @@ function atrium_update_6007() {
   }
   return $return;
 }
+
+/**
+ * Update 6008: Remove old atrium_install variable
+ */
+function atrium_update_6008() {
+  variable_del('atrium_install');
+  return array(array('success' => true, 'query' => "Removed variable: atrium_install."));
+}

@@ -202,48 +202,31 @@ function atrium_welcome() {
     return $login;
   }
   else {
-    $install_state = variable_get('atrium_install', 0);
-    switch ($install_state) {
-      // Stage 0: Clear out messages & theme cache, reload.
-      // We shouldn't get here anymore if the installer runs fine.
-      // @todo clean up this first step.
-      case 0:
-        system_theme_data();  // Rebuild theme cache.
-        _block_rehash();      // Rebuild block cache.
-        views_invalidate_cache(); // Rebuild the views.
-        menu_rebuild();       // Rebuild the menu.
-        features_rebuild();   // Features rebuild scripts.
-        variable_set('atrium_install', 1);
-        drupal_goto('welcome');
-      // Stage 1: Display welcome and ask user to create first group
-      case 1:
-        $firstgroup = variable_get('atrium_firstgroup', FALSE);
-        if (!$firstgroup) {
-          if ($result = db_result(db_query("SELECT count(*) FROM {node} WHERE type = 'group'"))) {
-            variable_set('atrium_firstgroup', TRUE);
-            $firstgroup = TRUE;
-          }
-        }
-        if ($firstgroup) {
-          menu_set_active_item('dashboard');
-          return menu_execute_active_handler();
-        }
-        else {
-          drupal_set_title(t('Welcome to !sitename', array('!sitename' => variable_get('site_name', 'Atrium'))));
+    $firstgroup = variable_get('atrium_firstgroup', FALSE);
+    if (!$firstgroup) {
+      if ($result = db_result(db_query("SELECT count(*) FROM {node} WHERE type = 'group'"))) {
+        variable_set('atrium_firstgroup', TRUE);
+        $firstgroup = TRUE;
+      }
+    }
+    if ($firstgroup) {
+      menu_set_active_item('dashboard');
+      return menu_execute_active_handler();
+    }
+    else {
+      drupal_set_title(t('Welcome to !sitename', array('!sitename' => variable_get('site_name', 'Atrium'))));
 
-          $output = "<div class='view-empty'>";
-          if (node_access('create', 'group')) {
-            $output .= t('Create your first !type to get started.', array('!type' => node_get_types('name', 'group')));
-            $output .= "<div class='buttons'>". l(t('Create !type', array('!type' => node_get_types('name', 'group'))), 'node/add/group', array('attributes' => array('class' => 'button'))) ."</div>";
-          }
-          else {
-            $output .= t('The site administator has not finished setting up this site. Please be patient and try again later.');
-          }
-          $output .= "</div>";
+      $output = "<div class='view-empty'>";
+      if (node_access('create', 'group')) {
+        $output .= t('Create your first !type to get started.', array('!type' => node_get_types('name', 'group')));
+        $output .= "<div class='buttons'>". l(t('Create !type', array('!type' => node_get_types('name', 'group'))), 'node/add/group', array('attributes' => array('class' => 'button'))) ."</div>";
+      }
+      else {
+        $output .= t('The site administator has not finished setting up this site. Please be patient and try again later.');
+      }
+      $output .= "</div>";
 
-          return $output;
-        }
-        break;
+      return $output;
     }
   }
 }
