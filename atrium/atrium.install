@@ -161,3 +161,12 @@ function atrium_update_6008() {
   variable_del('atrium_install');
   return array(array('success' => true, 'query' => "Removed variable: atrium_install."));
 }
+
+/**
+ * Update 6009: Add index to timestamp field on comments table.
+ */
+function atrium_update_6009() {
+  $return = array();
+  $return[] = update_sql("ALTER TABLE {comments} ADD INDEX(timestamp)");
+  return $return;
+}
