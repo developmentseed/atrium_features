@@ -1,6 +1,16 @@
 <?php
 
 /**
+ * Implementation of hook_install().
+ */
+function atrium_install() {
+  // Add index to comments table.
+  if (db_table_exists('comments')) {
+    db_query("ALTER TABLE {comments} ADD INDEX(timestamp)");
+  }
+}
+
+/**
  * Update to resolve install profile namespace collision.
  */
 function atrium_update_6001() {
@@ -167,6 +177,8 @@ function atrium_update_6008() {
  */
 function atrium_update_6009() {
   $return = array();
-  $return[] = update_sql("ALTER TABLE {comments} ADD INDEX(timestamp)");
+  if (db_table_exists('comments')) {
+    $return[] = update_sql("ALTER TABLE {comments} ADD INDEX(timestamp)");
+  }
   return $return;
 }
