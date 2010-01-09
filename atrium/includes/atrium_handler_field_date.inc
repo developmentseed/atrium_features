@@ -18,6 +18,8 @@ class atrium_handler_field_date extends views_handler_field_date {
         'large' => format_date($time, 'large'),
         'custom' => t('Custom'),
         'time ago' => t('Time ago'),
+        'day' => t('Day only'),
+        'time' => t('Time only'),
         'reldate' => t('Relative date'),
       ),
       '#default_value' => isset($this->options['date_format']) ? $this->options['date_format'] : 'small',
