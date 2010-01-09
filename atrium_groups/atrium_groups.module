@@ -82,7 +82,7 @@ function atrium_groups_context_page_reaction() {
   if (!spaces_get_space() && context_get('context', 'spaces-feature-groups')) {
     $breadcrumb = array(
       l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
-      l(t('Groups'), 'groups', array('purl' =>array('disabled' => TRUE))),
+      l(t('Groups'), 'og', array('purl' =>array('disabled' => TRUE))),
     );
     drupal_set_breadcrumb($breadcrumb);
   }
