@@ -12,7 +12,7 @@ function _atrium_book_context_default_contexts() {
   $context->description = '';
   $context->tag = 'Book';
   $context->conditions = array(
-    'node' => array(
+    'bookroot' => array(
       'values' => array(
         'book' => 'book',
       ),

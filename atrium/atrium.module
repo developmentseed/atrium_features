@@ -247,10 +247,9 @@ function atrium_litenode_alter(&$node, $row) {
  */
 function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
   switch ($op) {
-    case 'prepare':
     case 'view':
       // Load the node's read state.
-      if ($op === 'view' && !isset($node->new)) {
+      if (!isset($node->new)) {
         global $user;
         $readtime = db_result(db_query("SELECT timestamp FROM {history} WHERE uid = %d AND nid = %d", $user->uid, $node->nid));
         $node->new = atrium_get_readstate($readtime, $node->changed);
