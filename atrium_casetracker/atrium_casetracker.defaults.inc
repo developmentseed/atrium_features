@@ -69,8 +69,8 @@ function _atrium_casetracker_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'atrium_casetracker-book' => array(
-          'module' => 'atrium_casetracker',
+        'atrium-book' => array(
+          'module' => 'atrium',
           'delta' => 'book',
           'region' => 'right',
           'weight' => 0,

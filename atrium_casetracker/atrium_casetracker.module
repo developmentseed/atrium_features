@@ -145,7 +145,6 @@ function atrium_casetracker_block($op = 'list', $delta = 0) {
   switch ($op) {
     case 'list':
       $blocks['filters'] = array('info' => t('Atrium: Case Tracker filter'));
-      $blocks['book'] = array('info' => t('Atrium: Case Tracker book'));
       return $blocks;
     case 'view':
       $function = '_atrium_casetracker_block_'. $delta;
@@ -223,19 +222,6 @@ function _atrium_casetracker_block_filters($set = '') {
     return array('subject' => t('Filter results'), 'content' => $filters);
   }
   return array();
-}
-
-/**
- * Book block.
- */
-function _atrium_casetracker_block_book() {
-  // Reuse book block code but force book pages setting (and restore the variable after.
-  $orig = variable_get('book_block_mode', 'all pages');
-  global $conf;
-  $conf['book_block_mode'] = 'book pages';
-  $block = book_block('view', 0);
-  $conf['book_block_mode'] = $orig;
-  return $block;
 }
 
 /**

@@ -10,7 +10,7 @@ function _atrium_views_default_views() {
   $view = new view;
   $view->name = 'atrium_book_current';
   $view->description = 'Atrium: book: helper view to look up root book pages';
-  $view->tag = 'spaces';
+  $view->tag = 'atrium';
   $view->view_php = '';
   $view->base_table = 'node';
   $view->is_cacheable = FALSE;
@@ -58,6 +58,66 @@ function _atrium_views_default_views() {
       'table' => 'node',
       'field' => 'title',
       'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('arguments', array(
+    'type' => array(
+      'default_action' => 'ignore',
+      'style_plugin' => 'default_summary',
+      'style_options' => array(),
+      'wildcard' => 'all',
+      'wildcard_substitution' => 'All',
+      'title' => '',
+      'breadcrumb' => '',
+      'default_argument_type' => 'fixed',
+      'default_argument' => '',
+      'validate_type' => 'none',
+      'validate_fail' => 'not found',
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'validate_user_argument_type' => 'uid',
+      'validate_user_roles' => array(
+        '2' => 0,
+        '3' => 0,
+        '4' => 0,
+      ),
+      'relationship' => 'none',
+      'default_options_div_prefix' => '',
+      'default_argument_user' => 0,
+      'default_argument_fixed' => '',
+      'default_argument_php' => '',
+      'validate_argument_node_type' => array(
+        'blog' => 0,
+        'book' => 0,
+        'event' => 0,
+        'feed_ical' => 0,
+        'feed_ical_item' => 0,
+        'casetracker_basic_case' => 0,
+        'casetracker_basic_project' => 0,
+        'group' => 0,
+        'profile' => 0,
+        'shoutbox' => 0,
+        'admin_message' => 0,
+        'feedapi_node' => 0,
+        'feed_reader' => 0,
+        'imageset' => 0,
+        'page' => 0,
+      ),
+      'validate_argument_node_access' => 0,
+      'validate_argument_nid_type' => 'nid',
+      'validate_argument_vocabulary' => array(
+        '5' => 0,
+        '1' => 0,
+        '2' => 0,
+        '6' => 0,
+        '4' => 0,
+      ),
+      'validate_argument_type' => 'tid',
+      'validate_argument_transform' => 0,
+      'validate_user_restrict_roles' => 0,
+      'validate_argument_is_member' => 0,
+      'validate_argument_php' => '',
     ),
   ));
   $handler->override_option('filters', array(

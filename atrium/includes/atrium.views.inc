@@ -14,35 +14,6 @@ function atrium_views_pre_build(&$view) {
   if ($user->uid != 0 && !user_access('administer nodes') && $view->base_table == 'node') {
     $view->display_handler->set_option('distinct', 1);
   }
-
-  switch ($view->name) {
-    // Improve book contextuality
-    // This alter checks the current active context and only allows
-    // root books in that context's content types to be displayed/selected.
-    // This is critical to siloing each book enabled content type to
-    // their respective features while allowing child book pages to be
-    // nested under them. See hook_nodeapi() for the companion functionality
-    // which sets the active context based on the root book type.
-    case 'atrium_book_current':
-      if (context_get('atrium', 'book') === 'rendering') {
-        $filters = $view->display_handler->get_option('filters');
-        $filters['feature'] = array(
-          'operator' => '=',
-          'value' => '',
-          'group' => '0',
-          'exposed' => FALSE,
-          'expose' => array(
-            'operator' => FALSE,
-            'label' => '',
-          ),
-          'id' => 'feature',
-          'table' => 'node',
-          'field' => 'feature',
-        );
-        $view->display_handler->set_option('filters', $filters);
-      }
-      break;
-  }
 }
 
 /**

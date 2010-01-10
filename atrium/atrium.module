@@ -121,14 +121,20 @@ function atrium_menu_alter(&$callbacks) {
 function atrium_block($op = 'list', $delta = 0) {
   switch ($op) {
     case 'list':
-      return array(
+      $info = array(
         'account' => array('info' => t('Atrium: User account')),
         'admin_links' => array('info' => t('Atrium: Admin links')),
-        'book' => array('info' => t('Atrium: Book')),
         'create' => array('info' => t('Atrium: Create content')),
         'search' => array('info' => t('Atrium: Search form')),
         'user_links' => array('info' => t('Atrium: User links')),
       );
+      if (module_exists('admin')) {
+        $info = $info + array(
+          'book' => array('info' => t('Atrium: Book')),
+          'book_all' => array('info' => t('Atrium: Book (all)')),
+        );
+      }
+      return $info;
     case 'view':
       module_load_include('inc', 'atrium', 'atrium.block');
       $function = "_atrium_block_{$delta}";
@@ -263,6 +269,17 @@ function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
             $message .= ' '. t('To reactivate this !type, !link.', array('!type' => node_get_types('name', $node->type), '!link' => l(t('click here'), "node/{$node->nid}/reactivate")));
           }
           drupal_set_message($message);
+        }
+      }
+      break;
+    case 'insert':
+    case 'update':
+    case 'delete':
+      // Wipe the atrium book tree cache for a space when a book is modified.
+      if (!empty($node->book['bid'])) {
+        $space = spaces_get_space();
+        if ($space) {
+          cache_clear_all("atrium_book:{$space->type}:{$space->id}", 'cache', TRUE);
         }
       }
       break;
