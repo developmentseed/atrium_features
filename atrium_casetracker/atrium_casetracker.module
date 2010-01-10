@@ -92,27 +92,16 @@ function atrium_casetracker_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
 function atrium_casetracker_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node']) && !empty($form['book'])) {
     switch ($form['#node']->type) {
-      // Prevent projects from becoming cihld pages
+      // Ensure projects become root books.
       case 'casetracker_basic_project':
-        // Fieldset mods
-        $form['book']['#weight'] = !empty($form['body_field']['#weight']) ? $form['body_field']['#weight'] : 0;
-        $form['book']['#collapsible'] =
-        $form['book']['#collapsed'] = FALSE;
-
-        if (!empty($form['book']['bid']['#options'])) {
-          // Force book pages to not be orphaned
-          // unset($form['book']['bid']['#options'][0]);
-
-          // Force non book types to be root level books
-          $exclude = array('new');
-          if (isset($form['#node']->nid)) {
-            $exclude[] = $form['#node']->nid;
+        if (!empty($form['book'])) {
+          if (!empty($form['#node']->nid) && isset($form['book']['bid']['#options'][$form['#node']->nid])) {
+            $form['book']['bid']['#default_value'] = $form['#node']->nid;
           }
-          foreach ($form['book']['bid']['#options'] as $k => $v) {
-            if (!in_array($k, $exclude)) {
-              unset($form['book']['bid']['#options'][$k]);
-            }
+          else {
+            $form['book']['bid']['#default_value'] = 'new';
           }
+          $form['book']['#access'] = FALSE;
         }
         break;
     }
