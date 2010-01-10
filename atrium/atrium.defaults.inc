@@ -627,6 +627,7 @@ function _atrium_strongarm() {
   $strongarm->name = 'book_allowed_types';
   $strongarm->value = array(
     '0' => 'book',
+    '1' => 'casetracker_basic_project',
   );
 
   $export['book_allowed_types'] = $strongarm;
@@ -828,6 +829,15 @@ function _atrium_strongarm() {
   );
 
   $export['purl_types'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'seed_book';
+  $strongarm->value = array(
+    'book_nav' => '0',
+  );
+
+  $export['seed_book'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
