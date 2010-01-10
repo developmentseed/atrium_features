@@ -1,6 +1,17 @@
 <?php
 
 /**
+ * Form alter callback for comment form.
+ */
+function _atrium_form_comment_form_alter(&$form, $form_state) {
+  // Hide display of the "Your name" field.
+  if (isset($form['_author'])) {
+    $form['_author']['#access'] = FALSE;
+  }
+  $form['comment_filter']['comment']['#rows'] = 8;
+}
+
+/**
  * Form alter callback for node form.
  */
 function _atrium_form_node_form_alter(&$form, $form_state) {

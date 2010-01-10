@@ -151,6 +151,7 @@ function atrium_form_alter(&$form, &$form_state, $form_id) {
       context_set('context', 'layout_login', context_load('layout_login'));
       break;
     // Form alter handling via callbacks
+    case 'comment_form':
     case 'spaces_features_form':
     case 'system_themes_form':
     case 'node_type_form':
@@ -429,8 +430,8 @@ function atrium_account_links() {
   // as of now we'd have a copy hand paste hack job of menu_local_tasks()...
   $paths = array(
     "user/{$user->uid}" => t('Profile'),
-    "user/{$user->uid}/edit" => t('Account settings'),
-    "user/{$user->uid}/openid" => '',
+    "user/{$user->uid}/edit" => '',
+    "user/{$user->uid}/edit/openid" => '',
     'logout' => '',
   );
 
