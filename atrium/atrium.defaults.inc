@@ -127,6 +127,7 @@ function _atrium_context_default_contexts() {
       'values' => array(
         'node/add/*' => 'node/add/*',
         'node/*/edit' => 'node/*/edit',
+        'admin' => 'admin',
         'admin/*' => 'admin/*',
         'user/*/edit' => 'user/*/edit',
         'user/*/edit/*' => 'user/*/edit/*',
@@ -576,10 +577,10 @@ function _atrium_strongarm() {
     'blocks' => array(
       'admin-create' => 'admin-create',
       'admin-menu' => 'admin-menu',
+      'admin-devel' => 'admin-devel',
       'context_ui-editor' => 0,
       'context_ui-devel' => 0,
       'spaces_dashboard-editor' => 0,
-      'admin-devel' => 0,
       'spaces-menu_editor' => 0,
     ),
   );

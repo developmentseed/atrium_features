@@ -187,40 +187,59 @@ function _atrium_views_default_views() {
       'field' => 'feature',
       'relationship' => 'none',
     ),
-    'last_updated' => array(
+    'atrium_activity_timestamp' => array(
       'label' => '',
       'alter' => array(
-        'alter_text' => 0,
+        'alter_text' => FALSE,
         'text' => '',
-        'make_link' => 0,
+        'make_link' => FALSE,
         'path' => '',
         'alt' => '',
+        'link_class' => '',
         'prefix' => '',
         'suffix' => '',
-        'help' => '',
-        'trim' => 0,
+        'trim' => FALSE,
         'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'strip_tags' => 0,
-        'html' => 0,
+        'word_boundary' => TRUE,
+        'ellipsis' => TRUE,
+        'strip_tags' => FALSE,
+        'html' => FALSE,
       ),
+      'exclude' => 0,
+      'id' => 'atrium_activity_timestamp',
+      'table' => 'comments',
+      'field' => 'atrium_activity_timestamp',
+      'relationship' => 'none',
       'date_format' => 'time',
-      'custom_date_format' => 'g:i a',
-      'exclude' => 0,
-      'id' => 'last_updated',
-      'table' => 'node_comment_statistics',
-      'field' => 'last_updated',
-      'relationship' => 'none',
+      'custom_date_format' => '',
     ),
-    'title' => array(
+    'atrium_activity' => array(
       'label' => '',
-      'link_to_node' => 1,
+      'alter' => array(
+        'alter_text' => FALSE,
+        'text' => '',
+        'make_link' => FALSE,
+        'path' => '',
+        'alt' => '',
+        'link_class' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'trim' => FALSE,
+        'max_length' => '',
+        'word_boundary' => TRUE,
+        'ellipsis' => TRUE,
+        'strip_tags' => FALSE,
+        'html' => FALSE,
+      ),
+      'time_horizon' => '30',
       'exclude' => 0,
-      'id' => 'title',
-      'table' => 'node',
-      'field' => 'title',
+      'id' => 'atrium_activity',
+      'table' => 'comments',
+      'field' => 'atrium_activity',
       'relationship' => 'none',
+      'override' => array(
+        'button' => 'Override',
+      ),
     ),
     'timestamp' => array(
       'label' => '',
@@ -235,50 +254,31 @@ function _atrium_views_default_views() {
       ),
       'relationship' => 'none',
     ),
-    'last_comment_name' => array(
-      'label' => '',
-      'link_to_user' => TRUE,
-      'exclude' => 0,
-      'id' => 'last_comment_name',
-      'table' => 'node_comment_statistics',
-      'field' => 'last_comment_name',
-      'relationship' => 'none',
-    ),
-    'last_updated_1' => array(
+    'atrium_activity_timestamp_1' => array(
       'label' => '',
       'alter' => array(
-        'alter_text' => 0,
+        'alter_text' => FALSE,
         'text' => '',
-        'make_link' => 0,
+        'make_link' => FALSE,
         'path' => '',
         'alt' => '',
+        'link_class' => '',
         'prefix' => '',
         'suffix' => '',
-        'help' => '',
-        'trim' => 0,
+        'trim' => FALSE,
         'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'strip_tags' => 0,
-        'html' => 0,
+        'word_boundary' => TRUE,
+        'ellipsis' => TRUE,
+        'strip_tags' => FALSE,
+        'html' => FALSE,
       ),
-      'date_format' => 'day',
-      'custom_date_format' => 'l, M j',
       'exclude' => 1,
-      'id' => 'last_updated_1',
-      'table' => 'node_comment_statistics',
-      'field' => 'last_updated',
+      'id' => 'atrium_activity_timestamp_1',
+      'table' => 'comments',
+      'field' => 'atrium_activity_timestamp',
       'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('sorts', array(
-    'last_updated' => array(
-      'order' => 'DESC',
-      'granularity' => 'second',
-      'id' => 'last_updated',
-      'table' => 'node_comment_statistics',
-      'field' => 'last_updated',
-      'relationship' => 'none',
+      'date_format' => 'day',
+      'custom_date_format' => '',
     ),
   ));
   $handler->override_option('filters', array(
@@ -333,69 +333,50 @@ function _atrium_views_default_views() {
   ));
   $handler->override_option('title', 'Recent activity');
   $handler->override_option('empty', 'No recent activity found.');
-  $handler->override_option('items_per_page', 25);
-  $handler->override_option('use_pager', '1');
+  $handler->override_option('use_ajax', TRUE);
+  $handler->override_option('items_per_page', 15);
+  $handler->override_option('use_pager', 'mini');
+  $handler->override_option('distinct', 1);
   $handler->override_option('style_plugin', 'table');
   $handler->override_option('style_options', array(
-    'grouping' => 'last_updated_1',
+    'grouping' => 'atrium_activity_timestamp_1',
     'override' => 0,
     'sticky' => 0,
     'order' => 'desc',
     'columns' => array(
       'group_nid' => 'group_nid',
-      'last_updated' => 'last_updated',
       'feature' => 'feature',
-      'title' => 'title',
-      'last_comment_name' => 'last_comment_name',
-      'last_updated_1' => 'last_updated_1',
-      'timestamp' => 'last_comment_name',
+      'atrium_activity_timestamp' => 'atrium_activity_timestamp',
+      'atrium_activity' => 'atrium_activity',
+      'timestamp' => 'timestamp',
+      'atrium_activity_timestamp_1' => 'atrium_activity_timestamp_1',
     ),
     'info' => array(
       'group_nid' => array(
         'separator' => '',
       ),
-      'last_updated' => array(
-        'sortable' => 0,
-        'separator' => '',
-      ),
       'feature' => array(
         'separator' => '',
       ),
-      'title' => array(
-        'sortable' => 0,
+      'atrium_activity_timestamp' => array(
         'separator' => '',
       ),
-      'last_comment_name' => array(
-        'sortable' => 0,
-        'separator' => '',
-      ),
-      'last_updated_1' => array(
-        'sortable' => 0,
+      'atrium_activity' => array(
         'separator' => '',
       ),
       'timestamp' => array(
         'separator' => '',
       ),
+      'atrium_activity_timestamp_1' => array(
+        'separator' => '',
+      ),
     ),
-    'default' => 'last_updated_1',
+    'default' => '-1',
   ));
   $handler = $view->new_display('block', 'Recent activity', 'block_1');
   $handler->override_option('block_description', 'Recent activity');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('block', 'Files', 'block_2');
-  $handler->override_option('relationships', array(
-    'upload_fid' => array(
-      'label' => 'Files',
-      'required' => 1,
-      'id' => 'upload_fid',
-      'table' => 'node',
-      'field' => 'upload_fid',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-    ),
-  ));
   $handler->override_option('fields', array(
     'group_nid' => array(
       'label' => '',
@@ -411,46 +392,14 @@ function _atrium_views_default_views() {
         'button' => 'Override',
       ),
     ),
-    'filemime' => array(
-      'label' => '',
-      'link_to_file' => 1,
-      'exclude' => 0,
-      'id' => 'filemime',
-      'table' => 'files',
-      'field' => 'filemime',
-      'relationship' => 'upload_fid',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-    ),
-    'filename' => array(
-      'label' => '',
-      'link_to_file' => 1,
-      'exclude' => 0,
-      'id' => 'filename',
-      'table' => 'files',
-      'field' => 'filename',
-      'relationship' => 'upload_fid',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-    ),
-    'title' => array(
-      'label' => '',
-      'link_to_node' => 1,
-      'exclude' => 0,
-      'id' => 'title',
-      'table' => 'node',
-      'field' => 'title',
-      'relationship' => 'none',
-    ),
-    'last_updated' => array(
+    'feature' => array(
       'label' => '',
       'alter' => array(
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
         'path' => '',
+        'link_class' => '',
         'alt' => '',
         'prefix' => '',
         'suffix' => '',
@@ -462,69 +411,88 @@ function _atrium_views_default_views() {
         'strip_tags' => 0,
         'html' => 0,
       ),
-      'date_format' => 'time',
-      'custom_date_format' => 'g:i a',
+      'link_to_node' => 0,
       'exclude' => 0,
-      'id' => 'last_updated',
-      'table' => 'node_comment_statistics',
-      'field' => 'last_updated',
-      'relationship' => 'none',
+      'id' => 'feature',
+      'table' => 'spaces_node',
+      'field' => 'feature',
       'override' => array(
         'button' => 'Use default',
       ),
-    ),
-    'last_comment_name' => array(
-      'label' => '',
-      'link_to_user' => TRUE,
-      'exclude' => 0,
-      'id' => 'last_comment_name',
-      'table' => 'node_comment_statistics',
-      'field' => 'last_comment_name',
       'relationship' => 'none',
     ),
-    'last_updated_1' => array(
+    'atrium_activity_timestamp' => array(
       'label' => '',
       'alter' => array(
-        'alter_text' => 0,
+        'alter_text' => FALSE,
         'text' => '',
-        'make_link' => 0,
+        'make_link' => FALSE,
         'path' => '',
         'alt' => '',
+        'link_class' => '',
         'prefix' => '',
         'suffix' => '',
-        'help' => '',
-        'trim' => 0,
+        'trim' => FALSE,
         'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'strip_tags' => 0,
-        'html' => 0,
+        'word_boundary' => TRUE,
+        'ellipsis' => TRUE,
+        'strip_tags' => FALSE,
+        'html' => FALSE,
       ),
-      'date_format' => 'day',
-      'custom_date_format' => 'l, M j',
-      'exclude' => 1,
-      'id' => 'last_updated_1',
-      'table' => 'node_comment_statistics',
-      'field' => 'last_updated',
-      'relationship' => 'none',
+      'time_horizon' => 30,
+      'exclude' => 0,
+      'id' => 'atrium_activity_timestamp',
+      'table' => 'comments',
+      'field' => 'atrium_activity_timestamp',
       'override' => array(
         'button' => 'Use default',
       ),
+      'relationship' => 'none',
+      'date_format' => 'reldate',
+      'custom_date_format' => '',
+    ),
+    'atrium_activity_upload' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => FALSE,
+        'text' => '',
+        'make_link' => FALSE,
+        'path' => '',
+        'alt' => '',
+        'link_class' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'trim' => FALSE,
+        'max_length' => '',
+        'word_boundary' => TRUE,
+        'ellipsis' => TRUE,
+        'strip_tags' => FALSE,
+        'html' => FALSE,
+      ),
+      'time_horizon' => 30,
+      'exclude' => 0,
+      'id' => 'atrium_activity_upload',
+      'table' => 'comments',
+      'field' => 'atrium_activity_upload',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
     ),
   ));
   $handler->override_option('style_options', array(
-    'grouping' => 'last_updated_1',
+    'grouping' => '',
     'override' => 0,
     'sticky' => 0,
     'order' => 'desc',
     'columns' => array(
       'group_nid' => 'group_nid',
       'filemime' => 'filemime',
-      'filename' => 'filename',
-      'title' => 'filename',
-      'last_updated' => 'last_updated',
-      'last_comment_name' => 'last_comment_name',
-      'last_updated_1' => 'last_updated_1',
+      'filename' => 'filemime',
+      'filemime_1' => 'filemime',
+      'filename_1' => 'filemime',
+      'atrium_activity_timestamp' => 'atrium_activity_timestamp',
+      'atrium_activity' => 'atrium_activity',
     ),
     'info' => array(
       'group_nid' => array(
@@ -538,24 +506,22 @@ function _atrium_views_default_views() {
         'sortable' => 0,
         'separator' => '<br/>',
       ),
-      'title' => array(
+      'filemime_1' => array(
         'sortable' => 0,
         'separator' => '',
       ),
-      'last_updated' => array(
+      'filename_1' => array(
         'sortable' => 0,
         'separator' => '',
       ),
-      'last_comment_name' => array(
-        'sortable' => 0,
+      'atrium_activity_timestamp' => array(
         'separator' => '',
       ),
-      'last_updated_1' => array(
-        'sortable' => 0,
+      'atrium_activity' => array(
         'separator' => '',
       ),
     ),
-    'default' => 'last_updated_1',
+    'default' => '-1',
   ));
   $handler->override_option('block_description', 'Latest files');
   $handler->override_option('block_caching', -1);

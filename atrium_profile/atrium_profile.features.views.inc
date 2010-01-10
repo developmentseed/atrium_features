@@ -416,37 +416,65 @@ function _atrium_profile_views_default_views() {
       ),
       'relationship' => 'none',
     ),
-    'last_updated' => array(
+    'atrium_activity_timestamp' => array(
       'label' => '',
       'alter' => array(
-        'alter_text' => 0,
+        'alter_text' => FALSE,
         'text' => '',
-        'make_link' => 0,
+        'make_link' => FALSE,
         'path' => '',
-        'link_class' => '',
         'alt' => '',
+        'link_class' => '',
         'prefix' => '',
         'suffix' => '',
-        'help' => '',
-        'trim' => 0,
+        'trim' => FALSE,
         'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'strip_tags' => 0,
-        'html' => 0,
+        'word_boundary' => TRUE,
+        'ellipsis' => TRUE,
+        'strip_tags' => FALSE,
+        'html' => FALSE,
       ),
+      'time_horizon' => 30,
+      'exclude' => 0,
+      'id' => 'atrium_activity_timestamp',
+      'table' => 'comments',
+      'field' => 'atrium_activity_timestamp',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
       'date_format' => 'reldate',
       'custom_date_format' => '',
+    ),
+    'atrium_activity' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => FALSE,
+        'text' => '',
+        'make_link' => FALSE,
+        'path' => '',
+        'alt' => '',
+        'link_class' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'trim' => FALSE,
+        'max_length' => '',
+        'word_boundary' => TRUE,
+        'ellipsis' => TRUE,
+        'strip_tags' => FALSE,
+        'html' => FALSE,
+      ),
+      'time_horizon' => '30',
       'exclude' => 0,
-      'id' => 'last_updated',
-      'table' => 'node_comment_statistics',
-      'field' => 'last_updated',
+      'id' => 'atrium_activity',
+      'table' => 'comments',
+      'field' => 'atrium_activity',
       'override' => array(
-        'button' => 'Override',
+        'button' => 'Use default',
       ),
       'relationship' => 'none',
     ),
-    'title' => array(
+    'timestamp' => array(
       'label' => '',
       'alter' => array(
         'alter_text' => 0,
@@ -465,24 +493,12 @@ function _atrium_profile_views_default_views() {
         'strip_tags' => 0,
         'html' => 0,
       ),
-      'link_to_node' => 1,
+      'link_to_node' => 0,
+      'comments' => 0,
       'exclude' => 0,
-      'id' => 'title',
-      'table' => 'node',
-      'field' => 'title',
-      'override' => array(
-        'button' => 'Override',
-      ),
-      'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('sorts', array(
-    'last_updated' => array(
-      'order' => 'DESC',
-      'granularity' => 'second',
-      'id' => 'last_updated',
-      'table' => 'node_comment_statistics',
-      'field' => 'last_updated',
+      'id' => 'timestamp',
+      'table' => 'history_user',
+      'field' => 'timestamp',
       'override' => array(
         'button' => 'Use default',
       ),
@@ -490,7 +506,7 @@ function _atrium_profile_views_default_views() {
     ),
   ));
   $handler->override_option('arguments', array(
-    'uid_touch' => array(
+    'uid' => array(
       'default_action' => 'default',
       'style_plugin' => 'default_summary',
       'style_options' => array(),
@@ -502,9 +518,11 @@ function _atrium_profile_views_default_views() {
       'default_argument' => '',
       'validate_type' => 'user',
       'validate_fail' => 'not found',
-      'id' => 'uid_touch',
-      'table' => 'node',
-      'field' => 'uid_touch',
+      'break_phrase' => 0,
+      'not' => 0,
+      'id' => 'uid',
+      'table' => 'users',
+      'field' => 'uid',
       'validate_user_argument_type' => 'uid',
       'validate_user_roles' => array(
         '2' => 0,
@@ -529,12 +547,21 @@ function _atrium_profile_views_default_views() {
         'casetracker_basic_project' => 0,
         'group' => 0,
         'profile' => 0,
-        'feed' => 0,
+        'shoutbox' => 0,
+        'admin_message' => 0,
+        'feedapi_node' => 0,
+        'feed_reader' => 0,
+        'imageset' => 0,
+        'page' => 0,
       ),
       'validate_argument_node_access' => 0,
       'validate_argument_nid_type' => 'nid',
       'validate_argument_vocabulary' => array(
+        '5' => 0,
         '1' => 0,
+        '2' => 0,
+        '6' => 0,
+        '4' => 0,
       ),
       'validate_argument_type' => 'tid',
       'validate_argument_transform' => 0,
@@ -582,8 +609,39 @@ function _atrium_profile_views_default_views() {
   $handler->override_option('title', 'Recent activity');
   $handler->override_option('use_ajax', TRUE);
   $handler->override_option('items_per_page', 15);
-  $handler->override_option('use_pager', '1');
+  $handler->override_option('use_pager', 'mini');
   $handler->override_option('style_plugin', 'table');
+  $handler->override_option('style_options', array(
+    'grouping' => '',
+    'override' => 1,
+    'sticky' => 0,
+    'order' => 'asc',
+    'columns' => array(
+      'group_nid' => 'group_nid',
+      'feature' => 'feature',
+      'atrium_activity_timestamp' => 'atrium_activity_timestamp',
+      'atrium_activity' => 'atrium_activity',
+      'timestamp' => 'timestamp',
+    ),
+    'info' => array(
+      'group_nid' => array(
+        'separator' => '',
+      ),
+      'feature' => array(
+        'separator' => '',
+      ),
+      'atrium_activity_timestamp' => array(
+        'separator' => '',
+      ),
+      'atrium_activity' => array(
+        'separator' => '',
+      ),
+      'timestamp' => array(
+        'separator' => '',
+      ),
+    ),
+    'default' => '-1',
+  ));
   $handler->override_option('row_plugin', 'fields');
   $handler->override_option('row_options', array());
   $handler->override_option('block_description', 'User\'s activity');
