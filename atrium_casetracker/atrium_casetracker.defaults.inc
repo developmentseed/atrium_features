@@ -12,12 +12,12 @@ function _atrium_casetracker_context_default_contexts() {
   $context->description = '';
   $context->tag = 'Casetracker';
   $context->conditions = array(
-    'node' => array(
+    'bookroot' => array(
       'values' => array(
         'casetracker_basic_project' => 'casetracker_basic_project',
       ),
       'options' => array(
-        'node_form' => 1,
+        'node_form' => 0,
       ),
     ),
   );
@@ -42,10 +42,18 @@ function _atrium_casetracker_context_default_contexts() {
   $context->description = '';
   $context->tag = 'Casetracker';
   $context->conditions = array(
-    'node' => array(
+    'bookroot' => array(
       'values' => array(
         'casetracker_basic_project' => 'casetracker_basic_project',
+      ),
+      'options' => array(
+        'node_form' => 1,
+      ),
+    ),
+    'node' => array(
+      'values' => array(
         'casetracker_basic_case' => 'casetracker_basic_case',
+        'casetracker_basic_project' => 'casetracker_basic_project',
       ),
       'options' => array(
         'node_form' => 1,
@@ -78,6 +86,12 @@ function _atrium_casetracker_context_default_contexts() {
           'delta' => 'atrium_casetracker-block_2',
           'region' => 'right',
           'weight' => 2,
+        ),
+        'views-3de5a072e9754aa7bce60e3f05d1538e' => array(
+          'module' => 'views',
+          'delta' => '3de5a072e9754aa7bce60e3f05d1538e',
+          'region' => 'page_tools',
+          'weight' => 0,
         ),
       ),
     ),

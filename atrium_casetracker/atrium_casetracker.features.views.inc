@@ -44,14 +44,14 @@ function _atrium_casetracker_views_default_views() {
       'field' => 'case_priority_id',
       'relationship' => 'none',
     ),
-    'timestamp' => array(
-      'label' => 'New',
-      'link_to_node' => 0,
-      'comments' => 0,
+    'last_updated' => array(
+      'label' => 'Last post',
+      'date_format' => 'reldate',
+      'custom_date_format' => '',
       'exclude' => 0,
-      'id' => 'timestamp',
-      'table' => 'history_user',
-      'field' => 'timestamp',
+      'id' => 'last_updated',
+      'table' => 'node_comment_statistics',
+      'field' => 'last_updated',
       'relationship' => 'none',
     ),
     'title' => array(
@@ -79,14 +79,31 @@ function _atrium_casetracker_views_default_views() {
       'field' => 'case_status_id',
       'relationship' => 'none',
     ),
-    'last_updated' => array(
-      'label' => 'Last post',
-      'date_format' => 'reldate',
-      'custom_date_format' => '',
+    'timestamp' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
+      'link_to_node' => 0,
+      'comments' => 0,
       'exclude' => 0,
-      'id' => 'last_updated',
-      'table' => 'node_comment_statistics',
-      'field' => 'last_updated',
+      'id' => 'timestamp',
+      'table' => 'history_user',
+      'field' => 'timestamp',
       'relationship' => 'none',
     ),
   ));
@@ -298,11 +315,11 @@ function _atrium_casetracker_views_default_views() {
     'columns' => array(
       'pid' => 'case_priority_id',
       'case_priority_id' => 'case_priority_id',
+      'last_updated' => 'last_updated',
       'title' => 'title',
-      'timestamp' => 'title',
       'assign_to' => 'assign_to',
       'case_status_id' => 'case_status_id',
-      'last_updated' => 'last_updated',
+      'timestamp' => 'timestamp',
     ),
     'info' => array(
       'pid' => array(
@@ -313,11 +330,12 @@ function _atrium_casetracker_views_default_views() {
         'sortable' => 1,
         'separator' => '',
       ),
-      'title' => array(
-        'sortable' => 0,
+      'last_updated' => array(
+        'sortable' => 1,
         'separator' => '',
       ),
-      'timestamp' => array(
+      'title' => array(
+        'sortable' => 0,
         'separator' => '',
       ),
       'assign_to' => array(
@@ -328,8 +346,7 @@ function _atrium_casetracker_views_default_views() {
         'sortable' => 1,
         'separator' => '',
       ),
-      'last_updated' => array(
-        'sortable' => 1,
+      'timestamp' => array(
         'separator' => '',
       ),
     ),
@@ -1101,9 +1118,11 @@ function _atrium_casetracker_views_default_views() {
     ),
   ));
   $handler->override_option('title', 'Newest cases');
-  $handler->override_option('items_per_page', 10);
-  $handler->override_option('use_pager', '0');
-  $handler->override_option('use_more', 1);
+  $handler->override_option('empty', '');
+  $handler->override_option('use_ajax', TRUE);
+  $handler->override_option('items_per_page', 15);
+  $handler->override_option('use_pager', 'mini');
+  $handler->override_option('use_more', 0);
   $handler->override_option('link_display', 'page_3');
   $handler->override_option('block_description', 'Project cases (newest)');
   $handler->override_option('block_caching', -1);
@@ -1204,11 +1223,235 @@ function _atrium_casetracker_views_default_views() {
       'relationship' => 'none',
     ),
   ));
+  $handler->override_option('access', array(
+    'type' => 'perm',
+    'perm' => 'access content',
+  ));
   $handler->override_option('title', 'My cases');
   $handler->override_option('items_per_page', 5);
   $handler->override_option('use_pager', '0');
   $handler->override_option('style_plugin', 'list');
+  $handler->override_option('style_options', array(
+    'grouping' => '',
+    'override' => 0,
+    'sticky' => 0,
+    'order' => 'desc',
+    'columns' => array(
+      'pid' => 'case_priority_id',
+      'case_priority_id' => 'case_priority_id',
+      'title' => 'title',
+      'timestamp' => 'title',
+      'assign_to' => 'assign_to',
+      'case_status_id' => 'case_status_id',
+      'last_updated' => 'last_updated',
+    ),
+    'info' => array(
+      'pid' => array(
+        'sortable' => 0,
+        'separator' => '',
+      ),
+      'case_priority_id' => array(
+        'sortable' => 1,
+        'separator' => '',
+      ),
+      'title' => array(
+        'sortable' => 0,
+        'separator' => '',
+      ),
+      'timestamp' => array(
+        'separator' => '',
+      ),
+      'assign_to' => array(
+        'sortable' => 1,
+        'separator' => '',
+      ),
+      'case_status_id' => array(
+        'sortable' => 1,
+        'separator' => '',
+      ),
+      'last_updated' => array(
+        'sortable' => 1,
+        'separator' => '',
+      ),
+    ),
+    'default' => '-1',
+  ));
   $handler->override_option('block_description', 'My cases');
+  $handler->override_option('block_caching', -1);
+  $handler = $view->new_display('block', 'Latest cases', 'block_3');
+  $handler->override_option('fields', array(
+    'name' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
+      'link_to_user' => 1,
+      'overwrite_anonymous' => 0,
+      'anonymous_text' => '',
+      'exclude' => 0,
+      'id' => 'name',
+      'table' => 'users',
+      'field' => 'name',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'created' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
+      'date_format' => 'reldate',
+      'custom_date_format' => '',
+      'exclude' => 0,
+      'id' => 'created',
+      'table' => 'node',
+      'field' => 'created',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'title' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
+      'link_to_node' => 1,
+      'exclude' => 0,
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'relationship' => 'none',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+    ),
+  ));
+  $handler->override_option('filters', array(
+    'case' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'case',
+      'table' => 'node',
+      'field' => 'case',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'created' => array(
+      'operator' => '>=',
+      'value' => array(
+        'type' => 'offset',
+        'value' => '-30 days',
+        'min' => '',
+        'max' => '',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'created',
+      'table' => 'node',
+      'field' => 'created',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'status' => array(
+      'operator' => '=',
+      'value' => 1,
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'relationship' => 'none',
+    ),
+    'current' => array(
+      'operator' => 'all',
+      'value' => 'all',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'current',
+      'table' => 'spaces',
+      'field' => 'current',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'perm',
+    'perm' => 'access content',
+  ));
+  $handler->override_option('title', 'Latest cases');
+  $handler->override_option('items_per_page', 5);
+  $handler->override_option('use_pager', '0');
+  $handler->override_option('use_more', 1);
+  $handler->override_option('use_more_text', 'View more');
+  $handler->override_option('style_plugin', 'list');
+  $handler->override_option('style_options', array());
+  $handler->override_option('block_description', 'Latest cases');
   $handler->override_option('block_caching', -1);
   $translatables['atrium_casetracker'] = array(
     t('Defaults'),
@@ -1220,6 +1463,8 @@ function _atrium_casetracker_views_default_views() {
     t('Project cases (newest)'),
     t('Newest cases'),
     t('more'),
+    t('Latest cases'),
+    t('View more'),
   );
 
   $views[$view->name] = $view;
@@ -1291,11 +1536,15 @@ function _atrium_casetracker_views_default_views() {
     ),
   ));
   $handler->override_option('sorts', array(
-    'title' => array(
-      'order' => 'ASC',
-      'id' => 'title',
+    'changed' => array(
+      'order' => 'DESC',
+      'granularity' => 'second',
+      'id' => 'changed',
       'table' => 'node',
-      'field' => 'title',
+      'field' => 'changed',
+      'override' => array(
+        'button' => 'Override',
+      ),
       'relationship' => 'none',
     ),
   ));
@@ -1439,12 +1688,56 @@ function _atrium_casetracker_views_default_views() {
     'description' => '',
     'weight' => 0,
   ));
+  $handler = $view->new_display('block', 'Block: Projects', 'block_1');
+  $handler->override_option('fields', array(
+    'title' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+      ),
+      'link_to_node' => 1,
+      'exclude' => 0,
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'perm',
+    'perm' => 'access content',
+  ));
+  $handler->override_option('items_per_page', 10);
+  $handler->override_option('use_pager', '0');
+  $handler->override_option('use_more', 1);
+  $handler->override_option('use_more_text', 'View more');
+  $handler->override_option('style_plugin', 'list');
+  $handler->override_option('style_options', array(
+    'grouping' => '',
+    'type' => 'ul',
+  ));
+  $handler->override_option('block_description', 'Projects');
+  $handler->override_option('block_caching', -1);
   $translatables['atrium_casetracker_projects'] = array(
     t('Defaults'),
     t('Projects'),
     t('No projects found.'),
     t('Archived projects'),
     t('No archived projects found.'),
+    t('Block: Projects'),
+    t('View more'),
   );
 
   $views[$view->name] = $view;
