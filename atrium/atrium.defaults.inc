@@ -801,6 +801,13 @@ function _atrium_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'og_home_page_view';
+  $strongarm->value = '0';
+
+  $export['og_home_page_view'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'og_notifications_content_types';
   $strongarm->value = array(
     'blog' => 'blog',
@@ -869,6 +876,7 @@ function _atrium_strongarm() {
     'atrium_calendar-mini' => 1,
     'atrium_casetracker-book' => 0,
     'atrium_casetracker-filters' => 0,
+    'atrium_shoutbox-shoutbox' => 0,
     'book-0' => 0,
     'casetracker-0' => 0,
     'comment-0' => 0,
@@ -878,12 +886,14 @@ function _atrium_strongarm() {
     'devel-2' => 0,
     'diff-inline' => 0,
     'feedapi-feed_ical' => 0,
+    'feedapi-feedapi_node' => 0,
     'markdown-help' => 0,
     'menu-admin' => 0,
     'menu-devel' => 0,
     'menu-features' => 0,
     'menu-primary-links' => 0,
     'menu-secondary-links' => 0,
+    'menu-spaces' => 0,
     'node-0' => 0,
     'og-0' => 0,
     'og-3' => 0,
@@ -902,19 +912,32 @@ function _atrium_strongarm() {
     'views--exp-atrium_members-page_2' => 0,
     'views--exp-atrium_members-page_3' => 0,
     'views--exp-atrium_members-page_4' => 0,
+    'views--exp-messaging_shoutbox-block_1' => 0,
+    'views--exp-messaging_shoutbox-block_2' => 0,
+    'views--exp-messaging_shoutbox-default' => 0,
     'views-2806ea1d75b0ffa45a7eaa780e276615' => 1,
+    'views-3de5a072e9754aa7bce60e3f05d1538e' => 1,
+    'views-468d4512633362842c0ff768ac59efad' => 0,
+    'views-584a7dacb1e0f4c880cbacb19e2d0e93' => 0,
+    'views-707d7ca4a3396303c7ef762f32d243c8' => 0,
     'views-atrium_blog-block_1' => 0,
     'views-atrium_blog-block_2' => 1,
     'views-atrium_blog_comments-block_1' => 1,
     'views-atrium_calendar-block_1' => 0,
     'views-atrium_casetracker-block_1' => 0,
     'views-atrium_casetracker-block_2' => 1,
+    'views-atrium_casetracker-block_3' => 1,
     'views-atrium_groups-block_2' => 1,
     'views-atrium_intranet-block_1' => 1,
     'views-atrium_intranet-block_2' => 1,
-    'views-atrium_intranet-block_3' => 0,
+    'views-atrium_profile_blocks-block_1' => 0,
+    'views-atrium_profile_blocks-block_2' => 0,
+    'views-atrium_shoutbox_users-block_1' => 0,
     'views-atrium_taxonomy-block_1' => 0,
     'views-d6af0b83befbd3a36210064bbba489a8' => 0,
+    'views-fff60b5167ffbdd19460dca794bcc787' => 0,
+    'views-messaging_shoutbox-block_1' => 0,
+    'views-messaging_shoutbox-block_2' => 0,
     'xref-create' => 0,
   );
 
