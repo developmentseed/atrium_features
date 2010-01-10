@@ -56,18 +56,23 @@ function atrium_members_context_links_alter(&$links) {
 function atrium_members_context_page_reaction() {
   $space = spaces_get_space();
   if ($space->type == 'user') {
-    $breadcrumb = array(
-      l(t('Home'), '<front>'),
-      l(t('Members'), 'members'),
-      l(check_plain($space->title()), "user/{$space->id}"),
-    );
+    $breadcrumb = array(l(t('Home'), '<front>'));
+    $item = menu_get_item('members');
+    if ($item['access']) {
+      $breadcrumb[] = l($item['title'], $item['href']);
+    }
+    $item = menu_get_item("user/{$space->id}");
+    if ($item['access']) {
+      $breadcrumb[] = l($space->title(), $item['href']);
+    }
     drupal_set_breadcrumb($breadcrumb);
   }
   else if (context_get('context', 'spaces-feature-members')) {
-    $breadcrumb = array(
-      l(t('Home'), '<front>'),
-      l(t('Members'), 'members'),
-    );
+    $breadcrumb = array(l(t('Home'), '<front>'));
+    $item = menu_get_item('members');
+    if ($item['access']) {
+      $breadcrumb[] = l($item['title'], $item['href']);
+    }
     drupal_set_breadcrumb($breadcrumb);
   }
 }
