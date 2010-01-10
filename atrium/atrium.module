@@ -255,18 +255,8 @@ function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
         $node->new = atrium_get_readstate($readtime, $node->changed);
       }
 
-      // Confirm we are actually on a page of relevance
+      // Display a message for archived content
       if (menu_get_object() === $node) {
-        // Set the context for the root book node type when on a book child page
-        if (!empty($node->book['bid'])) {
-          $type = db_result(db_query("SELECT type FROM {node} WHERE nid = %d", $node->book['bid']));
-
-          // @TODO: Write a condition plugin for this rather than using nodeapi.
-          if ($plugin = context_get_plugin('condition', 'node')) {
-            $plugin->execute($node, 'view');
-          }
-        }
-        // Display a message for archived content
         if ($op == 'view' && $node->status == 0) {
           $message = t('This !type is <strong>archived</strong>.', array('!type' => node_get_types('name', $node->type)));
           if (node_access('update', $node)) {
