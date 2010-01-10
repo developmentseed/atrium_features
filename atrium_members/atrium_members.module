@@ -57,16 +57,16 @@ function atrium_members_context_page_reaction() {
   $space = spaces_get_space();
   if ($space->type == 'user') {
     $breadcrumb = array(
-      l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
-      l(t('Members'), 'members', array('purl' =>array('disabled' => TRUE))),
-      l(check_plain($space->title()), '<front>'),
+      l(t('Home'), '<front>'),
+      l(t('Members'), 'members'),
+      l(check_plain($space->title()), "user/{$space->id}"),
     );
     drupal_set_breadcrumb($breadcrumb);
   }
   else if (context_get('context', 'spaces-feature-members')) {
     $breadcrumb = array(
-      l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
-      l(t('Members'), 'members', array('purl' =>array('disabled' => TRUE))),
+      l(t('Home'), '<front>'),
+      l(t('Members'), 'members'),
     );
     drupal_set_breadcrumb($breadcrumb);
   }
