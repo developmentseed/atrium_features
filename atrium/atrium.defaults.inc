@@ -876,13 +876,14 @@ function _atrium_strongarm() {
     'atrium-account' => 0,
     'atrium-admin_links' => 0,
     'atrium-book' => 0,
+    'atrium-book_all' => 0,
     'atrium-create' => 0,
+    'atrium-help' => 0,
     'atrium-search' => 0,
     'atrium-user_links' => 0,
     'atrium_calendar-mini' => 1,
-    'atrium_casetracker-book' => 0,
     'atrium_casetracker-filters' => 0,
-    'atrium_shoutbox-shoutbox' => 0,
+    'atrium_shoutbox-shoutbox' => 1,
     'book-0' => 0,
     'casetracker-0' => 0,
     'comment-0' => 0,
@@ -924,8 +925,8 @@ function _atrium_strongarm() {
     'views-2806ea1d75b0ffa45a7eaa780e276615' => 1,
     'views-3de5a072e9754aa7bce60e3f05d1538e' => 1,
     'views-468d4512633362842c0ff768ac59efad' => 0,
-    'views-584a7dacb1e0f4c880cbacb19e2d0e93' => 0,
     'views-707d7ca4a3396303c7ef762f32d243c8' => 0,
+    'views-9659fa0bc3abbfbebd3db25567f1aa29' => 0,
     'views-atrium_blog-block_1' => 0,
     'views-atrium_blog-block_2' => 1,
     'views-atrium_blog_comments-block_1' => 1,
@@ -938,6 +939,7 @@ function _atrium_strongarm() {
     'views-atrium_intranet-block_2' => 1,
     'views-atrium_profile_blocks-block_1' => 0,
     'views-atrium_profile_blocks-block_2' => 0,
+    'views-atrium_shoutbox_shouts-block_1' => 1,
     'views-atrium_shoutbox_users-block_1' => 0,
     'views-atrium_taxonomy-block_1' => 0,
     'views-d6af0b83befbd3a36210064bbba489a8' => 0,
@@ -948,6 +950,19 @@ function _atrium_strongarm() {
   );
 
   $export['spaces_dashboard_blocks'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'spaces_dashboard_layouts';
+  $strongarm->value = array(
+    'default' => 1,
+    'columns' => 1,
+    'split' => 1,
+    'wide' => 0,
+    'login' => 0,
+  );
+
+  $export['spaces_dashboard_layouts'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
