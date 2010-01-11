@@ -116,14 +116,14 @@ function _atrium_block_book_all() {
           foreach($view->result as $row) {
             $data = array_merge($data, menu_tree_all_data(book_menu_name($row->nid)));
           }
-        }
-        $data = array(array('link' => array('title' => 'Documents', 'href' => 'documents'), 'below' => $data));
-        if ($output = menu_tree_output($data)) {
-          cache_set($cid, $output);
-          $block = array(
-            'subject' => "<span class='trail'>". t('Documents') ."</span>",
-            'content' => $output,
-          );
+          $data = array(array('link' => array('title' => 'Documents', 'href' => 'documents'), 'below' => $data));
+          if ($output = menu_tree_output($data)) {
+            cache_set($cid, $output);
+            $block = array(
+              'subject' => "<span class='trail'>". t('Documents') ."</span>",
+              'content' => $output,
+            );
+          }
         }
 
         // Put path back.
