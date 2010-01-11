@@ -540,6 +540,9 @@ function _atrium_views_default_views() {
       'relationship' => 'none',
     ),
   ));
+  $handler->override_option('title', 'Latest files');
+  $handler->override_option('empty', 'No recent files found.');
+  $handler->override_option('empty_format', '5');
   $handler->override_option('style_options', array(
     'grouping' => '',
     'override' => 0,
@@ -591,6 +594,7 @@ function _atrium_views_default_views() {
     t('No recent activity found.'),
     t('Files'),
     t('Latest files'),
+    t('No recent files found.'),
   );
 
   $views[$view->name] = $view;
