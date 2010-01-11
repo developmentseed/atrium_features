@@ -11,7 +11,7 @@ function atrium_shoutbox_help($path, $arg) {
     atrium_shoutbox_alert();
   }
 
-  if (($path == 'help#atrium_shoutbox') || context_isset('spaces', 'shoutbox')) {
+  if (($path == 'help#atrium_shoutbox') || context_isset('context', 'spaces-shoutbox-og')) {
     $help = '';
     $help .= '<h3>'. t('Shoutbox') .'</h3>';
     $help .= '<p>'. t('The shoutbox gives your team a space to microblog.') .'</p>';

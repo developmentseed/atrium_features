@@ -126,7 +126,8 @@ function _atrium_profile_views_default_views() {
     ),
   ));
   $handler->override_option('access', array(
-    'type' => 'none',
+    'type' => 'perm',
+    'perm' => 'access user profiles',
   ));
   $handler->override_option('cache', array(
     'type' => 'none',
@@ -312,10 +313,6 @@ function _atrium_profile_views_default_views() {
         'button' => 'Use default',
       ),
     ),
-  ));
-  $handler->override_option('access', array(
-    'type' => 'perm',
-    'perm' => 'access content',
   ));
   $handler->override_option('attachment_position', 'after');
   $handler->override_option('inherit_arguments', TRUE);

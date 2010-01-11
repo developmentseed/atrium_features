@@ -127,6 +127,7 @@ function atrium_block($op = 'list', $delta = 0) {
         'create' => array('info' => t('Atrium: Create content')),
         'search' => array('info' => t('Atrium: Search form')),
         'user_links' => array('info' => t('Atrium: User links')),
+        'help' => array('info' => t('Atrium: Help')),
       );
       if (module_exists('admin')) {
         $info = $info + array(

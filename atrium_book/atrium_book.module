@@ -6,7 +6,7 @@ include_once('atrium_book.features.inc');
  * Implementation of hook_help().
  */
 function atrium_book_help($path, $arg) {
-  if (($path == 'help#atrium_book') || (context_get('spaces', 'feature') == 'book')) {
+  if (($path == 'help#atrium_book') || context_isset('context', 'spaces-feature-book')) {
     switch ($path) {
       case 'node/add/book':
       case 'node/%/edit':

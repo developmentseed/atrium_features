@@ -30,7 +30,7 @@ function atrium_casetracker_init() {
  * Implementation of hook_help().
  */
 function atrium_casetracker_help($path, $arg) {
-  if (($path == 'help#atrium_casetracker') || (context_get('spaces', 'feature') == 'casetracker')) {
+  if (($path == 'help#atrium_casetracker') || context_isset('context', 'spaces-feature-casetracker')) {
     switch ($path) {
       case 'node/add/casetracker-basic-case':
       case 'node/add/casetracker-basic-project':

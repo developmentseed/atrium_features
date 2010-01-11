@@ -69,6 +69,12 @@ function _atrium_context_default_contexts() {
           'region' => 'palette',
           'weight' => 1,
         ),
+        'atrium-help' => array(
+          'module' => 'atrium',
+          'delta' => 'help',
+          'region' => 'palette',
+          'weight' => 2,
+        ),
       ),
     ),
   );
@@ -947,9 +953,7 @@ function _atrium_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'spaces_features';
   $strongarm->value = array(
-    'atrium_calendar' => '0',
     'atrium_groups' => '1',
-    'atrium_intranet' => '1',
     'atrium_members' => '1',
     'spaces_dashboard' => '1',
   );
@@ -1015,7 +1019,7 @@ function _atrium_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_register';
-  $strongarm->value = '1';
+  $strongarm->value = '0';
 
   $export['user_register'] = $strongarm;
   $strongarm = new stdClass;

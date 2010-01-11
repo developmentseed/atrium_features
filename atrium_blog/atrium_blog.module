@@ -9,13 +9,13 @@ function atrium_blog_help($path) {
   // Central help page content.
   if ($path == 'help#atrium_blog') {
     $help = '<h3>'. t('Blog') .'</h3>';
-    $help .= '<p>'. t("The blog lets your team communicate by posting updates and discussing issues. It is great place for sharing progress, discussing challenges, and exploring ideas.") .'</p>';
+    $help .= '<p>'. t("The blog lets your team communicate by posting updates and discussing issues. It is a great place for sharing progress, discussing challenges, and exploring ideas.") .'</p>';
     $help .= '<p>'. t("To start a conversation navigate to the blog and click the \"Add blog post\" button. You will need to enter a title and some body content to your post. Then click \"Save\".") .'</p>';
     return $help;
   }
 
   // Contextual help content.
-  if (context_get('spaces', 'feature') == 'blog') {
+  if (context_isset('context', 'spaces-feature-blog')) {
     if ($path == 'node/add/blog') {
       $help = '';
       $help .= '<h3>'. t('Blog') .'</h3>';
@@ -24,7 +24,7 @@ function atrium_blog_help($path) {
     }
     else {
       $help = '<h3>'. t('Blog') .'</h3>';
-      $help .= '<p>'. t("The blog lets your team communicate by posting updates and discussing issues. It is great place for sharing progress, discussing challenges, and exploring ideas.") .'</p>';
+      $help .= '<p>'. t("The blog lets your team communicate by posting updates and discussing issues. It is a great place for sharing progress, discussing challenges, and exploring ideas.") .'</p>';
       return $help;
     }
   }

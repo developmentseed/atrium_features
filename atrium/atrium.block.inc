@@ -190,3 +190,12 @@ function _atrium_block_user_links() {
     return array('subject' => t('Membership'), 'content' => theme('links', $links));
   }
 }
+
+/**
+ * Help.
+ */
+function _atrium_block_help() {
+  if ($helptext = theme('help')) {
+    return array('subject' => t('Need help?'), 'content' => $helptext);
+  }
+}
