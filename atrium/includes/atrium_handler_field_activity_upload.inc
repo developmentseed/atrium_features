@@ -43,7 +43,7 @@ class atrium_handler_field_activity_upload extends atrium_handler_field_activity
    * Render this field as a link to group space.
    */
   function render($value) {
-    $filename = truncate_utf8($value->{$this->aliases['filename']}, 40, FALSE, TRUE);
+    $filename = truncate_utf8($value->{$this->aliases['filename']}, 25, FALSE, TRUE);
     // Has comments
     if (!empty($value->{$this->field_alias})) {
       $account = user_load($value->{$this->aliases['comment_uid']});
