@@ -182,3 +182,14 @@ function atrium_update_6009() {
   }
   return $return;
 }
+
+/**
+ * Update 6010: Enforce the openatrium profile name
+ */
+function atrium_update_6010() {
+  if (variable_get('install_profile', 'default') == 'atrium_installer') {
+    variable_set('install_profile', 'openatrium');
+    return array(array('success' => true, 'query' => "Updated install profile name."));
+  }
+}
+
