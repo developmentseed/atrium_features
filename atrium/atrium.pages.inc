@@ -135,6 +135,10 @@ function _atrium_form_spaces_features_form_alter(&$form, $form_state) {
     );
     $form['#submit'][] = 'atrium_form_spaces_features_form_submit';
   }
+  elseif ($space->type == 'user') {
+    unset($form['designkit_color']);
+    unset($form['designkit_image']);
+  }
 }
 
 /**
