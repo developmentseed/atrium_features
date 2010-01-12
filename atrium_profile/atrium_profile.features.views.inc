@@ -461,7 +461,7 @@ function _atrium_profile_views_default_views() {
         'strip_tags' => FALSE,
         'html' => FALSE,
       ),
-      'time_horizon' => '30',
+      'time_horizon' => '90',
       'exclude' => 0,
       'id' => 'atrium_activity',
       'table' => 'comments',

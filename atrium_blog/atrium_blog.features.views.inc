@@ -864,7 +864,7 @@ function _atrium_blog_views_default_views() {
       'operator' => '>=',
       'value' => array(
         'type' => 'offset',
-        'value' => '-30 days',
+        'value' => '-6 months',
         'min' => '',
         'max' => '',
       ),

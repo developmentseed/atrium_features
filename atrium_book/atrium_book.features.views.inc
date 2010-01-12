@@ -100,7 +100,7 @@ function _atrium_book_views_default_views() {
         'strip_tags' => FALSE,
         'html' => FALSE,
       ),
-      'time_horizon' => '30',
+      'time_horizon' => '90',
       'exclude' => 0,
       'id' => 'atrium_activity',
       'table' => 'comments',
@@ -137,16 +137,6 @@ function _atrium_book_views_default_views() {
       'override' => array(
         'button' => 'Override',
       ),
-    ),
-  ));
-  $handler->override_option('sorts', array(
-    'changed' => array(
-      'order' => 'DESC',
-      'granularity' => 'second',
-      'id' => 'changed',
-      'table' => 'node',
-      'field' => 'changed',
-      'relationship' => 'none',
     ),
   ));
   $handler->override_option('filters', array(
