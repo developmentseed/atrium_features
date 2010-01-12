@@ -12,14 +12,6 @@ class atrium_handler_field_activity_upload extends atrium_handler_field_activity
   }
 
   /**
-   * Add the time_horizon element.
-   */
-  function options_form(&$form, $form_state) {
-    parent::options_form($form, $form_state);
-    unset($form['time_horizon']);
-  }
-
-  /**
    * Query. This relies on the hijacking of the Views execution process in
    * atrium_views_query_alter().
    */
