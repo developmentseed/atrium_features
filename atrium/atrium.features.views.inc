@@ -542,7 +542,6 @@ function _atrium_views_default_views() {
   ));
   $handler->override_option('title', 'Latest files');
   $handler->override_option('empty', 'No recent files found.');
-  $handler->override_option('empty_format', '5');
   $handler->override_option('style_options', array(
     'grouping' => '',
     'override' => 0,
@@ -1196,7 +1195,6 @@ function _atrium_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('empty', 'There is no content tagged with this term.');
-  $handler->override_option('empty_format', '5');
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
   $handler->override_option('style_options', array(

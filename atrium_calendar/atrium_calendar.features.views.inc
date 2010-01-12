@@ -853,7 +853,6 @@ function _atrium_calendar_views_default_views() {
     ),
   ));
   $handler->override_option('empty', 'No upcoming events found.');
-  $handler->override_option('empty_format', '6');
   $handler->override_option('items_per_page', 5);
   $handler->override_option('use_pager', '0');
   $handler->override_option('style_plugin', 'list');
