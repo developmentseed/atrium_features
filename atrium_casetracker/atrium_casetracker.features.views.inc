@@ -1222,6 +1222,23 @@ function _atrium_casetracker_views_default_views() {
       'field' => 'current',
       'relationship' => 'none',
     ),
+    'case' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'case',
+      'table' => 'node',
+      'field' => 'case',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
   ));
   $handler->override_option('access', array(
     'type' => 'perm',
