@@ -791,6 +791,7 @@ function _atrium_shoutbox_views_default_views() {
   $handler->override_option('cache', array(
     'type' => 'none',
   ));
+  $handler->override_option('use_ajax', TRUE);
   $handler->override_option('style_plugin', 'grid');
   $handler->override_option('style_options', array(
     'grouping' => '',
@@ -799,7 +800,8 @@ function _atrium_shoutbox_views_default_views() {
   ));
   $handler = $view->new_display('block', 'Block', 'block_1');
   $handler->override_option('title', 'Members');
-  $handler->override_option('items_per_page', 100);
+  $handler->override_option('items_per_page', 30);
+  $handler->override_option('use_pager', 'mini');
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
   $translatables['atrium_shoutbox_users'] = array(
