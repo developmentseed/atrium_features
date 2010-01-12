@@ -83,7 +83,7 @@ function _atrium_profile_views_default_views() {
       'breadcrumb' => '',
       'default_argument_type' => 'user',
       'default_argument' => '',
-      'validate_type' => 'user',
+      'validate_type' => 'useringroups',
       'validate_fail' => 'not found',
       'break_phrase' => 0,
       'not' => 0,
