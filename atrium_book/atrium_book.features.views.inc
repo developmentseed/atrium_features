@@ -193,6 +193,7 @@ function _atrium_book_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Latest changes');
+  $handler->override_option('empty', 'No recent updates found.');
   $handler->override_option('items_per_page', 25);
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
@@ -418,6 +419,7 @@ function _atrium_book_views_default_views() {
   $translatables['atrium_book'] = array(
     t('Defaults'),
     t('Latest changes'),
+    t('No recent updates found.'),
     t('Page: Latest changes'),
     t('Page: Archived books'),
     t('No archived books found.'),
