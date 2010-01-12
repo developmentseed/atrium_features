@@ -51,6 +51,8 @@ function _atrium_block_book() {
       if (module_exists('admin')) {
         $data = array_shift(menu_tree_all_data($node->book['menu_name']));
         if ($data['below']) {
+          drupal_add_css(drupal_get_path('module', 'admin') .'/includes/admin.menu.css');
+          drupal_add_js(drupal_get_path('module', 'admin') .'/includes/jquery.drilldown.js');
           drupal_add_js(drupal_get_path('module', 'atrium') .'/atrium.js');
           drupal_add_js(array('atriumBookPath' => url($_GET['q'])), 'setting');
           $title = l($data['link']['title'], "node/{$node->book['bid']}", array('attributes' => array('class' => 'depth-0')));
@@ -91,6 +93,8 @@ function _atrium_block_book_all() {
 
     // Dynamic block.
     if (module_exists('admin')) {
+      drupal_add_css(drupal_get_path('module', 'admin') .'/includes/admin.menu.css');
+      drupal_add_js(drupal_get_path('module', 'admin') .'/includes/jquery.drilldown.js');
       drupal_add_js(drupal_get_path('module', 'atrium') .'/atrium.js');
       drupal_add_js(array('atriumBookPath' => url($_GET['q'])), 'setting');
 
