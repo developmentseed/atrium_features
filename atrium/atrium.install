@@ -161,11 +161,11 @@ function atrium_update_6010() {
       $cnt++;
       if ($row->type == 'site') {
         if ($row->id == 'color') {
-          variable_set('designkit_color', serialize(array('background' => unserialize($row->value))));
+          variable_set('designkit_color', array('background' => unserialize($row->value)));
         }
         elseif ($row->id == 'logo') {
           $value = unserialize($row->value);
-          variable_set('designkit_image', serialize(array('logo' => $value['fid'])));
+          variable_set('designkit_image', array('logo' => $value['fid']));
         }
       }
       else {
