@@ -57,40 +57,11 @@ function atrium_update_6004() {
 }
 
 /**
- * Update 6005: Switch from atrium_dashboard to spaces_dashboard.
- */
-function atrium_update_6005() {
-  $return = array();
-  // Require that Spaces updates have been run.
-  $spaces_schema = drupal_get_installed_schema_version('spaces');
-  if ($spaces_schema >= 6301) {
-    $result = db_query("SELECT type, id, value FROM {spaces_overrides} WHERE object_type = 'variable' and object_id = 'spaces_features'");
-    $cnt = 0;
-    while ($row = db_fetch_object($result)) {
-      $value = unserialize($row->value);
-      if (isset($value['atrium_dashboard'])) {
-        $value['spaces_dashboard'] = $value['atrium_dashboard'];
-        unset($value['atrium_dashboard']);
-        db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = '%s' AND object_type = 'variable' AND object_id = 'spaces_features'", serialize($value), $row->type, $row->id);
-        $cnt++;
-      }
-    }
-    if ($cnt) {
-      $return[] = array('success' => true, 'query' => "Updated dashboard settings for $cnt spaces.");
-    }
-  }
-  else {
-    $return['#abort'] = array('success' => FALSE, 'query' => 'Updates for Spaces 3 must be run before updating Atrium.');
-  }
-  return $return;
-}
-
-/**
- * Update 6006: Older, gravlax era, Atrium installations may have erroneous
+ * Update 6005: Older, gravlax era, Atrium installations may have erroneous
  * values in the system table for Atrium's feature modules. This updates
  * corrects those and runs an update that would otherwise be missed.
  */
-function atrium_update_6006() {
+function atrium_update_6005() {
   $return = array();
   $result = db_query("SELECT name, schema_version FROM {system} WHERE type = 'module' AND status = 1 AND schema_version = -1");
   $atrium_features = array(
@@ -120,61 +91,47 @@ function atrium_update_6006() {
 }
 
 /**
- * Update 6007: Update settings from spaces_design to designkit.
+ * Update 6006: Switch from atrium_dashboard to spaces_dashboard.
  */
-function atrium_update_6007() {
+function atrium_update_6006() {
   $return = array();
-  $result = db_query("SELECT * FROM {spaces_settings} WHERE id IN ('color', 'logo')");
-  $cnt = 0;
-  while ($row = db_fetch_object($result)) {
-    $cnt++;
-    if ($row->type == 'site') {
-      if ($row->id == 'color') {
-        variable_set('designkit_color', serialize(array('background' => unserialize($row->value))));
-      }
-      elseif ($row->id == 'logo') {
-        $value = unserialize($row->value);
-        variable_set('designkit_image', serialize(array('logo' => $value['fid'])));
-      }
-    }
-    else {
-     if ($row->id == 'color') {
-        db_query("INSERT INTO {spaces_overrides} (type, id, object_type, object_id, value) VALUES ('%s', '%s', 'variable', 'designkit_color', '%s')",
-          $row->type,
-          $row->sid,
-          serialize(array('background' => unserialize($row->value)))
-        );
-      }
-      elseif ($row->id == 'logo') {
-        $value = unserialize($row->value);
-        if ($value['fid']) {
-          db_query("INSERT INTO {spaces_overrides} (type, id, object_type, object_id, value) VALUES ('%s', '%s', 'variable', 'designkit_image', '%s')",
-            $row->type,
-            $row->sid,
-            serialize(array('logo' => $value['fid']))
-          );
-        }
-      }
-    }
+  // We do a flexible update here as Aegir / drush updatedb requires
+  // that all updates complete at once for a migration to be successful.
+  $spaces_schema = drupal_get_installed_schema_version('spaces');
+  if ($spaces_schema < 6301) {
+    $return[] = update_sql("UPDATE {spaces_features} SET id = 'spaces_dashboard' WHERE id = 'atrium_dashboard'");
   }
-  if ($cnt) {
-    $return[] = array('success' => true, 'query' => "Migrated $cnt settings from site spaces_design to designkit.");
+  else {
+    $result = db_query("SELECT type, id, value FROM {spaces_overrides} WHERE object_type = 'variable' and object_id = 'spaces_features'");
+    $cnt = 0;
+    while ($row = db_fetch_object($result)) {
+      $value = unserialize($row->value);
+      if (isset($value['atrium_dashboard'])) {
+        $value['spaces_dashboard'] = $value['atrium_dashboard'];
+        unset($value['atrium_dashboard']);
+        db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = '%s' AND object_type = 'variable' AND object_id = 'spaces_features'", serialize($value), $row->type, $row->id);
+        $cnt++;
+      }
+    }
+    if ($cnt) {
+      $return[] = array('success' => TRUE, 'query' => "Updated dashboard settings for $cnt spaces.");
+    }
   }
   return $return;
 }
 
 /**
- * Update 6008: Remove old atrium_install variable
+ * Update 6007: Remove old atrium_install variable
  */
-function atrium_update_6008() {
+function atrium_update_6007() {
   variable_del('atrium_install');
-  return array(array('success' => true, 'query' => "Removed variable: atrium_install."));
+  return array(array('success' => TRUE, 'query' => "Removed variable: atrium_install."));
 }
 
 /**
- * Update 6009: Add index to timestamp field on comments table.
+ * Update 6008: Add index to timestamp field on comments table.
  */
-function atrium_update_6009() {
+function atrium_update_6008() {
   $return = array();
   if (db_table_exists('comments')) {
     $return[] = update_sql("ALTER TABLE {comments} ADD INDEX(timestamp)");
@@ -183,12 +140,61 @@ function atrium_update_6009() {
 }
 
 /**
- * Update 6010: Enforce the openatrium profile name
+ * Update 6009: Enforce the openatrium profile name
  */
-function atrium_update_6010() {
+function atrium_update_6009() {
   if (variable_get('install_profile', 'default') == 'atrium_installer') {
     variable_set('install_profile', 'openatrium');
     return array(array('success' => true, 'query' => "Updated install profile name."));
   }
+}
+
+/**
+ * Update 6010: Update settings from spaces_design to designkit.
+ */
+function atrium_update_6010() {
+  $return = array();
+  if (db_table_exists('spaces_overrides')) {
+    $result = db_query("SELECT * FROM {spaces_settings} WHERE id IN ('color', 'logo')");
+    $cnt = 0;
+    while ($row = db_fetch_object($result)) {
+      $cnt++;
+      if ($row->type == 'site') {
+        if ($row->id == 'color') {
+          variable_set('designkit_color', serialize(array('background' => unserialize($row->value))));
+        }
+        elseif ($row->id == 'logo') {
+          $value = unserialize($row->value);
+          variable_set('designkit_image', serialize(array('logo' => $value['fid'])));
+        }
+      }
+      else {
+      if ($row->id == 'color') {
+          db_query("INSERT INTO {spaces_overrides} (type, id, object_type, object_id, value) VALUES ('%s', '%s', 'variable', 'designkit_color', '%s')",
+            $row->type,
+            $row->sid,
+            serialize(array('background' => unserialize($row->value)))
+          );
+        }
+        elseif ($row->id == 'logo') {
+          $value = unserialize($row->value);
+          if ($value['fid']) {
+            db_query("INSERT INTO {spaces_overrides} (type, id, object_type, object_id, value) VALUES ('%s', '%s', 'variable', 'designkit_image', '%s')",
+              $row->type,
+              $row->sid,
+              serialize(array('logo' => $value['fid']))
+            );
+          }
+        }
+      }
+    }
+    if ($cnt) {
+      $return[] = array('success' => true, 'query' => "Migrated $cnt settings from site spaces_design to designkit.");
+    }
+  }
+  else {
+    $return['#abort'] = array('success' => TRUE, 'query' => 'Spaces 3 update scripts must be run first.');
+  }
+  return $return;
 }
 
