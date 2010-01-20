@@ -200,7 +200,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
   function assertText($text, $message = '', $group = 'Other') {
     $result = $this->assertTextHelper($text, $message, $group, FALSE);
     if (!$result) {
-      // $this->printPage();
+      $this->printPage();
     }
     return $result;
   }
