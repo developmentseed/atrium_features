@@ -253,13 +253,19 @@ function atrium_views_query_alter(&$view, &$query) {
     if (isset($main->table_queue['comments']['join'])) {
       $main->table_queue['comments']['join']->type = 'INNER';
     }
-    // Alter joins to the user table should go through comments, move it to
-    // the end of the stack to ensure it occurs after the comments JOIN.
+    // Alter joins to the user table should go through comments, move node and
+    // comment to the beginning of the stack to ensure that order.
     if (isset($main->table_queue['users']['join'])) {
-      $queue = $main->table_queue['users'];
-      $queue['join']->left_table = 'comments';
-      unset($main->table_queue['users']);
-      $main->table_queue['users'] = $queue;
+      $queue = array(
+        'node' => $main->table_queue['node'],
+        'comments' => $main->table_queue['comments'],
+      );
+      foreach ($main->table_queue as $k => $v) {
+        if (($k !== 'node') && ($k !== 'comments')) {
+          $queue[$k] = $v;
+        }
+      }
+      $main->table_queue = $queue;
     }
     // Alter joins to the upload, files tables to go through comment_upload instead.
     if (isset($main->table_queue['upload']['join'])) {
