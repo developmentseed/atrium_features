@@ -35,14 +35,14 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
     // Check initial texts
     $this->assertText(t('Welcome to !sitename', array('!sitename' => variable_get('site_name', 'Atrium'))));
     $this->assertText(t('Create your first !type to get started.', array('!type' => node_get_types('name', 'group'))));
-    
+
     // Check some initial paths. More than checking the page is properly built
     // we just do some page loading to check for errors.
-    foreach (array('groups', 'groups/my') as $path) {
+    foreach (array('og', 'og/my') as $path) {
       $this->drupalGet($path);
       $this->assertText(t('There is currently no content to view in this section.'));
     }
-    $this->drupalGet('groups/archived');
+    $this->drupalGet('og/archived');
     $this->assertText(t('No archived groups found.'));
     $this->drupalGet('members');
     $this->assertNoUniqueText($admin_user->name); // In menu and directory
