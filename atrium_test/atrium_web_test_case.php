@@ -1,13 +1,4 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.2.2.3.2.37 2009/04/23 05:39:52 boombatower Exp $
-// Core: Id: drupal_web_test_case.php,v 1.96 2009/04/22 09:57:10 dries Exp
-/**
- * @file
- * Provide required modifications to Drupal 7 core DrupalWebTestCase in order
- * for it to function properly in Drupal 6.
- *
- * Copyright 2008-2009 by Jimmy Berry ("boombatower", http://drupal.org/user/214218)
- */
 
 //require_once drupal_get_path('module', 'atrium_test') . '/atrium_test.d6.inc';
 require_once drupal_get_path('module', 'simpletest') . '/drupal_web_test_case.php';
@@ -20,7 +11,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
   // This will allow us to test install in other languages
   var $install_locale = 'en';
   // And we may want to try more install profiles
-  var $install_profile = 'atrium_installer';
+  var $install_profile = 'openatrium';
   
   /**
    * Installs Atrium instead of Drupal
@@ -47,7 +38,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       $language = (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => '');
       locale(NULL, NULL, TRUE);
     }
-    
+
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
 //    $db_prefix = Database::getConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
     $db_prefix = 'simpletest' . mt_rand(1000, 1000000);
@@ -78,21 +69,20 @@ class AtriumWebTestCase extends DrupalWebTestCase {
     // calls to it will fail.
     drupal_get_schema(NULL, TRUE);
     
-    if ($this->install_profile == 'atrium_installer') {
+    if ($this->install_profile == 'openatrium') {
       // Download and import translation if needed
       if ($this->install_locale != 'en') {
         $this->installLanguage($this->install_locale);
       }
       // Install more modules
-      $modules = _atrium_installer_atrium_modules();
+      $modules = _openatrium_atrium_modules();
       drupal_install_modules($modules);
       
       // Configure intranet
       // $profile_tasks = $this->install_profile . '_profile_tasks';
-      _atrium_installer_intranet_configure();
-      _atrium_installer_intranet_configure_check();
+      _openatrium_intranet_configure();
+      _openatrium_intranet_configure_check();
       variable_set('atrium_install', 1);
-      
     }
     else {
       // Rebuild caches. Partly done by Atrium installer
@@ -278,5 +268,22 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       
     parent::tearDown();
     $language = $this->originalLanguage;
+  }
+
+  /**
+   * Override of refreshVariables().
+   */
+  protected function refreshVariables() {
+    parent::refreshVariables();
+    strongarm_set_conf(TRUE);
+
+    // This is a workaround for the very early check of the 'site_frontpage'
+    // variable in the Drupal bootstrap process. The workaround re-runs
+    // drupal_init_path() to ensure the strongarm'ed version of
+    // 'site_frontpage' is used. Note that this may be too late if other modules
+    // weighted even lower than strongarm (which is a superlightweight -1000)
+    // rely on $_GET['q'] or 'site_frontpage' in hook_init().
+    $_GET['q'] = strongarm_language_strip($_REQUEST['q']);
+    drupal_init_path();
   }
 }
