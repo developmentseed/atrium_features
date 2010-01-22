@@ -10,6 +10,6 @@ class atrium_handler_field_group extends views_handler_field {
    * Render this field as a link to group space.
    */
   function render($value) {
-    return l(check_plain($value->node_title), '<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $value->nid)));
+    return l($value->node_title, '<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $value->nid)));
   }
 }
