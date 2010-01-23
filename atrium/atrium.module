@@ -73,29 +73,29 @@ function atrium_menu() {
 /**
  * Implementation of hook_menu_alter().
  */
-function atrium_menu_alter(&$callbacks) {
+function atrium_menu_alter(&$items) {
   // Replace search callbacks
   if (module_exists('search')) {
     $unset = array('search', 'search/node/%menu_tail', 'search/user/%menu_tail');
     foreach ($unset as $path) {
-      if (!empty($callbacks[$path])  && $callbacks[$path]['module'] == 'search') {
-        unset($callbacks[$path]);
+      if (!empty($items[$path])  && $items[$path]['module'] == 'search') {
+        unset($items[$path]);
       }
     }
   }
 
   // Replace taxonomy autocomplete with our own space-aware autocomplete
   if (module_exists('taxonomy')) {
-    $callbacks['taxonomy/autocomplete']['page callback'] = 'atrium_taxonomy_autocomplete';
-    $callbacks['taxonomy/autocomplete']['module'] = 'atrium';
-    $callbacks['taxonomy/autocomplete']['file'] = 'atrium.pages.inc';
+    $items['taxonomy/autocomplete']['page callback'] = 'atrium_taxonomy_autocomplete';
+    $items['taxonomy/autocomplete']['module'] = 'atrium';
+    $items['taxonomy/autocomplete']['file'] = 'atrium.pages.inc';
   }
 
   // @TODO Replace user autocomplete with space-aware / "user access" aware autocomplete
 
   // Hijack the /node callback for use as our welcome page
-  $callbacks['node']['page callback'] = 'drupal_goto';
-  $callbacks['node']['page arguments'] = array('welcome');
+  $items['node']['page callback'] = 'drupal_goto';
+  $items['node']['page arguments'] = array('welcome');
 
   // Kill undesirable menu items
   $yank = array(
