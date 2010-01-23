@@ -1,0 +1,38 @@
+<?php
+require_once drupal_get_path('module', 'atrium_test') . '/atrium_web_test_case.php';
+
+class AtriumTest extends AtriumWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Atrium',
+      'description' => 'Tests for core Atrium functionality.',
+      'group' => 'Atrium',
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+    $this->atriumBasic();
+  }
+
+  /**
+   * Ensure that 403 pages display a login form for anonymous users.
+   */
+  function test403() {
+    $this->drupalLogout();
+    $this->drupalGet('node');
+    $this->assertText(t('Username'));
+    $this->assertText(t('Password'));
+
+    $user = $this->atriumCreateUser('authenticated user');
+    $this->drupalLogin($user);
+    $this->drupalGet("node/{$this->atriumGroups['private']->nid}");
+    $this->assertText(t('You are not authorized to access this page'));
+  }
+}

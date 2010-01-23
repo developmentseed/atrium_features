@@ -335,6 +335,7 @@ function atrium_taxonomy_autocomplete($vid, $string = '') {
 
 /**
  * 403 page.
+ * Test: AtriumTest->test403().
  */
 function atrium_403() {
   // If we're in intranet mode, send anonymous users to a login screen.

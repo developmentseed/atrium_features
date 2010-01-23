@@ -90,11 +90,6 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       module_exists('views') ? views_get_all_views(TRUE) : TRUE;
       menu_rebuild();
     }
-    else {
-      // Rebuild caches. Partly done by Atrium installer
-      actions_synchronize();
-      menu_rebuild();
-    }
     
     _drupal_flush_css_js();
     $this->refreshVariables();
@@ -160,6 +155,72 @@ class AtriumWebTestCase extends DrupalWebTestCase {
     language_list('language', TRUE);
     // We may need to refresh default language
     drupal_init_language();
+  }
+
+  /**
+   * Create basic conditions for testing.
+   */
+  function atriumBasic() {
+    // Create a user for each role.
+    $this->atriumUsers = array();
+    $user_roles = array('authenticated user', 'manager', 'admin');
+    foreach ($user_roles as $role) {
+      $this->atriumUsers[$role] = $this->atriumCreateUser($role);
+    }
+
+    // Create public and private groups.
+    $this->drupalLogin($this->atriumUsers['admin']);
+    $this->atriumGroups = array();
+    $group_types = array(
+      'public' => 'atrium_og_public',
+      'private' => 'atrium_og_private',
+    );
+    foreach ($group_types as $key => $preset) {
+      $this->atriumGroups[$key] = $this->atriumCreateGroup($preset);
+    }
+  }
+
+  /**
+   * Create a group with the given preset
+   */
+  function atriumCreateGroup($preset = 'atrium_og_private') {
+    $group = new stdClass();
+    $group->title = $this->randomName(8);
+    $group->description = $this->randomName(32);
+    $group->path = strtolower($this->randomName(8, ''));
+    $group->preset = $preset;
+    $this->drupalGet('node/add/group');
+    $edit = array(
+      'title' => $group->title,
+      'og_description' => $group->description,
+      'purl[value]' => $group->path,
+      'spaces_preset_og' => $group->preset,
+    );
+    $this->drupalPost('node/add/group', $edit, t('Save'));
+    $group->nid = db_result(db_query("SELECT id FROM {purl} WHERE value = '%s'", $group->path));
+    return $group;
+  }
+
+  /**
+   * Create group content
+   */
+  function atriumCreateGroupContent($group, $type, $edit = array()) {
+    $node->type = $type;
+    $node->title = $this->randomName(8);
+    $node->body = $this->randomName(32);
+    $edit += array(
+      'title' => $node->title,
+      'body' => $node->body,
+    );
+    $path = "$group->path/node/add/$type";
+    $this->drupalGet($path);
+    $this->drupalPost($path, $edit, t('Save'));
+    // Get nid from database
+    $node->nid = db_result(db_query("SELECT nid FROM {node} WHERE title = '%s'", $node->title));
+    // Reload page and assert title
+    $this->drupalGet("$group->path/node/$node->nid");
+    $this->assertText($node->title);
+    return $node;
   }
 
   /**
@@ -281,15 +342,13 @@ class AtriumWebTestCase extends DrupalWebTestCase {
    */
   protected function refreshVariables() {
     parent::refreshVariables();
-    strongarm_set_conf(TRUE);
-
-    // This is a workaround for the very early check of the 'site_frontpage'
-    // variable in the Drupal bootstrap process. The workaround re-runs
-    // drupal_init_path() to ensure the strongarm'ed version of
-    // 'site_frontpage' is used. Note that this may be too late if other modules
-    // weighted even lower than strongarm (which is a superlightweight -1000)
-    // rely on $_GET['q'] or 'site_frontpage' in hook_init().
-    $_GET['q'] = strongarm_language_strip($_REQUEST['q']);
-    drupal_init_path();
+    // If strongarm is enabled, we need to reload its variable bootstrap
+    // for this page load.
+    // @TODO: Do we need to do this for Spaces too?
+    if (module_exists('strongarm')) {
+      strongarm_set_conf(TRUE);
+      $_GET['q'] = strongarm_language_strip($_REQUEST['q']);
+      drupal_init_path();
+    }
   }
 }

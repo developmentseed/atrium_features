@@ -61,26 +61,8 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
       $this->drupalGet("$path/$page");
     }
     // Create public and private group using the form
-    $group0->path = 'group0';
-    $group0->preset = 'atrium_og_private';
-    $group1->path = 'group1';
-    $group1->preset = 'atrium_og_public';
-    
-    foreach (array($group0, $group1) as $group) {
-      $group->title = $this->randomName(8);
-      $group->description = $this->randomName(32);
-      $this->drupalGet('node/add/group');
-      $edit = array(
-        'title' => $group->title,
-        'og_description' => $group->description,
-        'purl[value]' => $group->path,
-        'spaces_preset_og' => $group->preset,
-      );
-      $this->drupalPost('node/add/group', $edit, t('Save'));
-      // Save nid for this group
-      $group->nid = db_result(db_query("SELECT id FROM {purl} WHERE value = '%s'", $group->path));    
-      
-      // Test all pages for this group
+    foreach (array('atrium_og_private', 'atrium_og_public') as $preset) {
+      $group = $this->atriumCreateGroup($preset);
       $this->drupalGet($group->path);
       $this->assertText($group->title);
       foreach (array('dashboard') as $page) {
@@ -89,6 +71,7 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
       }     
       
       $content = array();
+
       // Check blog
       $this->drupalGet("$group->path/blog");
       $this->assertText(t('Please add your first !type to get started.', array('!type' => node_get_types('name', 'blog'))));
@@ -121,27 +104,4 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
       $this->drupalGet("$path/add_user");
     }
   }  
-  
-  /**
-   * Create group content 
-   */
-  function atriumCreateGroupContent($group, $type, $edit = array()) {    
-    $node->type = $type;
-    $node->title = $this->randomName(8);
-    $node->body = $this->randomName(32);
-    $edit += array(
-      'title' => $node->title,
-      'body' => $node->body,
-    );
-    $path = "$group->path/node/add/$type";
-    $this->drupalGet($path);
-    $this->drupalPost($path, $edit, t('Save'));
-    // Get nid from database
-    $node->nid = db_result(db_query("SELECT nid FROM {node} WHERE title = '%s'", $node->title));
-    // Reload page and assert title
-    $this->drupalGet("$group->path/node/$node->nid");
-    $this->assertText($node->title);
-    return $node;
-  }
 }
-
