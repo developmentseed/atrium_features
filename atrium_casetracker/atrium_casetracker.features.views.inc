@@ -1848,19 +1848,10 @@ function _atrium_casetracker_views_default_views() {
       'field' => 'status',
       'relationship' => 'none',
     ),
-    'users_current' => array(
-      'operator' => 'all',
-      'value' => '',
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'users_current',
+    'current' => array(
+      'id' => 'current',
       'table' => 'spaces',
-      'field' => 'users_current',
-      'relationship' => 'none',
+      'field' => 'current',
     ),
   ));
   $handler->override_option('access', array(
@@ -1870,9 +1861,6 @@ function _atrium_casetracker_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('items_per_page', 0);
-  $translatables['atrium_ct_assignee_options'] = array(
-    t('Defaults'),
-  );
 
   $views[$view->name] = $view;
 
