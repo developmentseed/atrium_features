@@ -88,11 +88,12 @@ function atrium_casetracker_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
 
 /**
  * Implementation of hook_form_alter().
+ * Ensure projects become root books.
+ * Test: AtriumCaseTrackerTest->testProjectNode().
  */
 function atrium_casetracker_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node']) && !empty($form['book'])) {
     switch ($form['#node']->type) {
-      // Ensure projects become root books.
       case 'casetracker_basic_project':
         if (!empty($form['book'])) {
           if (!empty($form['#node']->nid) && isset($form['book']['bid']['#options'][$form['#node']->nid])) {

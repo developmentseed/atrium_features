@@ -22,24 +22,55 @@ class AtriumCaseTrackerTest extends AtriumWebTestCase {
     foreach ($this->atriumGroups as $group) {
       $this->atriumEnableFeature('atrium_casetracker', 'og', $group->nid);
     }
+    // Use manager role since managers can create projects.
+    $this->atriumUsers['private_user'] = $this->atriumCreateUser('manager', array($this->atriumGroups['private']));
+    $this->atriumUsers['public_user'] = $this->atriumCreateUser('manager', array($this->atriumGroups['public']));
   }
 
   /**
-   * Ensure that cases can only be assigned to users in the current group.
+   * Test that cases can only be assigned to users in the current group.
    */
   function testAssigneeVisibility() {
-    $private_user = $this->atriumCreateUser('user', array($this->atriumGroups['private']));
-    $public_user = $this->atriumCreateUser('user', array($this->atriumGroups['public']));
+    $private = $this->atriumUsers['private_user'];
+    $public = $this->atriumUsers['public_user'];
 
-    // @TODO: actually inspect the assignee DOM elements for this text.
-    $this->drupalLogin($private_user);
-    $this->drupalGet('node/add/casetracker');
-    $this->assertText($private_user->name);
-    $this->assertNoText($public_user->name);
+    // Test that user A cannot see user B
+    $this->drupalLogin($private);
+    $this->atriumCreateGroupContent($this->atriumGroups['private'], 'casetracker_basic_project');
+    $this->drupalGet("{$this->atriumGroups['private']->path}/node/add/casetracker-basic-case");
+    $this->assertText(t('Case information'));
+    $this->assertText($private->name);
+    $this->assertNoText($public->name);
 
-    $this->drupalLogin($public_user);
-    $this->drupalGet('node/add/casetracker');
-    $this->assertText($public_user->name);
-    $this->assertNoText($private_user->name);
+    // Test that user B cannot see user A
+    $this->drupalLogin($public);
+    $this->atriumCreateGroupContent($this->atriumGroups['public'], 'casetracker_basic_project');
+    $this->drupalGet("{$this->atriumGroups['public']->path}/node/add/casetracker-basic-case");
+    $this->assertText(t('Case information'));
+    $this->assertText($public->name);
+    $this->assertNoText($private->name);
+  }
+
+  /**
+   * Test that projects
+   * - become root books upon creation
+   * - have inline diff enabled
+   */
+  function testProjectNode() {
+    $this->drupalLogin($this->atriumUsers['private_user']);
+    $node = $this->atriumCreateGroupContent($this->atriumGroups['private'], 'casetracker_basic_project');
+    $this->drupalGet("node/{$node->nid}");
+
+    // Is root book.
+    $this->assertText(t('Add child page'));
+
+    // Save a revision and test for inline diff.
+    $edit = array(
+      'title' => $this->randomName(32),
+      'body' => $this->randomName(32),
+    );
+    $this->drupalPost("node/{$node->nid}/edit", $edit, t('Save'));   
+    $this->drupalGet("node/{$node->nid}");
+    $this->assertText(t('Highlight changes'));
   }
 }
