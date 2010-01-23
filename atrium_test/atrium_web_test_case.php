@@ -185,6 +185,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
    */
   function atriumCreateGroup($preset = 'atrium_og_private') {
     $group = new stdClass();
+    $group->type = 'group';
     $group->title = $this->randomName(8);
     $group->description = $this->randomName(32);
     $group->path = strtolower($this->randomName(8, ''));

@@ -13,6 +13,7 @@ function _atrium_form_comment_form_alter(&$form, $form_state) {
 
 /**
  * Form alter callback for node form.
+ * Test: AtriumTest->testArchive().
  */
 function _atrium_form_node_form_alter(&$form, $form_state) {
   $node = $form['#node'];
@@ -88,7 +89,7 @@ function _atrium_form_node_form_alter(&$form, $form_state) {
     );
   }
   // Disable other node forms in archived spaces
-  else if (atrium_is_archived($space)) {
+  else if ($space && $space->type === 'og' && !$space->group->status) {
     drupal_access_denied(); exit;
   }
 

@@ -14,16 +14,13 @@ define('ATRIUM_MEMBERS_GROUP', 1);
 
 /**
  * Implementation of hook_init().
+ * Test: AtriumTest->testArchive().
  */
 function atrium_init() {
   // Alert the user that they are browsing an archived group.
   $space = spaces_get_space();
-  if ($space && atrium_is_archived($space)) {
-    $message = t('This !type is <strong>archived</strong>. You may not add or alter any of its content.', array('!type' => node_get_types('name', 'group')));
-    if (node_access('update', $space->group)) {
-      $message .= ' '. t('To reactivate this !type, !link.', array('!type' => node_get_types('name', 'group'), '!link' => l(t('click here'), "node/$space->id/reactivate")));
-    }
-    drupal_set_message($message);
+  if ($space && $space->type === 'og' && !$space->group->status) {
+    drupal_set_message(atrium_archived_message($space->group), 'status', FALSE);
   }
 }
 
@@ -263,14 +260,9 @@ function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
       }
 
       // Display a message for archived content
-      if (menu_get_object() === $node) {
-        if ($op == 'view' && $node->status == 0) {
-          $message = t('This !type is <strong>archived</strong>.', array('!type' => node_get_types('name', $node->type)));
-          if (node_access('update', $node)) {
-            $message .= ' '. t('To reactivate this !type, !link.', array('!type' => node_get_types('name', $node->type), '!link' => l(t('click here'), "node/{$node->nid}/reactivate")));
-          }
-          drupal_set_message($message);
-        }
+      // Test: AtriumTest->testArchive().
+      if (menu_get_object() === $node && $op == 'view' && $node->status == 0) {
+        drupal_set_message(atrium_archived_message($node), 'status', FALSE);
       }
       break;
     case 'insert':
@@ -574,14 +566,14 @@ function atrium_feature_access($feature, $perm = 'access content') {
 }
 
 /**
- * Function that checks whether a group has been archived.
+ * Message to display for archived nodes.
  */
-function atrium_is_archived($space = NULL) {
-  switch ($space->type) {
-    case 'og':
-      return !$space->group->status;
+function atrium_archived_message($node) {
+  $message = t('This !type is <strong>archived</strong>. You may not add or alter any of its content.', array('!type' => node_get_types('name', $node->type)));
+  if (node_access('update', $node)) {
+    $message .= ' '. t('To reactivate this !type, !link.', array('!type' => node_get_types('name', $node->type), '!link' => l(t('click here'), "node/{$node->nid}/reactivate")));
   }
-  return FALSE;
+  return $message;
 }
 
 /**
@@ -634,6 +626,7 @@ function atrium_search_form_submit($form, &$form_state) {
 
 /**
  * Reactivate node submit handler.
+ * Test: AtriumTest->testArchive().
  */
 function atrium_reactivate_submit($form, &$form_state) {
   $nid = $form_state['values']['nid'];
@@ -646,6 +639,7 @@ function atrium_reactivate_submit($form, &$form_state) {
 
 /**
  * OG archive submit handler.
+ * Test: AtriumTest->testArchive().
  */
 function atrium_archive_submit($form, &$form_state) {
   $nid = $form_state['values']['nid'];

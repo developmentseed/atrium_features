@@ -33,6 +33,40 @@ class AtriumTest extends AtriumWebTestCase {
     $user = $this->atriumCreateUser('authenticated user');
     $this->drupalLogin($user);
     $this->drupalGet("node/{$this->atriumGroups['private']->nid}");
-    $this->assertText(t('You are not authorized to access this page'));
+    $this->assertResponse(403, t('Access denied'));
+  }
+
+  /**
+   * Test archiving.
+   */
+  function testArchive() {
+    $this->drupalLogin($this->atriumCreateUser('admin'));
+    $group = $this->atriumCreateGroup();
+    $post = $this->atriumCreateGroupContent($group, 'blog');
+
+    // Archive the group.
+    $edit = array();
+    $this->drupalPost("node/{$group->nid}/edit", $edit, t('Archive this !type', array('!type' => node_get_types('name', $group->type))));
+
+    // Check that there is a message on both group & blog nodes.
+    $this->drupalGet("node/{$group->nid}");
+    $message = t('This !type is <strong>archived</strong>. You may not add or alter any of its content.', array('!type' => node_get_types('name', $group->type)));
+    $this->assertRaw($message);
+    $this->drupalGet("node/{$post->nid}");
+    $message = t('This !type is <strong>archived</strong>. You may not add or alter any of its content.', array('!type' => node_get_types('name', $group->type)));
+    $this->assertRaw($message);
+
+    // Check that blog node editing is disabled.
+    $this->drupalGet("node/{$post->nid}/edit");
+    $this->assertResponse(403, t('Access denied'));
+
+    // Reactivate it.
+    $this->drupalPost("node/{$group->nid}/edit", $edit, t('Reactivate'));
+    $message = t('The @type @title has been reactivated.', array('@type' => node_get_types('name', $group->type), '@title' => $group->title));
+    $this->assertRaw($message);
+
+    // Check that blog node editing works.
+    $this->drupalGet("node/{$post->nid}/edit");
+    $this->assertResponse(200, t('Accessible'));
   }
 }
