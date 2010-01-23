@@ -361,7 +361,19 @@ function atrium_preprocess_views_view(&$vars) {
  * updated.
  */
 function atrium_user_default_permissions_extra() {
-  if (context_get('atrium', 'access_perms')) {
+  // This is a rather enormous hack that alters pemissions only when the Spaces
+  // features form is being submitted (see atrium_form_spaces_features_form_submit()
+  // or during the install process.
+  //
+  // The proper solution to this problem is
+  // 1. A usable drupal_alter() system in Features components (including user
+  //    perms).
+  // 2. A global flag that prevents alters from running when Features, CTools
+  //    and other exportables tools are in the processing of building or
+  //    exporting components.
+  global $install_locale;
+  $permissions = array();
+  if (context_get('atrium', 'access_perms') || !empty($install_locale)) {
     if (!variable_get('user_register', FALSE)) {
       $permissions = array(
         array(
@@ -416,10 +428,9 @@ function atrium_user_default_permissions_extra() {
         );
         break;
     }
-    return $permissions;
   }
   module_load_include('inc', 'atrium', 'atrium.defaults');
-  return _atrium_user_default_permissions();
+  return array_merge($permissions, _atrium_user_default_permissions());
 }
 
 /**
