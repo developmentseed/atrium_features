@@ -1,0 +1,45 @@
+<?php
+require_once drupal_get_path('module', 'atrium_test') . '/atrium_web_test_case.php';
+
+class AtriumCaseTrackerTest extends AtriumWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Atrium Case Tracker',
+      'description' => 'Tests for Atrium Case Tracker.',
+      'group' => 'Atrium',
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+    $this->atriumBasic();
+    foreach ($this->atriumGroups as $group) {
+      $this->atriumEnableFeature('atrium_casetracker', 'og', $group->nid);
+    }
+  }
+
+  /**
+   * Ensure that cases can only be assigned to users in the current group.
+   */
+  function testAssigneeVisibility() {
+    $private_user = $this->atriumCreateUser('user', array($this->atriumGroups['private']));
+    $public_user = $this->atriumCreateUser('user', array($this->atriumGroups['public']));
+
+    // @TODO: actually inspect the assignee DOM elements for this text.
+    $this->drupalLogin($private_user);
+    $this->drupalGet('node/add/casetracker');
+    $this->assertText($private_user->name);
+    $this->assertNoText($public_user->name);
+
+    $this->drupalLogin($public_user);
+    $this->drupalGet('node/add/casetracker');
+    $this->assertText($public_user->name);
+    $this->assertNoText($private_user->name);
+  }
+}

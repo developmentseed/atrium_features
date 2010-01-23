@@ -163,7 +163,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
   function atriumBasic() {
     // Create a user for each role.
     $this->atriumUsers = array();
-    $user_roles = array('authenticated user', 'manager', 'admin');
+    $user_roles = array('user', 'manager', 'admin');
     foreach ($user_roles as $role) {
       $this->atriumUsers[$role] = $this->atriumCreateUser($role);
     }
@@ -229,11 +229,14 @@ class AtriumWebTestCase extends DrupalWebTestCase {
    *
    * @param $role
    *   Role for the user: admin, manager, user
+   * @param $groups
+   *   Optional: An array of group nids or group node objects to which the newly
+   *   created account should be a member of.
    * @return
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
    */
-  function atriumCreateUser($role = 'user') {
+  function atriumCreateUser($role = 'user', $groups = array()) {
     // Get the rid from the role
     $roles = array(
       'user' => 2,
@@ -241,6 +244,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       'manager' => 4,
     );
     $rid = $roles[$role];
+
     // Create a user assigned to that role.
     $edit = array();
     $edit['name']   = $this->randomName();
@@ -248,6 +252,18 @@ class AtriumWebTestCase extends DrupalWebTestCase {
     $edit['roles']  = array($rid => $rid);
     $edit['pass']   = user_password();
     $edit['status'] = 1;
+
+    // Add groups
+    if (!empty($groups)) {
+      foreach ($groups as $value) {
+        if (is_object($value) && !empty($object->nid)) {
+          $edit['og_groups'][$object->nid] = $object->nid;
+        }
+        else if (is_numeric($value)) {
+          $edit['og_groups'][$value] = $value;
+        }
+      }
+    }
 
     $account = user_save('', $edit);
 
@@ -259,6 +275,30 @@ class AtriumWebTestCase extends DrupalWebTestCase {
     // Add the raw password so that we can log in as this user.
     $account->pass_raw = $edit['pass'];
     return $account;
+  }
+
+  /**
+   * Enable the specified feature.
+   *
+   * @param $feature
+   *   A feature's name, e.g. 'atrium_blog'
+   * @param $space_type
+   *   Optional: The space type that this feature should be enabled for.
+   * @param $space_id
+   *   Optional: If the space type was specified, the ID of the space.
+   */
+  function atriumEnableFeature($feature, $space_type = NULL, $space_id = NULL) {
+    if (isset($space_type, $space_id)) {
+      $space = spaces_load($space_type, $space_id);
+      $features = $space->controllers->variable->get('spaces_features');
+      $features[$feature] = TRUE;
+      $space->controllers->variable->set('spaces_features', $features);
+    }
+    else if (!isset($space_type)) {
+      $features = variable_get('spaces_features', array());
+      $features[$feature] = TRUE;
+      variable_set('spaces_features', $features);
+    }
   }
   
   /**
