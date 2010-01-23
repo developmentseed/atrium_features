@@ -83,6 +83,12 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       _openatrium_intranet_configure();
       _openatrium_intranet_configure_check();
       variable_set('atrium_install', 1);
+
+      // Clear views cache before rebuilding menu tree. Requires patch
+      // [patch_here] to Views, as new modules have been included and
+      // default views need to be re-detected.
+      module_exists('views') ? views_get_all_views(TRUE) : TRUE;
+      menu_rebuild();
     }
     else {
       // Rebuild caches. Partly done by Atrium installer
