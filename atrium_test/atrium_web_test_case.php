@@ -212,7 +212,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       'title' => $node->title,
       'body' => $node->body,
     );
-    $path = "$group->path/node/add/$type";
+    $path = "$group->path/node/add/" . str_replace('_', '-', $type);
     $this->drupalGet($path);
     $this->drupalPost($path, $edit, t('Save'));
     // Get nid from database
@@ -253,19 +253,18 @@ class AtriumWebTestCase extends DrupalWebTestCase {
     $edit['pass']   = user_password();
     $edit['status'] = 1;
 
-    // Add groups
-    if (!empty($groups)) {
-      foreach ($groups as $value) {
-        if (is_object($value) && !empty($object->nid)) {
-          $edit['og_groups'][$object->nid] = $object->nid;
-        }
-        else if (is_numeric($value)) {
-          $edit['og_groups'][$value] = $value;
-        }
-      }
-    }
-
     $account = user_save('', $edit);
+
+    // Add groups.
+    if (!empty($account->uid) && !empty($groups)) {
+      foreach ($groups as $value) {
+        $gid = is_object($value) && !empty($value->nid) ? $value->nid : $value;
+        og_save_subscription($gid, $account->uid, array('is_active' => TRUE));
+      }
+      // Reload user account with OG associations.
+      og_get_subscriptions($account->uid, 1, TRUE); // Reset static cache.
+      $account = user_load($account->uid);
+    }
 
     $this->assertTrue(!empty($account->uid), t('User created with name %name, pass %pass and mail %mail', array('%name' => $edit['name'], '%pass' => $edit['pass'], '%mail' => $edit['mail'])), t('User login'));
     if (empty($account->uid)) {
