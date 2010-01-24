@@ -70,7 +70,7 @@ function atrium_groups_menu_alter(&$items) {
 function atrium_groups_spaces_og_breadcrumb_alter(&$bc) {
   if (isset($bc[2])) {
     $space = spaces_get_space();
-    $bc[2] = l(check_plain($space->title()), '<front>');
+    $bc[2] = l($space->title(), '<front>');
   }
 }
 

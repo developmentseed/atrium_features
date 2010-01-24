@@ -6,11 +6,13 @@
  */
 class atrium_plugin_access_atrium_feature extends spaces_plugin_access_spaces_feature {
   function access($account) {
-    return atrium_feature_access($this->options['spaces_feature'], $this->options['perm']);
+    $feature = $this->options['spaces_feature'] == 0 ? $this->get_my_feature() : $this->options['spaces_feature'];
+    return atrium_feature_access($feature, $this->options['perm']);
   }
 
   function get_access_callback() {
-    return array('atrium_feature_access', array($this->options['spaces_feature'], $this->options['perm']));
+    $feature = $this->options['spaces_feature'] == 0 ? $this->get_my_feature() : $this->options['spaces_feature'];
+    return array('atrium_feature_access', array($feature, $this->options['perm']));
   }
 
   function option_defaults(&$options) {

@@ -54,7 +54,7 @@ function atrium_shoutbox_block($op = 'list', $delta = 0) {
         if ($space->type === 'og') {
           $shoutbox = atrium_shoutbox_active_space_shoutbox();
           if (!$shoutbox) {
-            $shoutbox = atrium_shoutbox_create();
+            $shoutbox = atrium_shoutbox_create($space);
           }
           if ($shoutbox && node_access('view', $shoutbox)) {
             return array(
@@ -105,21 +105,14 @@ function atrium_shoutbox_page() {
   $shoutbox = atrium_shoutbox_active_space_shoutbox();
   // Lazy instantiate a shoutbox if no shoutbox exists for this space.
   if (!$shoutbox) {
-    $shoutbox = atrium_shoutbox_create();
+    $space = spaces_get_space();
+    $shoutbox = atrium_shoutbox_create($space);
   }
   if ($shoutbox && node_access('view', $shoutbox)) {
     $output = drupal_get_form('messaging_shoutbox_shoutform', $shoutbox, array('view' => 'atrium_shoutbox_shouts', 'display' => 'page_1', 'args' => array($shoutbox->nid)));
     return $output;
   }
 
-  // Special case for user space shoutbox
-  if ($space && $space->type == 'user') {
-    context_set('spaces', 'shoutbox', 'user');
-    $view = views_get_view('atrium_shoutbox_shouts');
-    return $view->execute_display('page_2');
-  }
-  else if ($space->type == 'og') {
-  }
   return '';
 }
 
@@ -146,17 +139,19 @@ function atrium_shoutbox_active_space_shoutbox($reset = FALSE) {
 }
 
 /**
- * Create a shoutbox for the current space. If no space is active
- * provided and there is no sitewide shoutbox yet, create one.
+ * Create a shoutbox for the provided OG space. 
  */
 function atrium_shoutbox_create($space) {
-  $form_state = array();
-  module_load_include('inc', 'node', 'node.pages');
-  $node = array('type' => 'shoutbox');
-  $form_state['values']['title'] = $space->group->title;
-  $form_state['values']['body'] = '';
-  $form_state['values']['name'] = $space->group->name;
-  $form_state['values']['op'] = t('Save');
-  drupal_execute('shoutbox_node_form', $form_state, (object) $node);
-  return atrium_shoutbox_active_space_shoutbox(TRUE);
+  if ($space->type === 'og') {
+    $form_state = array();
+    module_load_include('inc', 'node', 'node.pages');
+    $node = array('type' => 'shoutbox');
+    $form_state['values']['title'] = $space->group->title;
+    $form_state['values']['body'] = '';
+    $form_state['values']['name'] = $space->group->name;
+    $form_state['values']['op'] = t('Save');
+    drupal_execute('shoutbox_node_form', $form_state, (object) $node);
+    return atrium_shoutbox_active_space_shoutbox(TRUE);
+  }
+  return false;
 }
