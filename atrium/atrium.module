@@ -208,7 +208,7 @@ function atrium_form_spaces_features_form_alter(&$form, &$form_state) {
 // Wrap the orginal validation function to allow for the new path.
 function atrium_site_frontpage_validate($element, &$form_state) {
   if ($element['#value'] != 'my-dashboard') {
-    return spaces_site_frontpage_validate($element, &$form_state); 
+    return spaces_site_frontpage_validate($element, $form_state); 
   }
 }
 
