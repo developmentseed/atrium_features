@@ -47,7 +47,7 @@ class AtriumTranslateTestCase extends AtriumWebTestCase {
     $this->assertText(t('Create your first !type to get started.', array('!type' => node_get_types('name', 'group'))));
     // Check random string translations
     $this->assertText('Bienvenido');
-    $this->assertText('Cree su primer grupo');
+    $this->assertText('Cree su primer Grupo');
   }  
 }
 
