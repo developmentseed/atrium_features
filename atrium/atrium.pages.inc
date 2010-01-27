@@ -9,6 +9,12 @@ function _atrium_form_comment_form_alter(&$form, $form_state) {
     $form['_author']['#access'] = FALSE;
   }
   $form['comment_filter']['comment']['#rows'] = 8;
+
+  // Drupal 6.14 introduced a form cache bug. Using the workaround describe on
+  // http://drupal.org/node/579900#comment-2081404
+  if (isset($form['preview']) && $form['preview']['#type'] == 'button') {
+    $form['preview']['#type'] = 'submit';
+  }
 }
 
 /**
