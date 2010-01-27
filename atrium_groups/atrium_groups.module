@@ -6,6 +6,7 @@ include_once('atrium_groups.features.inc');
  * Implementation of hook_enable().
  */
 function atrium_groups_enable() {
+  ctools_include('export');
   ctools_export_set_status('spaces_presets', 'og_private', TRUE);
   ctools_export_set_status('spaces_presets', 'og_controlled', TRUE);
   ctools_export_set_status('spaces_presets', 'og_public', TRUE);
