@@ -441,7 +441,7 @@ function atrium_account_links() {
   $paths = array(
     "user/{$user->uid}" => t('Profile'),
     "user/{$user->uid}/edit" => '',
-    "user/{$user->uid}/edit/openid" => '',
+    "user/{$user->uid}/notifications" => '',
     'logout' => '',
   );
 
