@@ -104,8 +104,10 @@ function _atrium_groups_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'My groups');
+  $handler->override_option('use_ajax', TRUE);
   $handler->override_option('items_per_page', 20);
-  $handler->override_option('use_more', 1);
+  $handler->override_option('use_pager', 'mini');
+  $handler->override_option('use_more', 0);
   $handler->override_option('use_more_text', 'View more');
   $handler->override_option('link_display', 'page_1');
   $handler->override_option('style_plugin', 'list');
@@ -122,6 +124,7 @@ function _atrium_groups_views_default_views() {
     'type' => 'perm',
     'perm' => 'access content',
   ));
+  $handler->override_option('items_per_page', 15);
   $handler->override_option('block_description', 'My groups');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('page', 'Page: My groups', 'page_1');
@@ -221,6 +224,7 @@ function _atrium_groups_views_default_views() {
     'spaces_feature' => 'atrium_groups',
     'perm' => 'subscribe to content',
   ));
+  $handler->override_option('use_ajax', FALSE);
   $handler->override_option('items_per_page', 25);
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
@@ -446,6 +450,7 @@ function _atrium_groups_views_default_views() {
     ),
   ));
   $handler->override_option('title', 'Directory');
+  $handler->override_option('use_ajax', FALSE);
   $handler->override_option('items_per_page', 25);
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
@@ -697,6 +702,7 @@ function _atrium_groups_views_default_views() {
   ));
   $handler->override_option('title', 'Archived groups');
   $handler->override_option('empty', 'No archived groups found.');
+  $handler->override_option('use_ajax', FALSE);
   $handler->override_option('items_per_page', 25);
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'table');
