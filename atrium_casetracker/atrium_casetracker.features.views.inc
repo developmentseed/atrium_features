@@ -1245,8 +1245,9 @@ function _atrium_casetracker_views_default_views() {
     'perm' => 'access content',
   ));
   $handler->override_option('title', 'My cases');
+  $handler->override_option('use_ajax', TRUE);
   $handler->override_option('items_per_page', 5);
-  $handler->override_option('use_pager', '0');
+  $handler->override_option('use_pager', 'mini');
   $handler->override_option('style_plugin', 'list');
   $handler->override_option('style_options', array(
     'grouping' => '',
@@ -1736,9 +1737,10 @@ function _atrium_casetracker_views_default_views() {
     'type' => 'perm',
     'perm' => 'access content',
   ));
+  $handler->override_option('use_ajax', TRUE);
   $handler->override_option('items_per_page', 10);
-  $handler->override_option('use_pager', '0');
-  $handler->override_option('use_more', 1);
+  $handler->override_option('use_pager', 'mini');
+  $handler->override_option('use_more', 0);
   $handler->override_option('use_more_text', 'View more');
   $handler->override_option('style_plugin', 'list');
   $handler->override_option('style_options', array(
