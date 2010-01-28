@@ -57,8 +57,8 @@ function atrium_casetracker_help($path, $arg) {
         $help .= '<h3>'. t('Case Tracker') .'</h3>';
         $help .= '<p>'. t('The case tracker gives you a way to track progress on your <strong>projects</strong> and assign <strong>cases</strong> to yourself and others.') .'</p>';
         $help .= '<ul>';
-        $help .= '<li>'. t('!add_projects to keep your cases organized.', array('!add_projects' => l(t('Add projects'), 'node/add/project'))) .'</li>';
-        $help .= '<li>'. t('!add_cases to assign tasks or assignments to yourself and others for completion.', array('!add_cases' => l(t('Add cases'), 'node/add/case'))) .'</li>';
+        $help .= '<li>'. t('!add_projects to keep your cases organized.', array('!add_projects' => l(t('Add projects'), 'node/add/casetracker-basic-project'))) .'</li>';
+        $help .= '<li>'. t('!add_cases to assign tasks or assignments to yourself and others for completion.', array('!add_cases' => l(t('Add cases'), 'node/add/casetracker-basic-case'))) .'</li>';
         $help .= '<li>'. t('Cases can be <strong>reassigned</strong>, <strong>postponed</strong>, and <strong>closed</strong>, among other actions.') .'</li>';
         $help .= '<li>'. t('The history of a case - who it\'s been assigned to, its status and its priority - can be tracked viewing its comment thread.') .'</li>';
         $help .= '</ul>';
