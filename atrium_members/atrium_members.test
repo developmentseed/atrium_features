@@ -1,0 +1,78 @@
+<?php
+
+require_once drupal_get_path('module', 'atrium_test') . '/atrium_web_test_case.php';
+
+class AtriumMembersTest extends AtriumWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Atrium Members',
+      'description' => 'Tests for Atrium Members.',
+      'group' => 'Atrium',
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+    $this->atriumBasic();
+  }
+
+  /**
+   * Test member visibility.
+   *
+   * This test actually mainly tests code in spaces_og, but due to the fact
+   * that Drupal core provides no instances of {users} table queries going
+   * through db_rewrite_sql() the tests are here.
+   */
+  function testMemberVisibility() {
+    // When site is in ATRIUM_MEMBERS_ALL mode, users should be able to see all
+    // other users. Put the site in ATRIUM_MEMBERS_ALL mode and test that all
+    // accounts can see all other accounts.
+    $this->drupalLogin($this->atriumUsers['admin']);
+    $this->drupalPost('features', array('atrium_members' => ATRIUM_MEMBERS_ALL), 'Save configuration');
+
+    foreach ($this->atriumUsers as $account) {
+      $this->drupalLogin($account);
+      $this->drupalGet('members');
+      foreach ($this->atriumUsers as $account2) {
+        $this->assertText($account2->name);
+      }
+    }
+
+    // When site is in ATRIUM_MEMBERS_GROUP mode, admins and managers should
+    // see all users while normal users can only see those in their groups.
+    $this->drupalLogin($this->atriumUsers['admin']);
+    $this->drupalPost('features', array('atrium_members' => ATRIUM_MEMBERS_GROUP), 'Save configuration');
+
+    foreach (array('admin', 'manager') as $role) {
+      $this->drupalLogin($this->atriumUsers[$role]);
+      $this->drupalGet('members');
+      foreach ($this->atriumUsers as $account2) {
+        $this->assertText($account2->name);
+      }
+    }
+
+    $this->drupalLogin($this->atriumUsers['user']);
+    $this->drupalGet('members');
+    $this->assertText($this->atriumUsers['user']->name);
+    $this->assertNoText($this->atriumUsers['admin']->name);
+    $this->assertNoText($this->atriumUsers['manager']->name);
+
+    // Create users within a group. They should be able to see each other and
+    // 'admin' (the group administrator) but not other non-member users.
+    $this->atriumUsers['group_user1'] = $this->atriumCreateUser('user', array($this->atriumGroups['public']));
+    $this->atriumUsers['group_user2'] = $this->atriumCreateUser('user', array($this->atriumGroups['public']));
+    $this->drupalLogin($this->atriumUsers['group_user1']);
+    $this->drupalGet('members');
+    $this->assertText($this->atriumUsers['group_user1']->name);
+    $this->assertText($this->atriumUsers['group_user2']->name);
+    $this->assertText($this->atriumUsers['admin']->name);
+    $this->assertNoText($this->atriumUsers['user']->name);
+    $this->assertNoText($this->atriumUsers['manager']->name);
+  }
+}
