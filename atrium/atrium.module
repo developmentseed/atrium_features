@@ -353,6 +353,8 @@ function atrium_preprocess_views_view(&$vars) {
  * updated.
  */
 function atrium_user_default_permissions_extra() {
+  module_load_include('inc', 'atrium', 'atrium.defaults');
+
   // This is a rather enormous hack that alters pemissions only when the Spaces
   // features form is being submitted (see atrium_form_spaces_features_form_submit()
   // or during the install process.
@@ -420,9 +422,10 @@ function atrium_user_default_permissions_extra() {
         );
         break;
     }
+    // If in the middle of installation, merge all perms together.
+    return !empty($install_locale) ? array_merge($permissions, _atrium_user_default_permissions()) : $permissions;
   }
-  module_load_include('inc', 'atrium', 'atrium.defaults');
-  return array_merge($permissions, _atrium_user_default_permissions());
+  return _atrium_user_default_permissions();
 }
 
 /**
@@ -654,7 +657,18 @@ function atrium_archive_submit($form, &$form_state) {
  * Trigger a features rebuild.
  */
 function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
-  context_set('atrium', 'access_perms', TRUE);
-  features_rebuild();
-  context_set('atrium', 'access_perms', FALSE);
+  module_load_include('inc', 'features', 'features.export');
+  features_include();
+  $semaphore = features_semaphore('get', 'user');
+
+  // If there is no processing semaphore for user permissions or it is stale
+  // go ahead with a forced rebuild.
+  if (!$semaphore || (time() - $semaphore) >= FEATURES_SEMAPHORE_TIMEOUT) {
+    context_set('atrium', 'access_perms', TRUE);
+    features_rebuild(array('atrium' => array('user')));
+    context_set('atrium', 'access_perms', FALSE);
+  }
+  else {
+    drupal_set_message(t('Your changes could not be saved because user permissions are currently being rebuilt. Please try again in a few minutes.'), 'error');
+  }
 }
