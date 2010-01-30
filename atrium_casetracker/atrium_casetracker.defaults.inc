@@ -8,6 +8,43 @@ function _atrium_casetracker_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
+  $context->name = 'atrium-casetracker-book';
+  $context->description = '';
+  $context->tag = 'Casetracker';
+  $context->conditions = array(
+    'bookroot' => array(
+      'values' => array(
+        'casetracker_basic_project' => 'casetracker_basic_project',
+      ),
+      'options' => array(
+        'node_form' => 1,
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'diff-inline' => array(
+          'module' => 'diff',
+          'delta' => 'inline',
+          'region' => 'right',
+          'weight' => 0,
+        ),
+        'atrium-book' => array(
+          'module' => 'atrium',
+          'delta' => 'book',
+          'region' => 'right',
+          'weight' => 1,
+        ),
+      ),
+    ),
+    'menu' => 'casetracker',
+  );
+
+  $export['atrium-casetracker-book'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
   $context->name = 'atrium-casetracker-project';
   $context->description = '';
   $context->tag = 'Casetracker';
@@ -42,14 +79,6 @@ function _atrium_casetracker_context_default_contexts() {
   $context->description = '';
   $context->tag = 'Casetracker';
   $context->conditions = array(
-    'bookroot' => array(
-      'values' => array(
-        'casetracker_basic_project' => 'casetracker_basic_project',
-      ),
-      'options' => array(
-        'node_form' => 1,
-      ),
-    ),
     'node' => array(
       'values' => array(
         'casetracker_basic_case' => 'casetracker_basic_case',
@@ -69,18 +98,6 @@ function _atrium_casetracker_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'diff-inline' => array(
-          'module' => 'diff',
-          'delta' => 'inline',
-          'region' => 'right',
-          'weight' => 0,
-        ),
-        'atrium-book' => array(
-          'module' => 'atrium',
-          'delta' => 'book',
-          'region' => 'right',
-          'weight' => 1,
-        ),
         'atrium_casetracker-filters' => array(
           'module' => 'atrium_casetracker',
           'delta' => 'filters',
