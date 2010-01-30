@@ -12,7 +12,7 @@ function _atrium_casetracker_context_default_contexts() {
   $context->description = '';
   $context->tag = 'Casetracker';
   $context->conditions = array(
-    'bookroot' => array(
+    'node' => array(
       'values' => array(
         'casetracker_basic_project' => 'casetracker_basic_project',
       ),
@@ -69,23 +69,29 @@ function _atrium_casetracker_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
+        'diff-inline' => array(
+          'module' => 'diff',
+          'delta' => 'inline',
+          'region' => 'right',
+          'weight' => 0,
+        ),
         'atrium-book' => array(
           'module' => 'atrium',
           'delta' => 'book',
           'region' => 'right',
-          'weight' => 0,
+          'weight' => 1,
         ),
         'atrium_casetracker-filters' => array(
           'module' => 'atrium_casetracker',
           'delta' => 'filters',
           'region' => 'right',
-          'weight' => 1,
+          'weight' => 2,
         ),
         'views-atrium_casetracker-block_2' => array(
           'module' => 'views',
           'delta' => 'atrium_casetracker-block_2',
           'region' => 'right',
-          'weight' => 2,
+          'weight' => 3,
         ),
         'views-3de5a072e9754aa7bce60e3f05d1538e' => array(
           'module' => 'views',
