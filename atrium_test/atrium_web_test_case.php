@@ -238,43 +238,40 @@ class AtriumWebTestCase extends DrupalWebTestCase {
    *   creation fails.
    */
   function atriumCreateUser($role = 'user', $groups = array()) {
-    // Get the rid from the role
-    $roles = array(
-      'user' => 2,
-      'admin' => 3,
-      'manager' => 4,
-    );
-    $rid = $roles[$role];
+    // Abbreviate 'authenticated user' to just 'user'.
+    $role = $role === 'user' ? 'authenticated user' : $role;
+    $rid = db_result(db_query("SELECT rid FROM {role} WHERE name = '%s'", $role));
 
-    // Create a user assigned to that role.
-    $edit = array();
-    $edit['name']   = $this->randomName();
-    $edit['mail']   = $edit['name'] . '@example.com';
-    $edit['roles']  = array($rid => $rid);
-    $edit['pass']   = user_password();
-    $edit['status'] = 1;
+    if ($rid) {
+      // Create a user assigned to that role.
+      $edit = array();
+      $edit['name']   = $this->randomName();
+      $edit['mail']   = $edit['name'] . '@example.com';
+      $edit['roles']  = array($rid => $rid);
+      $edit['pass']   = user_password();
+      $edit['status'] = 1;
 
-    $account = user_save('', $edit);
+      $account = user_save('', $edit);
 
-    // Add groups.
-    if (!empty($account->uid) && !empty($groups)) {
-      foreach ($groups as $value) {
-        $gid = is_object($value) && !empty($value->nid) ? $value->nid : $value;
-        og_save_subscription($gid, $account->uid, array('is_active' => TRUE));
+      // Add groups.
+      if (!empty($account->uid) && !empty($groups)) {
+        foreach ($groups as $value) {
+          $gid = is_object($value) && !empty($value->nid) ? $value->nid : $value;
+          og_save_subscription($gid, $account->uid, array('is_active' => TRUE));
+        }
+        // Reload user account with OG associations.
+        og_get_subscriptions($account->uid, 1, TRUE); // Reset static cache.
+        $account = user_load($account->uid);
       }
-      // Reload user account with OG associations.
-      og_get_subscriptions($account->uid, 1, TRUE); // Reset static cache.
-      $account = user_load($account->uid);
-    }
 
-    $this->assertTrue(!empty($account->uid), t('User created with name %name, pass %pass and mail %mail', array('%name' => $edit['name'], '%pass' => $edit['pass'], '%mail' => $edit['mail'])), t('User login'));
-    if (empty($account->uid)) {
-      return FALSE;
+      $this->assertTrue(!empty($account->uid), t('User created with name %name, pass %pass and mail %mail', array('%name' => $edit['name'], '%pass' => $edit['pass'], '%mail' => $edit['mail'])), t('User login'));
+      if (!empty($account->uid)) {
+        // Add the raw password so that we can log in as this user.
+        $account->pass_raw = $edit['pass'];
+        return $account;
+      }
     }
-
-    // Add the raw password so that we can log in as this user.
-    $account->pass_raw = $edit['pass'];
-    return $account;
+    return FALSE;
   }
 
   /**
