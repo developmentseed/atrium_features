@@ -225,7 +225,7 @@ function _atrium_book_views_default_views() {
     'default' => '-1',
   ));
   $handler = $view->new_display('page', 'Page: Latest changes', 'page_1');
-  $handler->override_option('path', 'documents/latest');
+  $handler->override_option('path', 'notebook/latest');
   $handler->override_option('menu', array(
     'type' => 'none',
     'title' => 'Latest changes',
@@ -235,7 +235,7 @@ function _atrium_book_views_default_views() {
   ));
   $handler->override_option('tab_options', array(
     'type' => 'normal',
-    'title' => 'Documents',
+    'title' => 'Notebook',
     'description' => '',
     'weight' => '0',
   ));
@@ -402,7 +402,7 @@ function _atrium_book_views_default_views() {
     'columns' => '2',
     'alignment' => 'vertical',
   ));
-  $handler->override_option('path', 'documents/archived');
+  $handler->override_option('path', 'notebook/archived');
   $handler->override_option('menu', array(
     'type' => 'tab',
     'title' => 'Archived',

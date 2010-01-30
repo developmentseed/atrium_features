@@ -43,7 +43,7 @@ function _atrium_book_context_default_contexts() {
         ),
       ),
     ),
-    'menu' => 'documents',
+    'menu' => 'notebook',
   );
 
   $export['spaces-feature-book'] = $context;
@@ -72,15 +72,15 @@ function _atrium_book_menu_default_items() {
   $items = array();
 
   $items[] = array(
-    'title' => 'Documents',
-    'path' => 'documents',
+    'title' => 'Notebook',
+    'path' => 'notebook',
     'weight' => '0',
-    'description' => 'The documents feature lets you store and share information and attachments.',
+    'description' => 'The notebook feature lets you store and share information and attachments.',
   );
   // Translatables
   array(
-    t('Documents'),
-    t('The documents feature lets you store and share information and attachments.'),
+    t('Notebook'),
+    t('The notebook feature lets you store and share information and attachments.'),
   );
 
 

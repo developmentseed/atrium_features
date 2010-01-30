@@ -11,7 +11,7 @@ function atrium_book_help($path, $arg) {
       case 'node/add/book':
       case 'node/%/edit':
         $help = '';
-        $help .= '<h3>'. t('Documents') .'</h3>';
+        $help .= '<h3>'. t('Notebook') .'</h3>';
         $help .= '<p>'. t('Tips for adding & editing book pages:') .'</p>';
         $help .= '<ul>';
         $help .= '<li>'. t('Create a new book or choose an existing one for your page.') .'</li>';
@@ -23,13 +23,13 @@ function atrium_book_help($path, $arg) {
       case 'help#atrium_book':
       default:
         $help = '';
-        $help .= '<h3>'. t('Documents') .'</h3>';
-        $help .= '<p>'. t('The documents section provides a way for you to store and share information with your group members. With the book feature you can:') .'</p>';
+        $help .= '<h3>'. t('Notebook') .'</h3>';
+        $help .= '<p>'. t('The notebook section provides a way for you to store and share information with your group members. With the book feature you can:') .'</p>';
         $help .= '<ul>';
         $help .= '<li>'. t('!add_book_pages and organize them hierarchically into different books.', array('!add_book_pages' => l(t('Add book pages'), 'node/add/book'))) .'</li>';
         $help .= '<li>'. t('Attach files to pages to share them with others.') .'</li>';
         $help .= '<li>'. t('Track changes that others have made and revert changes as necessary.') .'</li>';
-        $help .= '<li>'. t('!archive books that are no longer of interest to the group. Archived books can be reactivated later if needed.', array('!archive' => l(t('Archive'), 'documents/archived'))) .'</li>';
+        $help .= '<li>'. t('!archive books that are no longer of interest to the group. Archived books can be reactivated later if needed.', array('!archive' => l(t('Archive'), 'notebook/archived'))) .'</li>';
         $help .= '</ul>';
         return $help;
     }
@@ -41,8 +41,8 @@ function atrium_book_help($path, $arg) {
  */
 function atrium_book_menu() {
   $items = array();
-  $items['documents'] = array(
-    'title' => 'Documents',
+  $items['notebook'] = array(
+    'title' => 'Notebook',
     'page callback' => 'atrium_book_overview',
     'page arguments' => array(),
     'access callback' => 'spaces_access_feature',
@@ -51,7 +51,7 @@ function atrium_book_menu() {
     'menu_name' => 'features',
     'file' => 'atrium_book.pages.inc',
   );
-  $items['documents/overview'] = array(
+  $items['notebook/overview'] = array(
     'title' => 'Overview',
     'page callback' => 'atrium_book_overview',
     'page arguments' => array(),

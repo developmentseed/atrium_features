@@ -80,14 +80,14 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
       $this->drupalGet("$group->path/blog");
       $this->assertText($blog->title);
       
-      // Check documents
-      $this->drupalGet("$group->path/documents");
+      // Check notebook
+      $this->drupalGet("$group->path/notebook");
       $this->assertText(t('No recent updates found.'));
-      $this->drupalGet("$group->path/documents/archived");
+      $this->drupalGet("$group->path/notebook/archived");
       $this->assertText(t('No archived books found.'));
       $book = $this->atriumCreateGroupContent($group, 'book');
       $content[] = $book;
-      $this->drupalGet("$group->path/documents");
+      $this->drupalGet("$group->path/notebook");
       $this->assertText($book->title);
       
       // These should show up in dashboard
