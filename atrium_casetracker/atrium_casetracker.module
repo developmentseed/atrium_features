@@ -23,7 +23,6 @@ function atrium_casetracker_init() {
   if ($set) {
     variable_set('views_defaults', $views_defaults);
   }
-
 }
 
 /**

@@ -1,11 +1,14 @@
 <?php
 
 /**
- * Implementation of hook_enable().
+ * Implementation of hook_install().
  */
-function atrium_casetracker_enable() {
+function atrium_casetracker_install() {
   drupal_get_schema(NULL, TRUE);
   _atrium_casetracker_default_states();
+
+  // Weight Atrium Case Tracker higher than Case Tracker.
+  db_query("UPDATE {system} SET weight = 1 WHERE name = 'atrium_casetracker' AND type = 'module'");
 }
 
 /**
@@ -68,4 +71,11 @@ function atrium_casetracker_update_6002() {
   return $ret;
 }
 
-
+/**
+ * Weight Atrium Case Tracker higher than Case Tracker.
+ */
+function atrium_casetracker_update_6003() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {system} SET weight = 1 WHERE name = 'atrium_casetracker' AND type = 'module'");
+  return $ret;
+}
