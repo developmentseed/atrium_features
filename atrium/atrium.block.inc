@@ -102,7 +102,7 @@ function _atrium_block_book_all() {
       $cid = $type ? "atrium_book:{$space->type}:{$space->id}:$type" : "atrium_book:{$space->type}:{$space->id}";
       if ($cache = cache_get($cid)) {
         $block = array(
-          'subject' => "<span class='trail'>". t('Documents') ."</span>",
+          'subject' => "<span class='trail'>". t('Notebook') ."</span>",
           'content' => $cache->data,
         );
       }
@@ -120,11 +120,11 @@ function _atrium_block_book_all() {
           foreach($view->result as $row) {
             $data = array_merge($data, menu_tree_all_data(book_menu_name($row->nid)));
           }
-          $data = array(array('link' => array('title' => 'Documents', 'href' => 'documents'), 'below' => $data));
+          $data = array(array('link' => array('title' => 'Notebook', 'href' => 'notebook'), 'below' => $data));
           if ($output = menu_tree_output($data)) {
             cache_set($cid, $output);
             $block = array(
-              'subject' => "<span class='trail'>". t('Documents') ."</span>",
+              'subject' => "<span class='trail'>". t('Notebook') ."</span>",
               'content' => $output,
             );
           }
@@ -143,9 +143,8 @@ function _atrium_block_book_all() {
           $data = array_merge($data, menu_tree_page_data(book_menu_name($row->nid)));
         }
       }
-      // $data = array(array('link' => array('title' => 'Documents', 'href' => 'documents'), 'below' => $data));
       if ($output = menu_tree_output($data)) {
-        $title = l(t('Documents'), 'documents', array('attributes' => array('class' => 'depth-0')));
+        $title = l(t('Notebook'), 'notebook', array('attributes' => array('class' => 'depth-0')));
         $block = array(
           'subject' => "<span class='trail'>{$title}</span>",
           'content' => $output,
