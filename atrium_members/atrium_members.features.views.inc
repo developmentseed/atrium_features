@@ -187,6 +187,20 @@ function _atrium_members_views_default_views() {
       'field' => 'uid',
       'relationship' => 'nid',
     ),
+    'current' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'current',
+      'table' => 'spaces',
+      'field' => 'current',
+      'relationship' => 'none',
+    ),
   ));
   $handler->override_option('access', array(
     'type' => 'perm',
@@ -196,6 +210,7 @@ function _atrium_members_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Active users');
+  $handler->override_option('use_ajax', TRUE);
   $handler->override_option('items_per_page', 25);
   $handler->override_option('use_pager', '1');
   $handler->override_option('distinct', 1);
@@ -338,6 +353,23 @@ function _atrium_members_views_default_views() {
       'relationship' => 'none',
       'reduce_duplicates' => 0,
     ),
+    'current' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'current',
+      'table' => 'spaces',
+      'field' => 'current',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
   ));
   $handler->override_option('title', 'Blocked users');
   $handler->override_option('path', 'members/blocked');
@@ -363,9 +395,11 @@ function _atrium_members_views_default_views() {
         'text' => '',
         'make_link' => 0,
         'path' => '',
+        'link_class' => '',
         'alt' => '',
         'prefix' => '',
         'suffix' => '',
+        'target' => '',
         'help' => '',
         'trim' => 0,
         'max_length' => '',
@@ -374,6 +408,9 @@ function _atrium_members_views_default_views() {
         'strip_tags' => 0,
         'html' => 0,
       ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
       'exclude' => 0,
       'id' => 'picture',
       'table' => 'users',
@@ -413,6 +450,70 @@ function _atrium_members_views_default_views() {
         'button' => 'Use default',
       ),
     ),
+    'is_manager' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'exclude' => 0,
+      'id' => 'is_manager',
+      'table' => 'og_uid',
+      'field' => 'is_manager',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'managelink' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'exclude' => 0,
+      'id' => 'managelink',
+      'table' => 'og_uid',
+      'field' => 'managelink',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
   ));
   $handler->override_option('access', array(
     'type' => 'atrium_feature',
@@ -424,7 +525,7 @@ function _atrium_members_views_default_views() {
   $handler->override_option('style_plugin', 'grid');
   $handler->override_option('style_options', array(
     'grouping' => '',
-    'columns' => '5',
+    'columns' => '2',
     'alignment' => 'horizontal',
   ));
   $handler->override_option('path', 'members/directory');
@@ -440,59 +541,6 @@ function _atrium_members_views_default_views() {
     'title' => 'Members',
     'description' => '',
     'weight' => '0',
-  ));
-  $handler = $view->new_display('page', 'Add users page', 'page_4');
-  $handler->override_option('style_options', array(
-    'grouping' => '',
-    'override' => 1,
-    'sticky' => 0,
-    'order' => 'asc',
-    'columns' => array(
-      'name' => 'name',
-      'mail' => 'name',
-      'groups' => 'groups',
-      'rid' => 'rid',
-    ),
-    'info' => array(
-      'name' => array(
-        'sortable' => 0,
-        'separator' => '<br/>',
-      ),
-      'mail' => array(
-        'sortable' => 0,
-        'separator' => '',
-      ),
-      'groups' => array(
-        'separator' => '',
-      ),
-      'rid' => array(
-        'separator' => '',
-      ),
-    ),
-    'default' => '-1',
-    'execution_type' => '1',
-    'display_type' => '0',
-    'skip_confirmation' => 1,
-    'display_result' => 1,
-    'merge_single_action' => 1,
-    'selected_operations' => array(
-      '0' => 'atrium_members_og_subscribe_action',
-      '1' => 'atrium_members_og_unsubscribe_action',
-    ),
-  ));
-  $handler->override_option('path', 'og/users/%/add_user');
-  $handler->override_option('menu', array(
-    'type' => 'tab',
-    'title' => 'Add users',
-    'description' => '',
-    'weight' => '20',
-    'name' => 'navigation',
-  ));
-  $handler->override_option('tab_options', array(
-    'type' => 'none',
-    'title' => '',
-    'description' => '',
-    'weight' => 0,
   ));
   $translatables['atrium_members'] = array(
     t('Defaults'),

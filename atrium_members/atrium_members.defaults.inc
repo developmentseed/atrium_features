@@ -8,7 +8,7 @@ function _atrium_members_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'spaces-feature-members';
+  $context->name = 'atrium-members-directory';
   $context->description = '';
   $context->tag = 'Members';
   $context->conditions = array(
@@ -21,14 +21,43 @@ function _atrium_members_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
+        'atrium_members-addform' => array(
+          'module' => 'atrium_members',
+          'delta' => 'addform',
+          'region' => 'right',
+          'weight' => 0,
+        ),
         'views--exp-atrium_members-default' => array(
           'module' => 'views',
           'delta' => '-exp-atrium_members-default',
           'region' => 'right',
-          'weight' => 0,
+          'weight' => 1,
         ),
       ),
     ),
+  );
+
+  $export['atrium-members-directory'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'spaces-feature-members';
+  $context->description = '';
+  $context->tag = 'Members';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        'members/add' => 'members/add',
+        'members/add/*' => 'members/add/*',
+      ),
+    ),
+    'views' => array(
+      'values' => array(
+        'atrium_members' => 'atrium_members',
+      ),
+    ),
+  );
+  $context->reactions = array(
     'menu' => 'members',
   );
 
