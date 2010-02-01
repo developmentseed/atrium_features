@@ -486,17 +486,8 @@ function atrium_admin_links($space = NULL) {
   // Within a space
   if ($space) {
     if ($space->type == 'og' && spaces_access_admin()) {
-      $item = menu_get_item("og/users/{$space->id}/faces");
-      if ($item && $item['access']) {
-        $links['members'] = array(
-          'title' => t('Members'),
-          'href' => "og/users/{$space->id}/faces",
-        );
-      }
-
       $item = menu_get_item("node/{$space->sid}/edit");
       if ($item && $item['access']) {
-        // Add settings link for administering spaces
         $links['settings'] = array(
           'title' => t('@type settings', array('@type' => node_get_types('name', $space->group->type))),
           'href' => "node/{$space->id}/edit",
