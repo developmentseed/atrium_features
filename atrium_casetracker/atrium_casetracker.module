@@ -3,29 +3,6 @@
 require('atrium_casetracker.features.inc');
 
 /**
- * Implementation of hook_init().
- */
-function atrium_casetracker_init() {
-  // Views: disable views that we are 'overriding'
-  $views_defaults = variable_get('views_defaults', array());
-  $disabled = array(
-    'casetracker_assignee_options',
-    'casetracker_project_cases',
-    'casetracker_project_options',
-  );
-  $set = FALSE;
-  foreach ($disabled as $view_name) {
-    if (empty($views_defaults[$view_name])) {
-      $set = TRUE;
-      $views_defaults[$view_name] = TRUE;
-    }
-  }
-  if ($set) {
-    variable_set('views_defaults', $views_defaults);
-  }
-}
-
-/**
  * Implementation of hook_help().
  */
 function atrium_casetracker_help($path, $arg) {
@@ -63,6 +40,30 @@ function atrium_casetracker_help($path, $arg) {
         $help .= '</ul>';
         return $help;
     }
+  }
+}
+
+/**
+ * Implementation of hook_menu_alter().
+ * Ensure casetracker views are disabled.
+ */
+function atrium_casetracker_menu_alter(&$items) {
+  // Views: disable views that we are 'overriding'
+  $views_defaults = variable_get('views_defaults', array());
+  $disabled = array(
+    'casetracker_assignee_options',
+    'casetracker_project_cases',
+    'casetracker_project_options',
+  );
+  $set = FALSE;
+  foreach ($disabled as $view_name) {
+    if (empty($views_defaults[$view_name])) {
+      $set = TRUE;
+      $views_defaults[$view_name] = TRUE;
+    }
+  }
+  if ($set) {
+    variable_set('views_defaults', $views_defaults);
   }
 }
 
