@@ -13,9 +13,16 @@ function atrium_groups_enable() {
 }
 
 /**
- * Implementation of hook_init().
+ * Implementation of hook_views_api().
  */
-function atrium_groups_init() {
+function atrium_groups_views_api() {
+  return array('api' => 2);
+}
+
+/**
+ * Implementation of hook_menu_alter().
+ */
+function atrium_groups_menu_alter(&$items) {
   // Views: disable views that we are 'overriding'
   $views_defaults = variable_get('views_defaults', array());
   $disabled = array(
@@ -24,7 +31,6 @@ function atrium_groups_init() {
     'og_files',
     'og_ghp_ron',
     'og_mytracker',
-    'og_members_block',
     'og_search',
     'og_tracker',
     'og_recent_type_term',
@@ -40,19 +46,7 @@ function atrium_groups_init() {
   if ($set) {
     variable_set('views_defaults', $views_defaults);
   }
-}
 
-/**
- * Implementation of hook_views_api().
- */
-function atrium_groups_views_api() {
-  return array('api' => 2);
-}
-
-/**
- * Implementation of hook_menu_alter().
- */
-function atrium_groups_menu_alter(&$items) {
   // Kill undesirable menu items
   $yank = array(
     'og/activity',
