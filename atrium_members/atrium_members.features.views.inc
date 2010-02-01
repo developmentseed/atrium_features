@@ -173,20 +173,6 @@ function _atrium_members_views_default_views() {
       'relationship' => 'none',
       'reduce_duplicates' => 0,
     ),
-    'uid_1' => array(
-      'operator' => '=',
-      'value' => '0',
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'uid_1',
-      'table' => 'og_uid',
-      'field' => 'uid',
-      'relationship' => 'nid',
-    ),
     'current' => array(
       'operator' => '=',
       'value' => '',
