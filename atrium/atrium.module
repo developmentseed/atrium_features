@@ -148,12 +148,11 @@ function atrium_block($op = 'list', $delta = 0) {
  */
 function atrium_form_alter(&$form, &$form_state, $form_id) {
   switch ($form_id) {
-    // Set login layout via context
+    // Set login layout via context, pass through.
     case 'user_login':
     case 'user_pass':
     case 'user_register':
       context_set('context', 'layout_login', context_load('layout_login'));
-      break;
     // Form alter handling via callbacks
     case 'comment_form':
     case 'spaces_features_form':

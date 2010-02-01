@@ -163,6 +163,20 @@ function _atrium_form_system_themes_form_alter(&$form, $form_state) {
   }
 }
 
+
+/**
+ * Implementation of hook_form_alter() for user_login.
+ */
+function _atrium_form_user_login_alter(&$form, $form_state) {
+  // If user has no destination set or user/login (a bad one), send to homepage post login.
+  // See user module login block for the use of [#action] to force a redirect.
+  $dest = isset($_GET['destination']) ? $_GET['destination'] : '';
+  if (!$dest || $dest == 'user/login') {
+    $path = variable_get('site_frontpage', 'node');
+    $form['#action'] = url($_GET['q'], array('query' => 'destination='. $path));
+  }
+}
+
 /**
  *  Implementation of hook_form_alter for node_type_form.
  */
