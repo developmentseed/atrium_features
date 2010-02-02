@@ -81,15 +81,6 @@ function atrium_menu_alter(&$items) {
     }
   }
 
-  // Replace taxonomy autocomplete with our own space-aware autocomplete
-  if (module_exists('taxonomy')) {
-    $items['taxonomy/autocomplete']['page callback'] = 'atrium_taxonomy_autocomplete';
-    $items['taxonomy/autocomplete']['module'] = 'atrium';
-    $items['taxonomy/autocomplete']['file'] = 'atrium.pages.inc';
-  }
-
-  // @TODO Replace user autocomplete with space-aware / "user access" aware autocomplete
-
   // Hijack the /node callback for use as our welcome page
   $items['node']['page callback'] = 'drupal_goto';
   $items['node']['page arguments'] = array('welcome');

@@ -311,50 +311,6 @@ function atrium_dashboard_redirect() {
 }
 
 /**
- * Override of taxonomy/autocomplete. Uses a view query that is space-aware.
- */
-function atrium_taxonomy_autocomplete($vid, $string = '') {
-  // The user enters a comma-separated list of tags. We only autocomplete the last tag.
-  $array = drupal_explode_tags($string);
-
-  // Fetch last tag
-  $last_string = trim(array_pop($array));
-  $matches = array();
-  if ($last_string != '') {
-    $view = views_get_view('atrium_taxonomy_autocomplete');
-    if ($view) {
-      $view->init_display();
-
-      // Override term name value.
-      $filters = $view->display_handler->get_option('filters');
-      $filters['name']['value'] = $last_string;
-      $filters['vid']['value'] = $filters['vid']['operator'] == 'in' ? array($vid) : $vid;
-      $view->display_handler->set_option('filters', $filters);
-
-      // Execute query
-      $view->execute_display();
-
-      // Get field alias for term name
-      $alias = !empty($view->field['name']) ? $view->field['name']->field_alias : '';
-
-      // Collect query results, prepare for autocomplete output
-      if ($alias) {
-        $prefix = count($array) ? implode(', ', $array) .', ' : '';
-        foreach ($view->result as $term) {
-          $n = $term->{$alias};
-          // Commas and quotes in terms are special cases, so encode 'em.
-          if (strpos($term->term_data_name, ',') !== FALSE || strpos($term->term_data_name, '"') !== FALSE) {
-            $n = '"'. str_replace('"', '""', $term->term_data_name) .'"';
-          }
-          $matches[$prefix . $n] = check_plain($term->term_data_name);
-        }
-      }
-    }
-  }
-  drupal_json($matches);
-}
-
-/**
  * 403 page.
  * Test: AtriumTest->test403().
  */
