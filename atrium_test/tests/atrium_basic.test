@@ -50,7 +50,7 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
     $this->assertText($admin_user->mail); // Display user mail
     $this->drupalGet('members/blocked');
     $this->assertText(t('Anonymous')); // Anonymous user is blocked
-    
+
     // Check the user space and account pages
     $space = 'space-' . $admin_user->name;
     $this->drupalGet("$space/blog");
@@ -68,8 +68,8 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
       foreach (array('dashboard') as $page) {
         $this->drupalGet("$group->path/$page");
         $this->assertText(t('No recent activity found.'));
-      }     
-      
+      }
+
       $content = array();
 
       // Check blog
@@ -79,7 +79,7 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
       $content[] = $blog;
       $this->drupalGet("$group->path/blog");
       $this->assertText($blog->title);
-      
+
       // Check notebook
       $this->drupalGet("$group->path/notebook");
       $this->assertText(t('No recent updates found.'));
@@ -89,19 +89,12 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
       $content[] = $book;
       $this->drupalGet("$group->path/notebook");
       $this->assertText($book->title);
-      
+
       // These should show up in dashboard
       $this->drupalGet("$group->path/dashboard");
       foreach ($content as $node) {
         $this->assertText($node->title);
       }
-      
-      // Group member pages
-      $path = "$group->path/og/users/$group->nid";
-      $this->drupalGet($path);
-      $this->drupalGet("$path/faces");
-      $this->drupalGet("$path/ucreate");
-      $this->drupalGet("$path/add_user");
     }
   }  
 }
