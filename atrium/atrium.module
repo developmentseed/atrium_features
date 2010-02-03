@@ -237,6 +237,43 @@ function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
 }
 
 /**
+ * Element validate handler for comment form.
+ */
+function atrium_comment_form_validate($element, $form_state) {
+  if ($form_state['clicked_button']['#value'] !== t('Close comment thread')) {
+    $value = trim($element['#value']);
+    if (empty($value)) {
+      form_set_error(current($element['#array_parents']), t('!name field is required.', array('!name' => $element['#title'])));
+    }
+  }
+}
+
+/**
+ * Form for toggling the current node's comment state.
+ */
+function atrium_comment_thread_toggleform($form_state, $node) {
+  $form = array();
+  $form['#node'] = $node;
+  $form['node_comment'] = array(
+    '#attributes' => array('class' => 'atrium-comment-thread'),
+    '#type' => 'submit',
+    '#submit' => array('atrium_comment_thread_toggleform_submit'),
+    '#value' => $node->comment == COMMENT_NODE_READ_WRITE ? t('Close comment thread') : t('Reopen comment thread'),
+  );
+  return $form;
+}
+
+/**
+ * Comment thread toggle submit handler.
+ */
+function atrium_comment_thread_toggleform_submit($form, $form_state) {
+  if (!empty($form['#node']) && $node = $form['#node']) {
+    $node->comment = $node->comment == COMMENT_NODE_READ_WRITE ? COMMENT_NODE_READ_ONLY : COMMENT_NODE_READ_WRITE;
+    node_save($node);
+  }
+}
+
+/**
  * Implementation of hook_link_alter().
  */
 function atrium_link_alter(&$links, $node) {
@@ -359,7 +396,7 @@ function atrium_views_api() {
 }
 
 /**
- * Implementation of preprocess_views_view().
+ * Preprocessor for theme('views_view').
  */
 function atrium_preprocess_views_view(&$vars) {
   $view = $vars['view'];
@@ -374,6 +411,15 @@ function atrium_preprocess_views_view(&$vars) {
       }
     }
     $vars['empty'] = !empty($output) ? $output : t('There is currently no content to view in this section.');
+  }
+}
+
+/**
+ * Preprocessor for theme('comment_wrapper').
+ */
+function atrium_preprocess_comment_wrapper(&$vars) {
+  if ($vars['node']->comment != COMMENT_NODE_READ_WRITE && node_access('update', $vars['node'])) {
+    $vars['content'].= theme('box', '', drupal_get_form('atrium_comment_thread_toggleform', $vars['node']));
   }
 }
 

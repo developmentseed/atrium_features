@@ -4,6 +4,16 @@
  * Form alter callback for comment form.
  */
 function _atrium_form_comment_form_alter(&$form, $form_state) {
+  // Allow those with access to the node to close or reopen commenting.
+  if (!empty($form['nid']['#value']) && ($node = node_load($form['nid']['#value'])) && node_access('update', $node)) {
+    $form = array_merge($form, atrium_comment_thread_toggleform($form_state, $node));
+  }
+  // Since there are other options besides comment submission we must remove
+  // the required flag on the comment body.
+  if (isset($form['comment_filter']['comment'])) {
+    $form['comment_filter']['comment']['#element_validate'] = array('atrium_comment_form_validate');
+    $form['comment_filter']['comment']['#required'] = FALSE;
+  }
   // Hide display of the "Your name" field.
   if (isset($form['_author'])) {
     $form['_author']['#access'] = FALSE;
