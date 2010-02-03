@@ -63,6 +63,13 @@ class AtriumTest extends AtriumWebTestCase {
     $this->drupalLogin($this->atriumUsers['manager']);
     $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
     $this->assertNoField('edit-node-comment', t('Comment toggler form not found.'));
+
+    // Create a non-comment enabled content type. Make sure toggler form
+    // does not appear.
+    $this->drupalLogin($this->atriumUsers['user']);
+    $book = $this->atriumCreateGroupContent($this->atriumGroups['public'], 'book');
+    $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$book->nid}");
+    $this->assertNoField('edit-node-comment', t('Comment toggler form not found.'));
   }
 
   /**
