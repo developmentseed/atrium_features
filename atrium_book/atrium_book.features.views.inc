@@ -419,10 +419,10 @@ function _atrium_book_views_default_views() {
   $translatables['atrium_book'] = array(
     t('Defaults'),
     t('Latest changes'),
-    t('No recent updates found.'),
-    t('Page: Latest changes'),
-    t('Page: Archived books'),
     t('No archived books found.'),
+    t('No recent updates found.'),
+    t('Page: Archived books'),
+    t('Page: Latest changes'),
   );
 
   $views[$view->name] = $view;

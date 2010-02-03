@@ -1472,17 +1472,17 @@ function _atrium_casetracker_views_default_views() {
   $handler->override_option('block_description', 'Latest cases');
   $handler->override_option('block_caching', -1);
   $translatables['atrium_casetracker'] = array(
-    t('Defaults'),
     t('All cases'),
-    t('No cases found.'),
+    t('Defaults'),
+    t('Latest cases'),
     t('My cases'),
-    t('There are no cases assigned to you.'),
+    t('Newest cases'),
+    t('No cases found.'),
     t('Project cases'),
     t('Project cases (newest)'),
-    t('Newest cases'),
-    t('more'),
-    t('Latest cases'),
+    t('There are no cases assigned to you.'),
     t('View more'),
+    t('more'),
   );
 
   $views[$view->name] = $view;
@@ -1750,12 +1750,12 @@ function _atrium_casetracker_views_default_views() {
   $handler->override_option('block_description', 'Projects');
   $handler->override_option('block_caching', -1);
   $translatables['atrium_casetracker_projects'] = array(
-    t('Defaults'),
-    t('Projects'),
-    t('No projects found.'),
     t('Archived projects'),
-    t('No archived projects found.'),
     t('Block: Projects'),
+    t('Defaults'),
+    t('No archived projects found.'),
+    t('No projects found.'),
+    t('Projects'),
     t('View more'),
   );
 
@@ -1863,6 +1863,9 @@ function _atrium_casetracker_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('items_per_page', 0);
+  $translatables['atrium_ct_assignee_options'] = array(
+    t('Defaults'),
+  );
 
   $views[$view->name] = $view;
 

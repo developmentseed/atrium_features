@@ -764,16 +764,16 @@ function _atrium_groups_views_default_views() {
     'weight' => 0,
   ));
   $translatables['atrium_groups'] = array(
-    t('Defaults'),
-    t('My groups'),
-    t('View more'),
-    t('Block: My groups (sidebar)'),
-    t('Page: My groups'),
-    t('Page: Group directory'),
-    t('Directory'),
-    t('Page: Archived groups'),
     t('Archived groups'),
+    t('Block: My groups (sidebar)'),
+    t('Defaults'),
+    t('Directory'),
+    t('My groups'),
     t('No archived groups found.'),
+    t('Page: Archived groups'),
+    t('Page: Group directory'),
+    t('Page: My groups'),
+    t('View more'),
   );
 
   $views[$view->name] = $view;

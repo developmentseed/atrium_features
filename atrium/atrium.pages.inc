@@ -63,39 +63,9 @@ function _atrium_form_node_form_alter(&$form, $form_state) {
     }
   }
 
+  // Disable node forms in archived spaces.
   $space = spaces_get_space();
-
-  // Determine whether this node is archivable
-  $archivable = in_array($node->type, variable_get('atrium_archivable', array()));
-  $archivable = !empty($node->nid) && $archivable;
-
-  // Only allow root books to be archived.
-  if (book_type_is_allowed($node->type)) {
-    $archivable = $archivable && (!empty($node->book) && $node->book['plid'] == 0);
-  }
-
-  // Add a link to archive/reactive the space
-  if ($archivable) {
-    // Add archive / reactivate buttons
-    if ($node->status) {
-      $archive_help = t('This !type is currently <strong>active</strong>. You can archive it to hide it from listings and prevent others from adding to or altering its content. You can always undo this action by reactivating the !type.', array('!type' => node_get_types('name', $node->type)));
-    }
-    else {
-      $archive_help = t('This !type is currently <strong>archived</strong>. You can reactivate it to allow others to add and alter its content.', array('!type' => node_get_types('name', $node->type)));
-    }
-    $form['archive'] = array(
-      '#type' => 'fieldset',
-      '#description' => $archive_help,
-      '#weight' => 100,
-    );
-    $form['archive']['button'] = array(
-      '#type' => 'submit',
-      '#value' => $node->status ? t('Archive this !type', array('!type' => node_get_types('name', $node->type))) : t('Reactivate'),
-      '#submit' => $node->status ? array('atrium_archive_submit') : array('atrium_reactivate_submit'),
-    );
-  }
-  // Disable other node forms in archived spaces
-  else if ($space && $space->type === 'og' && !$space->group->status) {
+  if (!atrium_archivable($node) && $space && $space->type === 'og' && !$space->group->status) {
     drupal_access_denied(); exit;
   }
 
@@ -163,7 +133,6 @@ function _atrium_form_system_themes_form_alter(&$form, $form_state) {
   }
 }
 
-
 /**
  * Implementation of hook_form_alter() for user_login.
  */
@@ -218,6 +187,16 @@ function _atrium_form_views_exposed_form_alter(&$form, $form_state) {
 }
 
 /**
+ * Menu callback for archive confirmation form.
+ */
+function atrium_archive($form_state, $node) {
+  $form = array();
+  $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
+  $form['#submit'] = array('atrium_archive_submit');
+  return confirm_form($form, t('Are you sure you want to archive %title?', array('%title' => $node->title)), "node/{$node->nid}", '', t('Archive'), t('Cancel'));
+}
+
+/**
  * Menu callback for reactivation confirmation form.
  */
 function atrium_reactivate($form_state, $node) {
@@ -225,6 +204,32 @@ function atrium_reactivate($form_state, $node) {
   $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
   $form['#submit'] = array('atrium_reactivate_submit');
   return confirm_form($form, t('Are you sure you want to reactivate %title?', array('%title' => $node->title)), "node/{$node->nid}", '', t('Reactivate'), t('Cancel'));
+}
+
+/**
+ * Reactivate node submit handler.
+ * Test: AtriumTest->testArchive().
+ */
+function atrium_reactivate_submit($form, &$form_state) {
+  $nid = $form_state['values']['nid'];
+  $node = node_load($nid);
+  $node->status = 1;
+  node_save($node);
+  drupal_set_message(t('The @type @title has been reactivated.', array('@type' => node_get_types('name', $node->type), '@title' => $node->title)));
+  purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $nid)));
+}
+
+/**
+ * OG archive submit handler.
+ * Test: AtriumTest->testArchive().
+ */
+function atrium_archive_submit($form, &$form_state) {
+  $nid = $form_state['values']['nid'];
+  $node = node_load($nid);
+  $node->status = 0;
+  node_save($node);
+  drupal_set_message(t('The @type @title has been archived.', array('@type' => node_get_types('name', $node->type), '@title' => $node->title)));
+  purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $nid)));
 }
 
 /**
