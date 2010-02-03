@@ -417,7 +417,7 @@ function atrium_preprocess_views_view(&$vars) {
  * Test: AtriumTest->testCommentToggle()
  */
 function atrium_preprocess_node(&$vars) {
-  if (node_access('update', $vars['node'])) {
+  if (node_access('update', $vars['node']) && in_array($vars['node']->comment, array(COMMENT_NODE_READ_ONLY, COMMENT_NODE_READ_WRITE))) {
     $vars['post_object'] .= theme('box', '', drupal_get_form('atrium_comment_thread_toggleform', $vars['node']));
   }
 }
