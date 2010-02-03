@@ -35,7 +35,7 @@ function atrium_menu() {
     'page callback' => 'atrium_welcome',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
-    'file' => 'atrium.pages.inc',
+    'file' => 'atrium.inc',
   );
   $items['help'] = array(
     'title' => 'Help',
@@ -44,7 +44,7 @@ function atrium_menu() {
     'access callback' => 'user_access',
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
-    'file' => 'atrium.pages.inc',
+    'file' => 'atrium.inc',
   );
   $items['node/%node/archive'] = array(
     'title' => 'Archive',
@@ -54,7 +54,7 @@ function atrium_menu() {
     'access callback' => 'atrium_archive_access',
     'access arguments' => array('archive', 1),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'atrium.pages.inc',
+    'file' => 'atrium.inc',
     'weight' => 10,
   );
   $items['node/%node/reactivate'] = array(
@@ -65,7 +65,7 @@ function atrium_menu() {
     'access callback' => 'atrium_archive_access',
     'access arguments' => array('reactivate', 1),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'atrium.pages.inc',
+    'file' => 'atrium.inc',
     'weight' => 10,
   );
   $items['my-dashboard'] = array(
@@ -74,7 +74,7 @@ function atrium_menu() {
     'access callback' => 'user_access',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
-    'file' => 'atrium.pages.inc',
+    'file' => 'atrium.inc',
   );
   return $items;
 }
@@ -112,7 +112,7 @@ function atrium_menu_alter(&$items) {
   // Replace default 403
   $items['access-denied']['page callback'] = 'atrium_403';
   $items['access-denied']['module'] = 'atrium';
-  $items['access-denied']['file'] = 'atrium.pages.inc';
+  $items['access-denied']['file'] = 'atrium.inc';
 }
 
 /**
@@ -162,7 +162,7 @@ function atrium_form_alter(&$form, &$form_state, $form_id) {
     case 'system_themes_form':
     case 'node_type_form':
     case 'views_exposed_form':
-      module_load_include('inc', 'atrium', 'atrium.pages');
+      module_load_include('inc', 'atrium', 'atrium');
       $function = "_atrium_form_{$form_id}_alter";
       if (function_exists($function)) {
         $function($form, $form_state);
@@ -172,7 +172,7 @@ function atrium_form_alter(&$form, &$form_state, $form_id) {
 
   //  Crappy exception for node form.
   if ($form['#id'] == 'node-form') {
-    module_load_include('inc', 'atrium', 'atrium.pages');
+    module_load_include('inc', 'atrium', 'atrium');
     $function = "_atrium_form_node_form_alter";
     if (function_exists($function)) {
       $function($form, $form_state);
@@ -207,10 +207,32 @@ function atrium_form_spaces_features_form_alter(&$form, &$form_state) {
   }
 }
 
-// Wrap the orginal validation function to allow for the new path.
+/**
+ * Wrap the orginal validation function to allow for the new path.
+ */
 function atrium_site_frontpage_validate($element, &$form_state) {
   if ($element['#value'] != 'my-dashboard') {
-    return spaces_site_frontpage_validate($element, $form_state); 
+    return spaces_site_frontpage_validate($element, $form_state);
+  }
+}
+
+/**
+ * Trigger a features rebuild.
+ */
+function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
+  module_load_include('inc', 'features', 'features.export');
+  features_include();
+  $semaphore = features_semaphore('get', 'user');
+
+  // If there is no processing semaphore for user permissions or it is stale
+  // go ahead with a forced rebuild.
+  if (!$semaphore || (time() - $semaphore) >= FEATURES_SEMAPHORE_TIMEOUT) {
+    context_set('atrium', 'access_perms', TRUE);
+    features_rebuild(array('atrium' => array('user')));
+    context_set('atrium', 'access_perms', FALSE);
+  }
+  else {
+    drupal_set_message(t('Your changes could not be saved because user permissions are currently being rebuilt. Please try again in a few minutes.'), 'error');
   }
 }
 
@@ -353,88 +375,6 @@ function atrium_preprocess_views_view(&$vars) {
     }
     $vars['empty'] = !empty($output) ? $output : t('There is currently no content to view in this section.');
   }
-}
-
-/**
- * Extra permissions that are dependent upon variable settings.
- * This function is called by atrium_user_default_permissions() and
- * the call to it needs to be manually retained when this feature is
- * updated.
- */
-function atrium_user_default_permissions_extra() {
-  module_load_include('inc', 'atrium', 'atrium.defaults');
-
-  // This is a rather enormous hack that alters pemissions only when the Spaces
-  // features form is being submitted (see atrium_form_spaces_features_form_submit()
-  // or during the install process.
-  //
-  // The proper solution to this problem is
-  // 1. A usable drupal_alter() system in Features components (including user
-  //    perms).
-  // 2. A global flag that prevents alters from running when Features, CTools
-  //    and other exportables tools are in the processing of building or
-  //    exporting components.
-  global $install_locale;
-  $permissions = array();
-  if (context_get('atrium', 'access_perms') || !empty($install_locale)) {
-    if (!variable_get('user_register', FALSE)) {
-      $permissions = array(
-        array(
-          'name' => 'access user profiles',
-          'roles' => array('authenticated user'),
-        ),
-        array(
-          'name' => 'access content',
-          'roles' => array('authenticated user'),
-        ),
-        array(
-          'name' => 'access comments',
-          'roles' => array('authenticated user'),
-        ),
-        array(
-          'name' => 'view revisions',
-          'roles' => array('authenticated user'),
-        ),
-      );
-    }
-    else {
-      $permissions = array(
-        array(
-          'name' => 'access user profiles',
-          'roles' => array('anonymous user', 'authenticated user'),
-        ),
-        array(
-          'name' => 'access content',
-          'roles' => array('anonymous user', 'authenticated user'),
-        ),
-        array(
-          'name' => 'access comments',
-          'roles' => array('anonymous user', 'authenticated user'),
-        ),
-        array(
-          'name' => 'view revisions',
-          'roles' => array('anonymous user', 'authenticated user'),
-        ),
-      );
-    }
-    switch (variable_get('atrium_members', ATRIUM_MEMBERS_GROUP)) {
-      case ATRIUM_MEMBERS_ALL:
-        $permissions[] = array(
-          'name' => 'view users outside groups',
-          'roles' => array('anonymous user', 'authenticated user', 'manager', 'admin'),
-        );
-        break;
-      case ATRIUM_MEMBERS_GROUP:
-        $permissions[] = array(
-          'name' => 'view users outside groups',
-          'roles' => array('manager', 'admin'),
-        );
-        break;
-    }
-    // If in the middle of installation, merge all perms together.
-    return !empty($install_locale) ? array_merge($permissions, _atrium_user_default_permissions()) : $permissions;
-  }
-  return _atrium_user_default_permissions();
 }
 
 /**
@@ -632,7 +572,6 @@ function atrium_search_form($form_state) {
   if (arg(0) == 'search' && isset($_GET['keys'])) {
     $default = urldecode($_GET['keys']);
   }
-  $search = 
   $form = array();
   $form['search'] = array(
     '#type' => 'textfield',
@@ -654,28 +593,4 @@ function atrium_search_form($form_state) {
 function atrium_search_form_submit($form, &$form_state) {
   $search = $form_state['values']['search'];
   drupal_goto('search', array('keys' => $search));
-}
-
-/**
- * Form submit handlers ===============================================
- */
-
-/**
- * Trigger a features rebuild.
- */
-function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
-  module_load_include('inc', 'features', 'features.export');
-  features_include();
-  $semaphore = features_semaphore('get', 'user');
-
-  // If there is no processing semaphore for user permissions or it is stale
-  // go ahead with a forced rebuild.
-  if (!$semaphore || (time() - $semaphore) >= FEATURES_SEMAPHORE_TIMEOUT) {
-    context_set('atrium', 'access_perms', TRUE);
-    features_rebuild(array('atrium' => array('user')));
-    context_set('atrium', 'access_perms', FALSE);
-  }
-  else {
-    drupal_set_message(t('Your changes could not be saved because user permissions are currently being rebuilt. Please try again in a few minutes.'), 'error');
-  }
 }

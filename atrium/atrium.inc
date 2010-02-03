@@ -196,6 +196,19 @@ function atrium_archive($form_state, $node) {
 }
 
 /**
+ * OG archive submit handler.
+ * Test: AtriumTest->testArchive().
+ */
+function atrium_archive_submit($form, &$form_state) {
+  $nid = $form_state['values']['nid'];
+  $node = node_load($nid);
+  $node->status = 0;
+  node_save($node);
+  drupal_set_message(t('The @type @title has been archived.', array('@type' => node_get_types('name', $node->type), '@title' => $node->title)));
+  purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $nid)));
+}
+
+/**
  * Menu callback for reactivation confirmation form.
  */
 function atrium_reactivate($form_state, $node) {
@@ -215,19 +228,6 @@ function atrium_reactivate_submit($form, &$form_state) {
   $node->status = 1;
   node_save($node);
   drupal_set_message(t('The @type @title has been reactivated.', array('@type' => node_get_types('name', $node->type), '@title' => $node->title)));
-  purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $nid)));
-}
-
-/**
- * OG archive submit handler.
- * Test: AtriumTest->testArchive().
- */
-function atrium_archive_submit($form, &$form_state) {
-  $nid = $form_state['values']['nid'];
-  $node = node_load($nid);
-  $node->status = 0;
-  node_save($node);
-  drupal_set_message(t('The @type @title has been archived.', array('@type' => node_get_types('name', $node->type), '@title' => $node->title)));
   purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $nid)));
 }
 
@@ -328,4 +328,86 @@ function atrium_403() {
     drupal_goto('user/login', 'destination='. $_REQUEST['q']);
   }
   return "<div class='access-denied'>". t('You are not authorized to access this page.') ."</div>";
+}
+
+/**
+ * Extra permissions that are dependent upon variable settings.
+ * This function is called by atrium_user_default_permissions() and
+ * the call to it needs to be manually retained when this feature is
+ * updated.
+ */
+function atrium_user_default_permissions_extra() {
+  module_load_include('inc', 'atrium', 'atrium.defaults');
+
+  // This is a rather enormous hack that alters pemissions only when the Spaces
+  // features form is being submitted (see atrium_form_spaces_features_form_submit()
+  // or during the install process.
+  //
+  // The proper solution to this problem is
+  // 1. A usable drupal_alter() system in Features components (including user
+  //    perms).
+  // 2. A global flag that prevents alters from running when Features, CTools
+  //    and other exportables tools are in the processing of building or
+  //    exporting components.
+  global $install_locale;
+  $permissions = array();
+  if (context_get('atrium', 'access_perms') || !empty($install_locale)) {
+    if (!variable_get('user_register', FALSE)) {
+      $permissions = array(
+        array(
+          'name' => 'access user profiles',
+          'roles' => array('authenticated user'),
+        ),
+        array(
+          'name' => 'access content',
+          'roles' => array('authenticated user'),
+        ),
+        array(
+          'name' => 'access comments',
+          'roles' => array('authenticated user'),
+        ),
+        array(
+          'name' => 'view revisions',
+          'roles' => array('authenticated user'),
+        ),
+      );
+    }
+    else {
+      $permissions = array(
+        array(
+          'name' => 'access user profiles',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+        array(
+          'name' => 'access content',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+        array(
+          'name' => 'access comments',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+        array(
+          'name' => 'view revisions',
+          'roles' => array('anonymous user', 'authenticated user'),
+        ),
+      );
+    }
+    switch (variable_get('atrium_members', ATRIUM_MEMBERS_GROUP)) {
+      case ATRIUM_MEMBERS_ALL:
+        $permissions[] = array(
+          'name' => 'view users outside groups',
+          'roles' => array('anonymous user', 'authenticated user', 'manager', 'admin'),
+        );
+        break;
+      case ATRIUM_MEMBERS_GROUP:
+        $permissions[] = array(
+          'name' => 'view users outside groups',
+          'roles' => array('manager', 'admin'),
+        );
+        break;
+    }
+    // If in the middle of installation, merge all perms together.
+    return !empty($install_locale) ? array_merge($permissions, _atrium_user_default_permissions()) : $permissions;
+  }
+  return _atrium_user_default_permissions();
 }

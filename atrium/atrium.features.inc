@@ -42,6 +42,7 @@ function atrium_imagecache_default_presets() {
 function atrium_user_default_permissions() {
   module_load_include('inc', 'atrium', 'atrium.defaults');
   $args = func_get_args();
+  module_load_include('inc', 'atrium', 'atrium');
   return atrium_user_default_permissions_extra();
 }
 
