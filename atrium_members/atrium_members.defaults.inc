@@ -27,12 +27,6 @@ function _atrium_members_context_default_contexts() {
           'region' => 'right',
           'weight' => 0,
         ),
-        'views--exp-atrium_members-default' => array(
-          'module' => 'views',
-          'delta' => '-exp-atrium_members-default',
-          'region' => 'right',
-          'weight' => 1,
-        ),
       ),
     ),
   );
