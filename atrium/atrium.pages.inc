@@ -19,7 +19,6 @@ function _atrium_form_comment_form_alter(&$form, $form_state) {
 
 /**
  * Form alter callback for node form.
- * Test: AtriumTest->testArchive().
  */
 function _atrium_form_node_form_alter(&$form, $form_state) {
   $node = $form['#node'];

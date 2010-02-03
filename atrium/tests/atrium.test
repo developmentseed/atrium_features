@@ -45,8 +45,7 @@ class AtriumTest extends AtriumWebTestCase {
     $post = $this->atriumCreateGroupContent($group, 'blog');
 
     // Archive the group.
-    $edit = array();
-    $this->drupalPost("node/{$group->nid}/edit", $edit, t('Archive this !type', array('!type' => node_get_types('name', $group->type))));
+    $this->drupalPost("node/{$group->nid}/archive", array(), t('Archive'));
 
     // Check that there is a message on both group & blog nodes.
     $this->drupalGet("node/{$group->nid}");
@@ -61,7 +60,7 @@ class AtriumTest extends AtriumWebTestCase {
     $this->assertResponse(403, t('Access denied'));
 
     // Reactivate it.
-    $this->drupalPost("node/{$group->nid}/edit", $edit, t('Reactivate'));
+    $this->drupalPost("node/{$group->nid}/reactivate", array(), t('Reactivate'));
     $message = t('The @type @title has been reactivated.', array('@type' => node_get_types('name', $group->type), '@title' => $group->title));
     $this->assertRaw($message);
 
