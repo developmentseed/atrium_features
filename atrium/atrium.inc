@@ -123,13 +123,25 @@ function _atrium_form_spaces_features_form_alter(&$form, $form_state) {
  */
 function _atrium_form_system_themes_form_alter(&$form, $form_state) {
   $themes = system_theme_data();
+  $hidden = FALSE;
   foreach ($themes as $key => $theme) {
-    if (empty($theme->info['atrium'])) {
+    if (empty($theme->info['atrium']) && !variable_get('atrium_show_all_themes', FALSE)) {
       unset($form[$key]);
       unset($form['status']['#options'][$key]);
       unset($form['theme_default']['#options'][$key]);
     }
   }
+  $form['atrium'] = array(
+    '#type' => 'fieldset',
+    '#description' => variable_get('atrium_show_all_themes', FALSE) ?
+        t('All themes, including those incompatible with Atrium, are shown above.') :
+        t('Themes that are not compatible with Atrium have been hidden.'),
+  );
+  $form['atrium']['toggle'] = array(
+    '#type' => 'submit',
+    '#value' => variable_get('atrium_show_all_themes', FALSE) ? t('Show only compatible themes') : t('Show all themes'),
+    '#submit' => array('atrium_system_themes_form_submit'),
+  );
 }
 
 /**

@@ -237,6 +237,14 @@ function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
 }
 
 /**
+ * Submit handler for system_themes_form show themes toggler.
+ */
+function atrium_system_themes_form_submit($form_state) {
+  $setting = variable_get('atrium_show_all_themes', FALSE);
+  variable_set('atrium_show_all_themes', !$setting);
+}
+
+/**
  * Form for toggling the current node's comment state.
  * Test: AtriumTest->testCommentToggle()
  */
