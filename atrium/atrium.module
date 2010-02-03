@@ -218,8 +218,15 @@ function atrium_site_frontpage_validate($element, &$form_state) {
  * Implementation of hook_link_alter().
  */
 function atrium_link_alter(&$links, $node) {
+  // Remove new comments link.
   if (!empty($links['comment_new_comments']) && !empty($links['comment_comments'])) {
     unset($links['comment_comments']);
+  }
+  // Remove links that are inaccessible.
+  foreach ($links as $key => $link) {
+    if (($item = menu_get_item($link['href'])) && !$item['access']) {
+      unset($links[$key]);
+    }
   }
 }
 
