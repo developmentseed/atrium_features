@@ -29,3 +29,13 @@ function atrium_blog_help($path) {
     }
   }
 }
+
+/**
+ * Preprocessor for theme('node_form').
+ */
+function atrium_blog_preprocess_node_form(&$vars) {
+  if (!empty($vars['form']['field_referenced_book_page'])) {
+    $vars['sidebar']['field_referenced_book_page'] = $vars['form']['field_referenced_book_page'];
+    unset($vars['form']['field_referenced_book_page']);
+  }
+}
