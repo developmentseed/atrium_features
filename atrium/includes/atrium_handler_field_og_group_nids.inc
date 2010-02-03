@@ -3,6 +3,12 @@ class atrium_handler_field_og_group_nids extends views_handler_field {
   function init(&$view, $options) {
     parent::init($view, $options);
     $this->additional_fields['group_nid'] = array('table' => 'og_ancestry', 'field' => 'group_nid');
+
+    // Omit this field if we're within a group space.
+    $space = spaces_get_space();
+    if ($space && $space->type === 'og') {
+      $this->options['exclude'] = TRUE;
+    }
   }
 
   /**
