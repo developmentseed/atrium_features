@@ -1554,12 +1554,11 @@ function _atrium_casetracker_views_default_views() {
     ),
   ));
   $handler->override_option('sorts', array(
-    'changed' => array(
-      'order' => 'DESC',
-      'granularity' => 'second',
-      'id' => 'changed',
+    'title' => array(
+      'order' => 'ASC',
+      'id' => 'title',
       'table' => 'node',
-      'field' => 'changed',
+      'field' => 'title',
       'override' => array(
         'button' => 'Override',
       ),
@@ -1730,6 +1729,19 @@ function _atrium_casetracker_views_default_views() {
       'id' => 'title',
       'table' => 'node',
       'field' => 'title',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('sorts', array(
+    'changed' => array(
+      'order' => 'DESC',
+      'granularity' => 'second',
+      'id' => 'changed',
+      'table' => 'node',
+      'field' => 'changed',
+      'override' => array(
+        'button' => 'Override',
+      ),
       'relationship' => 'none',
     ),
   ));
