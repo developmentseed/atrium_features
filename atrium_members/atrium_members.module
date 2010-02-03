@@ -13,13 +13,6 @@ function atrium_members_enable() {
 }
 
 /**
- * Implementation of hook_views_api().
- */
-function atrium_members_views_api() {
-  return array('api' => 2);
-}
-
-/**
  * Implementation of hook_block().
  */
 function atrium_members_block($op = 'list', $delta = 0, $edit = array()) {
@@ -28,6 +21,7 @@ function atrium_members_block($op = 'list', $delta = 0, $edit = array()) {
       return array('addform' => array('info' => t('User add form')));
     case 'view':
       if (atrium_members_addform_access()) {
+        module_load_include('inc', 'atrium_members', 'atrium_members');
         $space = spaces_get_space();
         return array('subject' => t('Add existing users'), 'content' => drupal_get_form('atrium_members_addform', $space->group));
       }
@@ -40,99 +34,12 @@ function atrium_members_block($op = 'list', $delta = 0, $edit = array()) {
  */
 function atrium_members_theme() {
   return array(
-    'atrium_members_addform' => array('arguments' => array('form' => array())),
-  );
-}
-
-/**
- * Form for adding existing members to a group.
- */
-function atrium_members_addform($form_state, $group) {
-  $form = array('#theme' => 'atrium_members_addform');
-  $form['messages'] = array('#type' => 'markup');
-
-  // Provide the page View for AJAX reload action.
-  if ($display = views_get_page_view()) {
-    if ($display->get_option('use_ajax')) {
-      $form['view'] = array(
-        '#type' => 'hidden',
-        '#value' => "{$display->view->name}:{$display->view->current_display}",
-        '#attributes' => array('class' => 'atrium-members-addform-view'),
-      );
-    }
-  }
-
-  $form['group'] = array(
-    '#type' => 'value',
-    '#value' => $group,
-  );
-  $form['username'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Username'),
-    '#default_value' => '',
-    '#autocomplete_path' => 'user/autocomplete',
-    '#description' => '',
-  );
-  $form['add'] = array(
-    '#type' => 'submit',
-    '#value' => t('Add to group'),
-    '#submit' => array('atrium_members_addform_submit'),
-    '#ahah' => array(
-      'path' => 'members/add/ajax',
-      'wrapper' => 'atrium-members-addform-messages',
-      'method' => 'replace',
-      'effect' => 'none',
+    'atrium_members_addform' => array(
+      'arguments' => array('form' => array()),
+      'path' => drupal_get_path('module', 'atrium_members'),
+      'file' => 'atrium_members.inc',
     ),
   );
-  return $form;
-}
-
-/**
- * Theme function for atrium_members_addform().
- */
-function theme_atrium_members_addform($form) {
-  drupal_add_js(drupal_get_path('module', 'atrium_members') .'/atrium_members.js');
-  $output .= "<div id='atrium-members-addform-messages'>";
-  $output .= drupal_render($form['messages']);
-  $output .= "</div>";
-  $output .= drupal_render($form);
-  return "<div class='atrium-members-addform'>{$output}</div>";
-}
-
-function atrium_members_addform_access() {
-  $space = spaces_get_space();
-  return user_access('create users') && $space && $space->type == 'og';
-}
-
-function atrium_members_addform_submit(&$form, &$form_state) {
-  if ($uid = db_result(db_query("SELECT uid FROM {users} WHERE name = '%s'", $form_state['values']['username']))) {
-    if ($account = user_load($uid)) {
-      og_save_subscription($form_state['values']['group']->nid, $account->uid, array('is_active' => 1));
-      drupal_set_message(t('Subscribed user %name to %group.', array('%name' => $account->name, '%group' => $form_state['values']['group']->title)));
-    }
-  }
-}
-
-/**
- * AJAX/AHAH callback for user addform submission.
- */
-function atrium_members_addform_ajax() {
-  if ($form = form_get_cache($_POST['form_build_id'], $form_state)) {
-    // Build submitted values.
-    $form_state = array('values' => $_POST);
-    foreach (element_children($form) as $key) {
-      if ($form[$key]['#type'] === 'value' && isset($form[$key]['#value'])) {
-        $form_state['values'][$key] = $form[$key]['#value'];
-      }
-    }
-    // Submit the form & retrieve messages.
-    atrium_members_addform_submit($form, $form_state);
-    $output = theme('status_messages');
-    drupal_json(array('status' => TRUE, 'data' => $output));
-    exit();
-  }
-  drupal_json(array('status' => FALSE, 'data' => ''));
-  exit();  
 }
 
 /**
@@ -146,6 +53,14 @@ function atrium_members_menu() {
       'access callback' => 'atrium_members_addform_access',
       'access arguments' => array(),
       'type' => MENU_CALLBACK,
+      'file' => 'atrium_members.inc',
+    ),
+    'members/add/autocomplete' => array(
+      'page callback' => 'atrium_members_autocomplete',
+      'access callback' => 'user_access',
+      'access arguments' => array('access user profiles'),
+      'type' => MENU_CALLBACK,
+      'file' => 'atrium_members.inc',
     ),
   );
 }
@@ -161,6 +76,8 @@ function atrium_members_menu_alter(&$items) {
     $item = $items['user/%user_category/edit/'. $category['name']];
     $item['page callback'] = 'drupal_get_form';
     $item['page arguments'] = array('atrium_members_user_profile_tab', 1, $category['name']);
+    $item['module'] = 'atrium_members';
+    $item['file'] = 'atrium_members.inc';
     $items['user/%user_category/edit/'. $category['name']] = $item;
   }
 
@@ -196,12 +113,17 @@ function atrium_members_menu_alter(&$items) {
     'access callback' => TRUE,
     'access arguments' => array(TRUE),
     'type' => MENU_CALLBACK,
+    'module' => 'atrium_members',
+    'file' => 'atrium_members.inc',
   );
 }
 
-function atrium_members_og_users() {
-  menu_set_active_item('members');
-  return menu_execute_active_handler();
+/**
+ * Access callback for using the members addform.
+ */
+function atrium_members_addform_access() {
+  $space = spaces_get_space();
+  return user_access('create users') && $space && $space->type == 'og';
 }
 
 /**
@@ -262,32 +184,6 @@ function atrium_members_form_user_profile_form_alter(&$form) {
 }
 
 /**
- * Implementation of hook_views_pre_view().
- */
-function atrium_members_views_pre_view(&$view) {
-  switch ($view->name) {
-    case 'atrium_members':
-      $filters = $view->display_handler->get_option('filters');
-      foreach ($filters as $id => $filter) {
-        if ("{$filter['table']}:{$filter['field']}" == 'og_uid:uid') {
-          // If user may view user outside their group memberships,
-          // yank the og_uid filter.
-          if (user_access('view users outside groups')) {
-            unset($filters[$id]);
-          }
-          // Otherwise, enforce the filter.
-          else {
-            $filters[$id]['value'] = 1;
-          }
-          $view->display_handler->set_option('filters', $filters);
-          break;
-        }
-      }
-      break;
-  }
-}
-
-/**
  * Implementation of hook_user().
  */
 function atrium_members_user($op, &$edit, &$account, $category = NULL) {
@@ -323,22 +219,10 @@ function atrium_members_user($op, &$edit, &$account, $category = NULL) {
 }
 
 /**
- * Form callback that generates only the portion of the user profile form that is requested.
+ * Implementation of hook_atrium_admin_links_alter().
  */
-function atrium_members_user_profile_tab($form_state, $account, $tab) {
-  module_load_include('inc', 'user', 'user.pages');
-  $form = user_profile_form($form_state, $account);
-  $form['#submit'] = array('user_profile_form_submit');
-  foreach (element_children($form) as $k) {
-    if ($k == $tab || $form[$k]['#type'] == 'submit') {
-      $form[$k]['#access'] = TRUE;
-    }
-    else {
-      $form[$k]['#access'] = FALSE;
-    }
+function atrium_members_atrium_admin_links_alter(&$links, $space) {
+  if (spaces_access_admin() && user_access('create users') && ($item = menu_get_item('members/all')) && $item['access']) {
+    $links['members'] = array('title' => t('Members'), 'href' => $item['href']);
   }
-  if (isset($form['delete'])) {
-    $form['delete']['#access'] = FALSE;
-  }
-  return $form;
 }
