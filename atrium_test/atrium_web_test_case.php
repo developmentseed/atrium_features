@@ -161,15 +161,8 @@ class AtriumWebTestCase extends DrupalWebTestCase {
    * Create basic conditions for testing.
    */
   function atriumBasic() {
-    // Create a user for each role.
-    $this->atriumUsers = array();
-    $user_roles = array('user', 'manager', 'admin');
-    foreach ($user_roles as $role) {
-      $this->atriumUsers[$role] = $this->atriumCreateUser($role);
-    }
-
     // Create public and private groups.
-    $this->drupalLogin($this->atriumUsers['admin']);
+    $this->drupalLogin($this->atriumCreateUser('admin'));
     $this->atriumGroups = array();
     $group_types = array(
       'public' => 'atrium_og_public',
@@ -177,6 +170,13 @@ class AtriumWebTestCase extends DrupalWebTestCase {
     );
     foreach ($group_types as $key => $preset) {
       $this->atriumGroups[$key] = $this->atriumCreateGroup($preset);
+    }
+
+    // Create a user for each role.
+    $this->atriumUsers = array();
+    $user_roles = array('user', 'manager', 'admin');
+    foreach ($user_roles as $role) {
+      $this->atriumUsers[$role] = $this->atriumCreateUser($role, $this->atriumGroups);
     }
   }
 
