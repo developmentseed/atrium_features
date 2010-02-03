@@ -21,6 +21,50 @@ class AtriumTest extends AtriumWebTestCase {
     $this->atriumBasic();
   }
 
+/**
+   * Test comment toggling.
+   */
+  function testCommentToggle() {
+    $this->drupalLogin($this->atriumUsers['user']);
+    $node = $this->atriumCreateGroupContent($this->atriumGroups['public'], 'blog');
+
+    // Test that the comment form exists and the node owner can toggle
+    // form commenting on and off.
+    $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
+    $this->assertField('comment', t('Comment form found.'));
+    $this->assertField('edit-node-comment', t('Comment toggler form found.'));
+
+    // Admin should have access as well.
+    $this->drupalLogin($this->atriumUsers['admin']);
+    $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
+    $this->assertField('edit-node-comment', t('Comment toggler form found.'));
+
+    // Manager (and other users) do not have access.
+    $this->drupalLogin($this->atriumUsers['manager']);
+    $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
+    $this->assertNoField('edit-node-comment', t('Comment toggler form not found.'));
+
+    // Turn off commenting.
+    $this->drupalLogin($this->atriumUsers['user']);
+    $this->drupalPost("{$this->atriumGroups['public']->path}/node/{$node->nid}", array(), t('Close comment thread'));
+
+    // Test that comments are actually off.
+    $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
+    $this->assertNoField('comment', t('Comment form not found.'));
+    $this->assertField('edit-node-comment', t('Comment toggler form found.'));
+    $this->drupalPost("{$this->atriumGroups['public']->path}/node/{$node->nid}", array(), t('Reopen comment thread'));
+
+    // Admin should be able to turn them back on.
+    $this->drupalLogin($this->atriumUsers['admin']);
+    $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
+    $this->assertField('edit-node-comment', t('Comment toggler form found.'));
+
+    // Manager should not.
+    $this->drupalLogin($this->atriumUsers['manager']);
+    $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
+    $this->assertNoField('edit-node-comment', t('Comment toggler form not found.'));
+  }
+
   /**
    * Ensure that 403 pages display a login form for anonymous users.
    */

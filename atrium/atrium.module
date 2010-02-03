@@ -237,19 +237,8 @@ function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
 }
 
 /**
- * Element validate handler for comment form.
- */
-function atrium_comment_form_validate($element, $form_state) {
-  if ($form_state['clicked_button']['#value'] !== t('Close comment thread')) {
-    $value = trim($element['#value']);
-    if (empty($value)) {
-      form_set_error(current($element['#array_parents']), t('!name field is required.', array('!name' => $element['#title'])));
-    }
-  }
-}
-
-/**
  * Form for toggling the current node's comment state.
+ * Test: AtriumTest->testCommentToggle()
  */
 function atrium_comment_thread_toggleform($form_state, $node) {
   $form = array();
@@ -415,11 +404,14 @@ function atrium_preprocess_views_view(&$vars) {
 }
 
 /**
- * Preprocessor for theme('comment_wrapper').
+ * Preprocessor for theme('node').
+ * The use of the 'post_object' key in this preprocess requires a tao-based
+ * theme to be in use to render the content.
+ * Test: AtriumTest->testCommentToggle()
  */
-function atrium_preprocess_comment_wrapper(&$vars) {
-  if ($vars['node']->comment != COMMENT_NODE_READ_WRITE && node_access('update', $vars['node'])) {
-    $vars['content'].= theme('box', '', drupal_get_form('atrium_comment_thread_toggleform', $vars['node']));
+function atrium_preprocess_node(&$vars) {
+  if (node_access('update', $vars['node'])) {
+    $vars['post_object'] .= theme('box', '', drupal_get_form('atrium_comment_thread_toggleform', $vars['node']));
   }
 }
 
