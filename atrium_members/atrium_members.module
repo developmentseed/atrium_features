@@ -166,6 +166,12 @@ function atrium_members_context_page_reaction() {
       $breadcrumb[] = l($item['title'], $item['href']);
     }
     drupal_set_breadcrumb($breadcrumb);
+
+    // If not in a space, use wide layout.
+    // @TODO: Reimplement user search filters/facets in the sidebar.
+    if (!$space) {
+      context_set('context', 'layout_wide', context_load('layout_wide'));
+    }
   }
 }
 
