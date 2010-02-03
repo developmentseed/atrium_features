@@ -244,7 +244,6 @@ function atrium_comment_thread_toggleform($form_state, $node) {
   $form = array();
   $form['#node'] = $node;
   $form['node_comment'] = array(
-    '#attributes' => array('class' => 'atrium-comment-thread'),
     '#type' => 'submit',
     '#submit' => array('atrium_comment_thread_toggleform_submit'),
     '#value' => $node->comment == COMMENT_NODE_READ_WRITE ? t('Close comment thread') : t('Reopen comment thread'),
