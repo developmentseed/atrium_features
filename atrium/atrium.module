@@ -248,13 +248,16 @@ function atrium_system_themes_form_submit($form_state) {
  * Form for toggling the current node's comment state.
  * Test: AtriumTest->testCommentToggle()
  */
-function atrium_comment_thread_toggleform($form_state, $node) {
+function atrium_comment_thread_toggleform($form_state, $action = 'close', $nid) {
   $form = array();
-  $form['#node'] = $node;
-  $form['node_comment'] = array(
+  $form['nid'] = array(
+    '#type' => 'value',
+    '#value' => $nid,
+  );
+  $form['comment_toggle'] = array(
     '#type' => 'submit',
     '#submit' => array('atrium_comment_thread_toggleform_submit'),
-    '#value' => $node->comment == COMMENT_NODE_READ_WRITE ? t('Close comment thread') : t('Reopen comment thread'),
+    '#value' => $action == 'close' ? t('Close comment thread') : t('Reopen comment thread'),
   );
   return $form;
 }
@@ -263,7 +266,9 @@ function atrium_comment_thread_toggleform($form_state, $node) {
  * Comment thread toggle submit handler.
  */
 function atrium_comment_thread_toggleform_submit($form, $form_state) {
-  if (!empty($form['#node']) && $node = $form['#node']) {
+  if (!empty($form_state['values']['nid']) && $node = $form_state['values']['nid']) {
+    // Load that node afresh.
+    $node = node_load($form_state['values']['nid'], NULL, TRUE);
     $node->comment = $node->comment == COMMENT_NODE_READ_WRITE ? COMMENT_NODE_READ_ONLY : COMMENT_NODE_READ_WRITE;
     node_save($node);
   }
@@ -418,7 +423,8 @@ function atrium_preprocess_views_view(&$vars) {
  */
 function atrium_preprocess_node(&$vars) {
   if (node_access('update', $vars['node']) && in_array($vars['node']->comment, array(COMMENT_NODE_READ_ONLY, COMMENT_NODE_READ_WRITE))) {
-    $vars['post_object'] .= theme('box', '', drupal_get_form('atrium_comment_thread_toggleform', $vars['node']));
+    $action = $vars['node']->comment == COMMENT_NODE_READ_WRITE ? 'close' : 'reopen';
+    $vars['post_object'] .= theme('box', '', drupal_get_form('atrium_comment_thread_toggleform', $action, $vars['node']->nid));
   }
 }
 

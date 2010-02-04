@@ -32,17 +32,17 @@ class AtriumTest extends AtriumWebTestCase {
     // form commenting on and off.
     $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
     $this->assertField('comment', t('Comment form found.'));
-    $this->assertField('edit-node-comment', t('Comment toggler form found.'));
+    $this->assertField('edit-comment-toggle', t('Comment toggler form found.'));
 
     // Admin should have access as well.
     $this->drupalLogin($this->atriumUsers['admin']);
     $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
-    $this->assertField('edit-node-comment', t('Comment toggler form found.'));
+    $this->assertField('edit-comment-toggle', t('Comment toggler form found.'));
 
     // Manager (and other users) do not have access.
     $this->drupalLogin($this->atriumUsers['manager']);
     $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
-    $this->assertNoField('edit-node-comment', t('Comment toggler form not found.'));
+    $this->assertNoField('edit-comment-toggle', t('Comment toggler form not found.'));
 
     // Turn off commenting.
     $this->drupalLogin($this->atriumUsers['user']);
@@ -51,25 +51,25 @@ class AtriumTest extends AtriumWebTestCase {
     // Test that comments are actually off.
     $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
     $this->assertNoField('comment', t('Comment form not found.'));
-    $this->assertField('edit-node-comment', t('Comment toggler form found.'));
+    $this->assertField('edit-comment-toggle', t('Comment toggler form found.'));
     $this->drupalPost("{$this->atriumGroups['public']->path}/node/{$node->nid}", array(), t('Reopen comment thread'));
 
     // Admin should be able to turn them back on.
     $this->drupalLogin($this->atriumUsers['admin']);
     $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
-    $this->assertField('edit-node-comment', t('Comment toggler form found.'));
+    $this->assertField('edit-comment-toggle', t('Comment toggler form found.'));
 
     // Manager should not.
     $this->drupalLogin($this->atriumUsers['manager']);
     $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
-    $this->assertNoField('edit-node-comment', t('Comment toggler form not found.'));
+    $this->assertNoField('edit-comment-toggle', t('Comment toggler form not found.'));
 
     // Create a non-comment enabled content type. Make sure toggler form
     // does not appear.
     $this->drupalLogin($this->atriumUsers['user']);
     $book = $this->atriumCreateGroupContent($this->atriumGroups['public'], 'book');
     $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$book->nid}");
-    $this->assertNoField('edit-node-comment', t('Comment toggler form not found.'));
+    $this->assertNoField('edit-comment-toggle', t('Comment toggler form not found.'));
   }
 
   /**
