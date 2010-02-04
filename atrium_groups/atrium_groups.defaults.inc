@@ -76,7 +76,7 @@ function _atrium_groups_spaces_presets() {
   $spaces_presets->api_version = 3;
   $spaces_presets->name = 'atrium_og_private';
   $spaces_presets->title = 'Private group';
-  $spaces_presets->description = 'A simple private group with a blog, document library and dashboard.';
+  $spaces_presets->description = 'A private group is accessible only to users added to that group by one of the group\'s managers.';
   $spaces_presets->space_type = 'og';
   $spaces_presets->value = array(
     'variable' => array(
@@ -138,7 +138,7 @@ function _atrium_groups_spaces_presets() {
   $spaces_presets->api_version = 3;
   $spaces_presets->name = 'atrium_og_public';
   $spaces_presets->title = 'Public group';
-  $spaces_presets->description = 'A simple public group with a blog, document library and dashboard.';
+  $spaces_presets->description = 'A public group is accessible to all users on the site. Users can join and leave public groups freely.';
   $spaces_presets->space_type = 'og';
   $spaces_presets->value = array(
     'variable' => array(
