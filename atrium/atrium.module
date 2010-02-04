@@ -422,7 +422,7 @@ function atrium_preprocess_views_view(&$vars) {
  * Test: AtriumTest->testCommentToggle()
  */
 function atrium_preprocess_node(&$vars) {
-  if (node_access('update', $vars['node']) && in_array($vars['node']->comment, array(COMMENT_NODE_READ_ONLY, COMMENT_NODE_READ_WRITE))) {
+  if ($vars['node'] === menu_get_object() && node_access('update', $vars['node']) && in_array($vars['node']->comment, array(COMMENT_NODE_READ_ONLY, COMMENT_NODE_READ_WRITE))) {
     $action = $vars['node']->comment == COMMENT_NODE_READ_WRITE ? 'close' : 'reopen';
     $vars['post_object'] .= theme('box', '', drupal_get_form('atrium_comment_thread_toggleform', $action, $vars['node']->nid));
   }
