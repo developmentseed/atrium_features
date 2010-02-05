@@ -16,9 +16,10 @@ function _atrium_block_account() {
     if ($view = views_get_view('atrium_groups')) {
       $block['content'] .= "<div class='pane-right'>";
       $block['content'] .= "<h3>". t('My groups') ."</h3>" . $view->execute_display('default');
-      $block['content'] .= "</div></div>";
+      $block['content'] .= "</div>";
       $view->destroy();
     }
+    $block['content'] .= "</div>";
     return $block;
   }
   else {
