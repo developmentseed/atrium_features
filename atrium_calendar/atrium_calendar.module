@@ -97,13 +97,13 @@ function atrium_calendar_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
 function _atrium_calendar_block_mini($op, $edit) {
   if ($op == 'view') {
     $block = array();
-    $date = context_get('node', 'field_date');
-    if ($date) {
-      $year = date_format($date, 'Y');
-      $month = date_format($date, 'm');
-      $args = "$year-$month";
-      $block['content'] = views_embed_view('atrium_calendar', 'block_1', $args);
+    if ($date = context_get('node', 'field_date')) {
+      $args = date_format($date, 'Y') . '-' . date_format($date, 'm');
     }
-    return $block;
+    else {
+      $args = format_date(time(), 'custom', 'Y') . '-' . format_date(time(), 'custom', 'm');
+    }
+    $block['content'] = views_embed_view('atrium_calendar', 'block_1', $args);
   }
+  return $block;
 }
