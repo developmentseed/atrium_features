@@ -100,6 +100,7 @@ function atrium_members_addform_ajax() {
     // Submit the form & retrieve messages.
     atrium_members_addform_submit($form, $form_state);
     $output = theme('status_messages');
+    $output = "<div class='atrium-members-ajax'>{$output}</div>";
     drupal_json(array('status' => TRUE, 'data' => $output));
     exit();
   }
