@@ -46,17 +46,17 @@ function _atrium_calendar_content_default_fields() {
     'default_format' => 'long',
     'widget' => array(
       'default_value' => 'blank',
-      'default_value_custom' => '',
+      'default_value_code' => '',
       'default_value2' => 'same',
-      'default_value_custom2' => '',
+      'default_value_code2' => '',
       'input_format' => 'm/d/Y - g:ia',
       'input_format_custom' => '',
       'increment' => '1',
       'text_parts' => array(),
       'year_range' => '-3:+3',
-      'default_value_code' => '',
-      'default_value_code2' => '',
       'label_position' => 'above',
+      'default_value_custom' => '',
+      'default_value_custom2' => '',
       'label' => 'Date',
       'weight' => '-3',
       'description' => '',
@@ -140,6 +140,36 @@ function _atrium_calendar_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
+  $context->name = 'atrium-calendar-event';
+  $context->description = '';
+  $context->tag = 'Calendar';
+  $context->conditions = array(
+    'node' => array(
+      'values' => array(
+        'event' => 'event',
+      ),
+      'options' => array(
+        'node_form' => 0,
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'atrium_calendar-mini' => array(
+          'module' => 'atrium_calendar',
+          'delta' => 'mini',
+          'region' => 'right',
+          'weight' => 0,
+        ),
+      ),
+    ),
+  );
+
+  $export['atrium-calendar-event'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
   $context->name = 'spaces-feature-calendar';
   $context->description = '';
   $context->tag = 'Calendar';
@@ -166,12 +196,6 @@ function _atrium_calendar_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'atrium_calendar-mini' => array(
-          'module' => 'atrium_calendar',
-          'delta' => 'mini',
-          'region' => 'right',
-          'weight' => 0,
-        ),
         'views-2806ea1d75b0ffa45a7eaa780e276615' => array(
           'module' => 'views',
           'delta' => '2806ea1d75b0ffa45a7eaa780e276615',
