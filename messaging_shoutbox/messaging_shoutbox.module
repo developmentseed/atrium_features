@@ -124,10 +124,9 @@ function messaging_shoutbox_ajax($op = 'shout') {
       if (($nid = $form_state['values']['nid']) && !empty($form_state['values']['shout'])) {
         messaging_shoutbox_shout($nid, array('text' => $form_state['values']['shout'], 'uid' => $user->uid));
       }
-      $view_name = $form_state['values']['view_name'];
-      $view_display = $form_state['values']['view_display'];
-      $output = views_embed_view($view_name, $view_display, $nid);
-      print drupal_to_js(array('status' => TRUE, 'data' => $output));
+      // Return a DOM element that indicates to our JS behaviors that the
+      // request is complete.
+      print drupal_to_js(array('status' => TRUE, 'data' => "<div class='messaging-shoutbox-ajax'></div>"));
   }
   exit();
 }
@@ -221,29 +220,25 @@ function messaging_shoutbox_block($op = 'list', $delta = 0) {
  * @param $shoutbox
  *   The shoutbox node object to which shouts will be related.
  * @param $view_name
- *   The name of the view to use for rendering shouts.
- * @param $display_id
- *   The view display to use for rendering shouts.
- * @param $view_args
- *   Any additional arguments to pass to the view.
+ *   Optional: The view name for rendered shouts. Needed to AJAX update the view
+ *   in question.
+ * @param $view_display
+ *   Optional: The view display for rendered shouts.
+ * @param $rendered
+ *   Optional: A rendered view of shouts. If omitted, a default view will be used.
  */
-function messaging_shoutbox_shoutform($form_state, $shoutbox, $views_params = array()) {
+function messaging_shoutbox_shoutform($form_state, $shoutbox, $view_name = 'messaging_shoutbox', $view_display = 'block_1', $rendered = NULL) {
   $form = array('#theme' => 'messaging_shoutbox_shoutform');
-
-  $defaults = array(
-    'view' => 'messaging_shoutbox',
-    'display' => 'block_1',
-    'args' => array(),
-  );
-  $views_params = array_merge($defaults, $views_params);
-
-  // Different wrapper classes so we can have more shoutboxes on a page
-  $wrapper = 'shoutbox-wrapper-' . $shoutbox->nid;
 
   // Form values to pass thru
   $form['nid'] = array('#type' => 'hidden', '#value' => $shoutbox->nid);
-  $form['view_name'] = array('#type' => 'hidden', '#value' => $views_params['view']);
-  $form['view_display'] = array('#type' => 'hidden', '#value' => $views_params['display']);
+  $form['view'] = array(
+    '#type' => 'hidden',
+    '#value' => "{$view_name}:{$view_display}",
+    '#attributes' => array('class' => 'messaging-shoutbox-shoutform-view')
+  );
+
+  $wrapper = 'messaging-shoutbox-wrapper-'. $shoutbox->nid;
 
   $form['shout'] = array(
     '#type' => 'textarea',
@@ -254,19 +249,27 @@ function messaging_shoutbox_shoutform($form_state, $shoutbox, $views_params = ar
   $form['shoutbox_submit'] = array(
     '#type' => 'submit',
     '#value' => t('Shout'),
-    '#ahah' => array('path' => 'shoutbox/js/shout', 'wrapper' => $wrapper),
+    '#ahah' => array(
+      'path' => 'shoutbox/js/shout',
+      'wrapper' => $wrapper,
+      'method' => 'replace',
+      'effect' => 'none',
+    ),
   );
-  $args = array_merge(array($views_params['view'], $views_params['display']), $views_params['args']);
   $form['shoutbox'] = array(
-    '#value' => call_user_func_array('views_embed_view', $args),
-    '#prefix' => "<div class='shoutbox-list' id='$wrapper'>",
-    '#suffix' => '</div>',
+    '#value' => !isset($rendered) ? views_embed_view('messaging_shoutbox', 'block_1') : $rendered,
+    '#prefix' => "<div class='shoutbox-list'>",
+    '#suffix' => "</div>",
+  );
+  // Dummy wrapper to trigger Views AJAX behavior.
+  $form['wrapper'] = array(
+    '#type' => 'markup',
+    '#value' => "<div id='{$wrapper}'></div>",
   );
 
   // Limit visibility for post controls
   $form['shout']['#access'] = $form['shoutbox_submit']['#access'] = user_access('post messages to shoutbox');
-  
-  return $form;  
+  return $form;
 }
 
 /**
