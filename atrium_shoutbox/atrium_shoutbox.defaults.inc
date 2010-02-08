@@ -93,11 +93,9 @@ function _atrium_shoutbox_menu_default_items() {
     'title' => 'Shoutbox',
     'path' => 'shoutbox',
     'weight' => '0',
-    'description' => 'A simple shoutbox feature',
   );
   // Translatables
   array(
-    t('A simple shoutbox feature'),
     t('Shoutbox'),
   );
 

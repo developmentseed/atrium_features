@@ -27,7 +27,6 @@ function atrium_shoutbox_menu() {
   $items['shoutbox'] = array(
     'title' => 'Shoutbox',
     'title callback' => 'atrium_shoutbox_title',
-    'description' => 'A simple shoutbox feature',
     'page callback' => 'atrium_shoutbox_page',
     'access callback' => 'spaces_access_feature',
     'access arguments' => array('view', 'atrium_shoutbox'),
