@@ -74,6 +74,17 @@ function atrium_calendar_block($op = 'list', $delta = 0, $edit = array()) {
  */
 function atrium_calendar_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
   switch ($op) {
+    // Custom code for forcing inheritance of OG groups from feed node to
+    // iCal items. See: http://drupal.org/node/632920.
+    case 'insert':
+    case 'update':
+      if ($node->type == 'feed_ical_item' && !empty($node->feeds_node_item->feed_nid)) {
+        $feed_node = node_load($node->feeds_node_item->feed_nid);
+        if (!empty($feed_node->og_groups)) {
+          $node->og_groups = $feed_node->og_groups;
+        }
+      }
+      break;
     case 'view':
       // Confirm we are actually on a page of relevance
       if (menu_get_object() === $node && !empty($node->field_date)) {
