@@ -883,7 +883,7 @@ function _atrium_strongarm() {
     'atrium-user_links' => 0,
     'atrium_calendar-mini' => 1,
     'atrium_casetracker-filters' => 0,
-    'atrium_shoutbox-shoutbox' => 1,
+    'atrium_shoutbox-shoutbox' => 0,
     'book-0' => 0,
     'casetracker-0' => 0,
     'comment-0' => 0,
