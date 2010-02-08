@@ -372,15 +372,6 @@ function _atrium_profile_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'feedapi_settings_profile';
-  $strongarm->value = array(
-    'enabled' => FALSE,
-  );
-
-  $export['feedapi_settings_profile'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'node_options_profile';
   $strongarm->value = array(
     '0' => 'status',

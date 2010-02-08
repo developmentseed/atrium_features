@@ -673,6 +673,8 @@ function _atrium_blog_views_default_views() {
   $handler->override_option('attachment_position', 'after');
   $handler->override_option('inherit_arguments', TRUE);
   $handler->override_option('inherit_exposed_filters', FALSE);
+  $handler->override_option('inherit_pager', FALSE);
+  $handler->override_option('render_pager', TRUE);
   $handler->override_option('displays', array(
     'block_2' => 'block_2',
     'default' => 0,
@@ -680,15 +682,15 @@ function _atrium_blog_views_default_views() {
     'block_1' => 0,
   ));
   $translatables['atrium_blog'] = array(
-    t('Defaults'),
-    t('Blog'),
-    t('Page'),
-    t('Block'),
     t('Archive'),
-    t('Feed'),
+    t('Block'),
+    t('Blog'),
     t('Blog teaser'),
-    t('more'),
     t('Blog teaser (list)'),
+    t('Defaults'),
+    t('Feed'),
+    t('Page'),
+    t('more'),
   );
 
   $views[$view->name] = $view;

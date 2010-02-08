@@ -317,6 +317,8 @@ function _atrium_profile_views_default_views() {
   $handler->override_option('attachment_position', 'after');
   $handler->override_option('inherit_arguments', TRUE);
   $handler->override_option('inherit_exposed_filters', FALSE);
+  $handler->override_option('inherit_pager', FALSE);
+  $handler->override_option('render_pager', TRUE);
   $handler->override_option('displays', array(
     'default' => 'default',
     'page_1' => 'page_1',
@@ -768,11 +770,11 @@ function _atrium_profile_views_default_views() {
   $handler->override_option('block_description', 'User\'s groups');
   $handler->override_option('block_caching', -1);
   $translatables['atrium_profile_blocks'] = array(
-    t('Defaults'),
     t('Activity'),
+    t('Defaults'),
+    t('Groups'),
     t('Recent activity'),
     t('User\'s activity'),
-    t('Groups'),
     t('User\'s groups'),
   );
 
