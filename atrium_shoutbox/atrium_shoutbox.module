@@ -6,11 +6,6 @@ include_once('atrium_shoutbox.features.inc');
  * Implementation of hook_help().
  */
 function atrium_shoutbox_help($path, $arg) {
-  // This is a reliable way to run on every page, but late in the stack.
-  if (variable_get('atrium_shoutbox_alert', FALSE)) {
-    atrium_shoutbox_alert();
-  }
-
   if (($path == 'help#atrium_shoutbox') || context_isset('context', 'spaces-shoutbox-og')) {
     $help = '';
     $help .= '<h3>'. t('Shoutbox') .'</h3>';
@@ -28,17 +23,36 @@ function atrium_shoutbox_help($path, $arg) {
  * Implementation of hook_menu()
  */
 function atrium_shoutbox_menu() {
-  $items = array();  
+  $items = array();
   $items['shoutbox'] = array(
     'title' => 'Shoutbox',
+    'title callback' => 'atrium_shoutbox_title',
     'description' => 'A simple shoutbox feature',
     'page callback' => 'atrium_shoutbox_page',
     'access callback' => 'spaces_access_feature',
     'access arguments' => array('view', 'atrium_shoutbox'),
     'type' => MENU_NORMAL_ITEM,
     'menu_name' => 'features',
+    'options' => array(
+      'fragment' => 'block-atrium_shoutbox-shoutbox',
+      'attributes' => array(
+        'id' => 'atrium-shoutbox-launcher',
+        'class' => 'palette-toggle'
+      ),
+    ),
   );
   return $items;
+}
+
+/**
+ * Shoutbox menu item title callback.
+ */
+function atrium_shoutbox_title($title) {
+  $title = t($title);
+  if (($shoutbox = atrium_shoutbox_get_shoutbox()) && !empty($shoutbox['count'])) {
+    $title .= " ({$shoutbox['count']})";
+  }
+  return $title;
 }
 
 /**
@@ -49,26 +63,16 @@ function atrium_shoutbox_block($op = 'list', $delta = 0) {
     case 'list':
       return array('shoutbox' => array('info' =>  t('Shoutbox')));
     case 'view':
-      if ($delta == 'shoutbox') {
-        $space = spaces_get_space();
-        if ($space->type === 'og') {
-          $shoutbox = atrium_shoutbox_active_space_shoutbox();
-          if (!$shoutbox) {
-            $shoutbox = atrium_shoutbox_create($space);
+      if ($delta == 'shoutbox' && spaces_access_feature('view', 'atrium_shoutbox') && !context_isset('context', 'spaces-shoutbox-og')) {
+        if ($shoutbox = atrium_shoutbox_get_shoutbox()) {
+          if (($space = spaces_get_space()) && $space->type === 'og') {
+            $link = l(t('Full view'), 'shoutbox');
+            $output = "{$shoutbox['rendered']}<div class='more-link'>$link</div>";
+            return array('subject' => filter_xss_admin($space->group->title), 'content' => $output);
           }
-          if ($shoutbox && node_access('view', $shoutbox)) {
-            return array(
-              'subject' => check_plain($shoutbox->title),
-              'content' => drupal_get_form('messaging_shoutbox_shoutform', $shoutbox, array('view' => 'atrium_shoutbox_shouts', 'display' => 'default', 'args' => array($shoutbox->nid))),
-            );
+          else {
+            return array('subject' => t('Shoutbox'), 'content' => $shoutbox['rendered']);
           }
-        }
-        else {
-          $view = views_get_view('atrium_shoutbox_shouts');
-          return array(
-            'subject' => t('Shoutbox'),
-            'content' => $view->execute_display('default'),
-          );
         }
       }
       break;
@@ -102,56 +106,83 @@ function atrium_shoutbox_context_links_alter(&$links) {
  * Page callback for spaces shoutbox feature.
  */
 function atrium_shoutbox_page() {
-  $shoutbox = atrium_shoutbox_active_space_shoutbox();
-  // Lazy instantiate a shoutbox if no shoutbox exists for this space.
-  if (!$shoutbox) {
-    $space = spaces_get_space();
-    $shoutbox = atrium_shoutbox_create($space);
+  $shoutbox = atrium_shoutbox_get_shoutbox();
+  if ($shoutbox && $shoutbox['node']) {
+    $rendered = views_embed_view('atrium_shoutbox_shouts', 'page_1', array($node->nid));
+    return drupal_get_form('messaging_shoutbox_shoutform', $shoutbox['node'], 'atrium_shoutbox_shouts', 'page_1', $rendered);
   }
-  if ($shoutbox && node_access('view', $shoutbox)) {
-    $output = drupal_get_form('messaging_shoutbox_shoutform', $shoutbox, array('view' => 'atrium_shoutbox_shouts', 'display' => 'page_1', 'args' => array($shoutbox->nid)));
-    return $output;
-  }
-
-  return '';
+  return $shoutbox ? $shoutbox['rendered'] : '';
 }
 
 /**
- * Helper function to retrieve and static cache the current active shoutbox for a space.
+ * Generate the shoutbox for the current space and/or situation along with user
+ * unread count calculations. This behaves as a singleton for the page load so
+ * that it can be used at several points (menu title callback, block, etc.).
  */
-function atrium_shoutbox_active_space_shoutbox($reset = FALSE) {
-  static $active_shoutbox;
-  if (!isset($active_shoutbox) || $reset) {
-    $active_shoutbox = FALSE;
-    if ($view = views_get_view('atrium_shoutbox')) {
-      $view->set_display();
-      $view->set_items_per_page(0);
-      $view->execute();
-      if (is_array($view->result) && count($view->result)) {
-        $node = node_load($view->result[0]->nid);
-        if ($node) {
-          $active_shoutbox = $node;
+function atrium_shoutbox_get_shoutbox($reset = FALSE) {
+  static $shoutbox;
+  if (!isset($shoutbox) || $reset) {
+    // Add shoutbox js and current server timestamp. Note that we don't
+    // use the client side timestamp (via JS) because the cookie timestamp
+    // is compared with shout times. We avoid bad client clocks and
+    // inconsistencies using this method.
+    drupal_add_js(drupal_get_path('module', 'admin') . '/includes/jquery.cookie.js');
+    drupal_add_js(drupal_get_path('module', 'atrium_shoutbox') . '/atrium_shoutbox.js');
+    drupal_add_js(array('atrium_shoutbox' => array('timestamp' => time())), 'setting');
+
+    $shoutbox = array();
+    $space = spaces_get_space();
+    if ($space->type === 'og') {
+      if ($view = views_get_view('atrium_shoutbox')) {
+        $view->set_display('default');
+        $view->execute();
+        if (is_array($view->result) && count($view->result)) {
+          $node = node_load($view->result[0]->nid);
+        }
+        else {
+          $node = (object) array(
+            'title' => $space->group->title,
+            'body' => '',
+            'name' => $space->group->name,
+            'type' => 'shoutbox',
+          );
+          node_save($node);
+        }
+        // Get the view and pass it to the form, as we will want access to the
+        // raw view resultset ourselves.
+        if (node_access('view', $node) && $view = views_get_view('atrium_shoutbox_shouts')) {
+          $shoutbox['node'] = $node;
+          $shoutbox['view'] = $view;
+          $shoutbox['rendered'] = drupal_get_form('messaging_shoutbox_shoutform', $node, $view->name, 'default', $view->execute_display('default', array($node->nid)));
+        }
+      }
+    }
+    else {
+      $view = views_get_view('atrium_shoutbox_shouts');
+      $shoutbox['node'] = FALSE;
+      $shoutbox['view'] = $view;
+      $shoutbox['rendered'] = $view->execute_display('default');
+    }
+
+    // Gather count of unread shouts for the current user..
+    if (!empty($shoutbox)) {
+      global $user;
+      $shoutbox['count'] = 0;
+      if (!empty($shoutbox['view']->result) && !empty($_REQUEST['AtriumShoutbox'])) {
+        $user_last_viewed = $_REQUEST['AtriumShoutbox'];
+        foreach ($shoutbox['view']->result as $row) {
+          // Only tally shouts that occurred after this user's last view.
+          // The user's shouts don't count.
+          if (
+            isset($row->comments_timestamp, $row->comments_uid) &&
+            $row->comments_timestamp >= $user_last_viewed &&
+            $row->comments_uid !== $user->uid
+          ) {
+            $shoutbox['count']++;
+          }
         }
       }
     }
   }
-  return $active_shoutbox;
-}
-
-/**
- * Create a shoutbox for the provided OG space. 
- */
-function atrium_shoutbox_create($space) {
-  if ($space->type === 'og') {
-    $form_state = array();
-    module_load_include('inc', 'node', 'node.pages');
-    $node = array('type' => 'shoutbox');
-    $form_state['values']['title'] = $space->group->title;
-    $form_state['values']['body'] = '';
-    $form_state['values']['name'] = $space->group->name;
-    $form_state['values']['op'] = t('Save');
-    drupal_execute('shoutbox_node_form', $form_state, (object) $node);
-    return atrium_shoutbox_active_space_shoutbox(TRUE);
-  }
-  return false;
+  return $shoutbox;
 }

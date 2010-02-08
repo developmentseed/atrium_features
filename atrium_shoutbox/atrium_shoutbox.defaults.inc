@@ -8,7 +8,34 @@ function _atrium_shoutbox_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'spaces-shoutbox-og';
+  $context->name = 'atrium-shoutbox';
+  $context->description = '';
+  $context->tag = 'Shoutbox';
+  $context->conditions = array(
+    'sitewide' => array(
+      'values' => array(
+        '1' => 1,
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'atrium_shoutbox-shoutbox' => array(
+          'module' => 'atrium_shoutbox',
+          'delta' => 'shoutbox',
+          'region' => 'palette',
+          'weight' => 0,
+        ),
+      ),
+    ),
+  );
+
+  $export['atrium-shoutbox'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'atrium-shoutbox-og';
   $context->description = '';
   $context->tag = 'Shoutbox';
   $context->conditions = array(
@@ -37,34 +64,7 @@ function _atrium_shoutbox_context_default_contexts() {
     ),
   );
 
-  $export['spaces-shoutbox-og'] = $context;
-  $context = new stdClass;
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
-  $context->name = 'spaces-shoutbox-user';
-  $context->description = '';
-  $context->tag = 'Shoutbox';
-  $context->conditions = array(
-    'views' => array(
-      'values' => array(
-        'atrium_shoutbox_shouts:page_2' => 'atrium_shoutbox_shouts:page_2',
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'views-584a7dacb1e0f4c880cbacb19e2d0e93' => array(
-          'module' => 'views',
-          'delta' => '584a7dacb1e0f4c880cbacb19e2d0e93',
-          'region' => 'right',
-          'weight' => 0,
-        ),
-      ),
-    ),
-  );
-
-  $export['spaces-shoutbox-user'] = $context;
+  $export['atrium-shoutbox-og'] = $context;
   return $export;
 }
 

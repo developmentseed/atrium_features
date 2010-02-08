@@ -300,28 +300,6 @@ function _atrium_shoutbox_views_default_views() {
         'button' => 'Override',
       ),
     ),
-    'comment' => array(
-      'operator' => 'contains',
-      'value' => '',
-      'group' => '0',
-      'exposed' => TRUE,
-      'expose' => array(
-        'use_operator' => 0,
-        'operator' => 'comment_op',
-        'identifier' => 'comment',
-        'label' => 'Search',
-        'optional' => 1,
-        'remember' => 0,
-      ),
-      'case' => 0,
-      'id' => 'comment',
-      'table' => 'comments',
-      'field' => 'comment',
-      'override' => array(
-        'button' => 'Override',
-      ),
-      'relationship' => 'none',
-    ),
     'timestamp' => array(
       'operator' => '>=',
       'value' => array(
@@ -461,6 +439,116 @@ function _atrium_shoutbox_views_default_views() {
       'id' => 'comment',
       'table' => 'comments',
       'field' => 'comment',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('filters', array(
+    'current' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'current',
+      'table' => 'spaces',
+      'field' => 'current',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'nid',
+    ),
+    'nid' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'nid',
+      'table' => 'node_access',
+      'field' => 'nid',
+      'relationship' => 'nid',
+    ),
+    'status' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'relationship' => 'nid',
+      'override' => array(
+        'button' => 'Override',
+      ),
+    ),
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'shoutbox' => 'shoutbox',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'relationship' => 'nid',
+      'override' => array(
+        'button' => 'Override',
+      ),
+    ),
+    'comment' => array(
+      'operator' => 'contains',
+      'value' => '',
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'comment_op',
+        'identifier' => 'comment',
+        'label' => 'Search',
+        'optional' => 1,
+        'remember' => 0,
+      ),
+      'case' => 0,
+      'id' => 'comment',
+      'table' => 'comments',
+      'field' => 'comment',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'timestamp' => array(
+      'operator' => '>=',
+      'value' => array(
+        'type' => 'offset',
+        'value' => '-1 year',
+        'min' => '',
+        'max' => '',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'timestamp',
+      'table' => 'comments',
+      'field' => 'timestamp',
       'relationship' => 'none',
     ),
   ));
@@ -709,10 +797,10 @@ function _atrium_shoutbox_views_default_views() {
     'weight' => 0,
   ));
   $translatables['atrium_shoutbox_shouts'] = array(
+    t('Admin'),
     t('Defaults'),
     t('Shoutbox'),
     t('Shoutbox (admin)'),
-    t('Admin'),
   );
 
   $views[$view->name] = $view;
@@ -805,8 +893,8 @@ function _atrium_shoutbox_views_default_views() {
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
   $translatables['atrium_shoutbox_users'] = array(
-    t('Defaults'),
     t('Block'),
+    t('Defaults'),
     t('Members'),
   );
 
