@@ -48,10 +48,10 @@ function atrium_update_6003() {
  */
 function atrium_update_6004() {
   $return = array();
-  drupal_install_modules(array('designkit', 'jquery_ui', 'context_layouts', 'spaces_dashboard'));
+  drupal_install_modules(array('designkit', 'jquery_ui', 'context_ui', 'context_layouts', 'spaces_dashboard'));
   $return[] = array(
     'success' => true,
-    'query' => 'Installed designkit, jquery_ui, context_layouts and spaces_dashboard modules'
+    'query' => 'Installed designkit, jquery_ui, context_layouts context_ui and spaces_dashboard modules.'
   );
   return $return;
 }
