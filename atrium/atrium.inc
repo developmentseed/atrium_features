@@ -23,6 +23,26 @@ function _atrium_form_comment_form_alter(&$form, $form_state) {
 function _atrium_form_node_form_alter(&$form, $form_state) {
   $node = $form['#node'];
 
+  // Path alias UI adjustments.
+  // Ideally this would live in PURL, but PURL is weighted too light for this
+  // form_alter() which must occur after path.
+  if (module_exists('path')) {
+    $space = spaces_get_space();
+    if ($space && $space->type === 'og' && isset($form['path']['path'])) {
+      switch (variable_get('purl_method_spaces_og', 'path')) {
+        case 'path':
+          $form['path']['path']['#size'] = '28';
+          $form['path']['path']['#field_prefix'] = "{$space->group->purl}/";
+          break;
+        case 'pair':
+          $key = variable_get('purl_method_spaces_og_key', FALSE);
+          $form['path']['path']['#size'] = '28';
+          $form['path']['path']['#field_prefix'] = "{$key}/{$space->id}/";
+          break;
+      }
+    }
+  }
+
   // Book mods
   if ($form['#id'] == 'node-form' && book_type_is_allowed($form['#node']->type)) {
     $node = $form['#node'];
