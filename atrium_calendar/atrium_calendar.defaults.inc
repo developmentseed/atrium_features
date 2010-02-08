@@ -46,17 +46,17 @@ function _atrium_calendar_content_default_fields() {
     'default_format' => 'long',
     'widget' => array(
       'default_value' => 'blank',
-      'default_value_code' => '',
+      'default_value_custom' => '',
       'default_value2' => 'same',
-      'default_value_code2' => '',
+      'default_value_custom2' => '',
       'input_format' => 'm/d/Y - g:ia',
       'input_format_custom' => '',
       'increment' => '1',
       'text_parts' => array(),
       'year_range' => '-3:+3',
+      'default_value_code' => '',
+      'default_value_code2' => '',
       'label_position' => 'above',
-      'default_value_custom' => '',
-      'default_value_custom2' => '',
       'label' => 'Date',
       'weight' => '-3',
       'description' => '',
@@ -221,9 +221,80 @@ function _atrium_calendar_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
+  else if ($module == "feeds" && $api == "feeds_importer_default") {
+    return array("version" => 1);
+  }
   else if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => 1);
   }
+}
+
+/**
+ * Helper to implementation of hook_feeds_importer_default().
+ */
+function _atrium_calendar_feeds_importer_default() {
+  $export = array();
+  $feeds_importer = new stdClass;
+  $feeds_importer->disabled = FALSE; /* Edit this to true to make a default feeds_importer disabled initially */
+  $feeds_importer->api_version = 1;
+  $feeds_importer->id = 'atrium_calendar_ical_feed';
+  $feeds_importer->config = array(
+    'name' => 'iCal feed',
+    'description' => 'Importer for iCal feeds.',
+    'fetcher' => array(
+      'plugin_key' => 'FeedsHTTPFetcher',
+      'config' => array(
+        'auto_detect_feeds' => FALSE,
+      ),
+    ),
+    'parser' => array(
+      'plugin_key' => 'ParserIcalFeedsParser',
+      'config' => array(),
+    ),
+    'processor' => array(
+      'plugin_key' => 'FeedsNodeProcessor',
+      'config' => array(
+        'content_type' => 'feed_ical_item',
+        'update_existing' => 1,
+        'expire' => '-1',
+        'mappings' => array(
+          '0' => array(
+            'source' => 'ical_date',
+            'target' => 'field_date:start',
+            'unique' => FALSE,
+          ),
+          '1' => array(
+            'source' => 'ical_date',
+            'target' => 'field_date:end',
+            'unique' => FALSE,
+          ),
+          '2' => array(
+            'source' => 'title',
+            'target' => 'title',
+            'unique' => FALSE,
+          ),
+          '3' => array(
+            'source' => 'description',
+            'target' => 'body',
+            'unique' => FALSE,
+          ),
+          '4' => array(
+            'source' => 'timestamp',
+            'target' => 'created',
+            'unique' => FALSE,
+          ),
+        ),
+      ),
+    ),
+    'content_type' => 'feed_ical',
+    'update' => 0,
+    'import_period' => '1800',
+    'expire_period' => 3600,
+    'import_on_create' => 1,
+  );
+
+  $export['atrium_calendar_ical_feed'] = $feeds_importer;
+  return $export;
 }
 
 /**
@@ -385,126 +456,6 @@ function _atrium_calendar_strongarm() {
   $strongarm->value = '0';
 
   $export['comment_feed_ical_item'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'feedapi_mapper_mapping_feed_ical';
-  $strongarm->value = array(
-    'a:2:{i:0;s:7:"options";i:1;s:6:"VEVENT";}' => 'a:3:{i:0;s:4:"date";i:1;s:10:"field_date";i:2;s:4:"ical";}',
-  );
-
-  $export['feedapi_mapper_mapping_feed_ical'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'feedapi_settings_event';
-  $strongarm->value = array(
-    'enabled' => 0,
-    'upload_method' => 'url',
-    'refresh_on_create' => 0,
-    'update_existing' => 1,
-    'refresh_time' => '1800',
-    'items_delete' => '0',
-    'parsers' => array(
-      'parser_ical' => array(
-        'enabled' => 0,
-        'weight' => '0',
-      ),
-    ),
-    'processors' => array(
-      'feedapi_node' => array(
-        'enabled' => 0,
-        'weight' => '0',
-        'content_type' => 'blog',
-        'input_format' => '4',
-        'node_date' => 'feed',
-        'x_dedupe' => '0',
-      ),
-      'feedapi_inherit' => array(
-        'enabled' => 0,
-        'weight' => '0',
-        'inherit_og' => 1,
-        'inherit_taxonomy' => 1,
-        'inherit_author' => 1,
-      ),
-    ),
-  );
-
-  $export['feedapi_settings_event'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'feedapi_settings_feed_ical';
-  $strongarm->value = array(
-    'enabled' => 1,
-    'upload_method' => 'url',
-    'refresh_on_create' => 1,
-    'update_existing' => 1,
-    'refresh_time' => '1800',
-    'items_delete' => '0',
-    'parsers' => array(
-      'parser_ical' => array(
-        'enabled' => 1,
-        'weight' => '0',
-      ),
-    ),
-    'processors' => array(
-      'feedapi_node' => array(
-        'enabled' => 1,
-        'weight' => '-5',
-        'content_type' => 'feed_ical_item',
-        'input_format' => '4',
-        'node_date' => 'feed',
-        'x_dedupe' => '1',
-      ),
-      'feedapi_inherit' => array(
-        'enabled' => 1,
-        'weight' => '0',
-        'inherit_og' => 1,
-        'inherit_taxonomy' => 1,
-        'inherit_author' => 1,
-      ),
-    ),
-  );
-
-  $export['feedapi_settings_feed_ical'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'feedapi_settings_feed_ical_item';
-  $strongarm->value = array(
-    'enabled' => 0,
-    'upload_method' => 'url',
-    'refresh_on_create' => 0,
-    'update_existing' => 1,
-    'refresh_time' => '1800',
-    'items_delete' => '0',
-    'parsers' => array(
-      'parser_ical' => array(
-        'enabled' => 0,
-        'weight' => '0',
-      ),
-    ),
-    'processors' => array(
-      'feedapi_node' => array(
-        'enabled' => 0,
-        'weight' => '0',
-        'content_type' => 'blog',
-        'input_format' => '4',
-        'node_date' => 'feed',
-        'x_dedupe' => '0',
-      ),
-      'feedapi_inherit' => array(
-        'enabled' => 0,
-        'weight' => '0',
-        'inherit_og' => 1,
-        'inherit_taxonomy' => 1,
-        'inherit_author' => 1,
-      ),
-    ),
-  );
-
-  $export['feedapi_settings_feed_ical_item'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;

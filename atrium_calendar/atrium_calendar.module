@@ -45,13 +45,6 @@ function atrium_calendar_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_feedapi_mapper_elements().
- */
-function atrium_calendar_feedapi_mapper_elements() {
-  return array(array('options', 'VEVENT'));
-}
-
-/**
  * Implementation of hook_context_links_alter().
  * Removes ical event items from node links.
  */
