@@ -78,6 +78,7 @@ function _atrium_context_default_contexts() {
       ),
     ),
   );
+  $context->condition_mode = 0;
 
   $export['atrium-intranet-global'] = $context;
   $context = new stdClass;
@@ -105,6 +106,7 @@ function _atrium_context_default_contexts() {
       ),
     ),
   );
+  $context->condition_mode = 0;
 
   $export['atrium-section-taxonomy'] = $context;
   $context = new stdClass;
@@ -120,6 +122,7 @@ function _atrium_context_default_contexts() {
       'layout' => 'login',
     ),
   );
+  $context->condition_mode = 0;
 
   $export['layout_login'] = $context;
   $context = new stdClass;
@@ -146,6 +149,7 @@ function _atrium_context_default_contexts() {
       'layout' => 'wide',
     ),
   );
+  $context->condition_mode = 0;
 
   $export['layout_wide'] = $context;
   $context = new stdClass;
@@ -173,6 +177,7 @@ function _atrium_context_default_contexts() {
       ),
     ),
   );
+  $context->condition_mode = 0;
 
   $export['spaces_dashboard-custom-1'] = $context;
   return $export;
@@ -844,6 +849,17 @@ function _atrium_strongarm() {
   $strongarm->value = 'welcome';
 
   $export['site_frontpage'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'space_menu_items';
+  $strongarm->value = array(
+    'dashboard' => -20,
+    'og' => -19,
+    'members' => -18,
+  );
+
+  $export['space_menu_items'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
