@@ -204,7 +204,7 @@ function atrium_update_6010() {
 function atrium_update_6011() {
   $return = array();
   if (db_table_exists('spaces_overrides')) {
-    $return[] = update_sql("DELETE from {spaces_overrides} where object_id = 'space_menu_items' and type = 'user'");
+    $return[] = update_sql("DELETE FROM {spaces_overrides} WHERE object_type = 'variable' AND object_id = 'space_menu_items' AND type = 'user'");
   }
   else {
     $return['#abort'] = array('success' => TRUE, 'query' => 'Spaces 3 update scripts must be run first.');
