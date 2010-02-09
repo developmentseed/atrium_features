@@ -21,6 +21,7 @@ function _atrium_groups_context_default_contexts() {
   $context->reactions = array(
     'menu' => 'og',
   );
+  $context->condition_mode = 0;
 
   $export['spaces-feature-groups'] = $context;
   return $export;
@@ -85,6 +86,8 @@ function _atrium_groups_spaces_presets() {
         'atrium_book' => '1',
         'atrium_calendar' => '0',
         'atrium_casetracker' => '0',
+        'atrium_members' => '1',
+        'atrium_shoutbox' => '0',
         'spaces_dashboard' => '1',
       ),
       'spaces_dashboard_custom' => array(
@@ -99,6 +102,15 @@ function _atrium_groups_spaces_presets() {
         'background' => '#3399aa',
       ),
       'site_frontpage' => 'dashboard',
+      'space_menu_items' => array(
+        'dashboard' => -20,
+        'blog' => -19,
+        'notebook' => -18,
+        'casetracker' => -17,
+        'shoutbox' => -16,
+        'calendar' => -15,
+        'members' => -14,
+      ),
     ),
     'context' => array(
       'spaces_dashboard-custom-1:reaction:block' => array(
@@ -132,6 +144,10 @@ function _atrium_groups_spaces_presets() {
     ),
   );
 
+$translatables['atrium_og_private'] = array(
+    t('A private group is accessible only to users added to that group by one of the group\'s managers.'),
+    t('Private group'),
+);
   $export['atrium_og_private'] = $spaces_presets;
   $spaces_presets = new stdClass;
   $spaces_presets->disabled = FALSE; /* Edit this to true to make a default spaces_presets disabled initially */
@@ -147,6 +163,8 @@ function _atrium_groups_spaces_presets() {
         'atrium_book' => '1',
         'atrium_calendar' => '0',
         'atrium_casetracker' => '0',
+        'atrium_members' => '1',
+        'atrium_shoutbox' => '0',
         'spaces_dashboard' => '1',
       ),
       'site_frontpage' => 'dashboard',
@@ -159,6 +177,15 @@ function _atrium_groups_spaces_presets() {
       'spaces_og_private' => 0,
       'designkit_color' => array(
         'background' => '#3399aa',
+      ),
+      'space_menu_items' => array(
+        'dashboard' => -20,
+        'blog' => -19,
+        'notebook' => -18,
+        'casetracker' => -17,
+        'shoutbox' => -16,
+        'calendar' => -15,
+        'members' => -14,
       ),
     ),
     'context' => array(
@@ -193,6 +220,10 @@ function _atrium_groups_spaces_presets() {
     ),
   );
 
+$translatables['atrium_og_public'] = array(
+    t('A public group is accessible to all users on the site. Users can join and leave public groups freely.'),
+    t('Public group'),
+);
   $export['atrium_og_public'] = $spaces_presets;
   return $export;
 }
