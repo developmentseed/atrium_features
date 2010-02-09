@@ -198,3 +198,16 @@ function atrium_update_6010() {
   return $return;
 }
 
+/**
+ * 6011: Remove userspace menu customizations.
+ */
+function atrium_update_6011() {
+  $return = array();
+  if (db_table_exists('spaces_overrides')) {
+    $return[] = update_sql("DELETE from {spaces_overrides} where object_id = 'space_menu_items' and type = 'user'");
+  }
+  else {
+    $return['#abort'] = array('success' => TRUE, 'query' => 'Spaces 3 update scripts must be run first.');
+  }
+  return $return;
+}
