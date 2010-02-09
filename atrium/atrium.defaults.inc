@@ -80,6 +80,10 @@ function _atrium_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
+  $translatables['atrium-intranet-global'] = array(
+    t('Intranet'),
+  );
+
   $export['atrium-intranet-global'] = $context;
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
@@ -108,6 +112,10 @@ function _atrium_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
+  $translatables['atrium-section-taxonomy'] = array(
+    t('Intranet'),
+  );
+
   $export['atrium-section-taxonomy'] = $context;
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
@@ -123,6 +131,10 @@ function _atrium_context_default_contexts() {
     ),
   );
   $context->condition_mode = 0;
+
+  $translatables['layout_login'] = array(
+    t('Theme'),
+  );
 
   $export['layout_login'] = $context;
   $context = new stdClass;
@@ -151,6 +163,10 @@ function _atrium_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
+  $translatables['layout_wide'] = array(
+    t('Theme'),
+  );
+
   $export['layout_wide'] = $context;
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
@@ -178,6 +194,11 @@ function _atrium_context_default_contexts() {
     ),
   );
   $context->condition_mode = 0;
+
+  $translatables['spaces_dashboard-custom-1'] = array(
+    t('Dashboard'),
+    t('Dashboard'),
+  );
 
   $export['spaces_dashboard-custom-1'] = $context;
   return $export;

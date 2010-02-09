@@ -30,6 +30,11 @@ function _atrium_members_context_default_contexts() {
       ),
     ),
   );
+  $context->condition_mode = 0;
+
+  $translatables['atrium-members-directory'] = array(
+    t('Members'),
+  );
 
   $export['atrium-members-directory'] = $context;
   $context = new stdClass;
@@ -53,6 +58,11 @@ function _atrium_members_context_default_contexts() {
   );
   $context->reactions = array(
     'menu' => 'members',
+  );
+  $context->condition_mode = 0;
+
+  $translatables['spaces-feature-members'] = array(
+    t('Members'),
   );
 
   $export['spaces-feature-members'] = $context;
@@ -190,6 +200,10 @@ function _atrium_members_spaces_presets() {
     ),
   );
 
+  $translatables['atrium_user_simple'] = array(
+    t('A simple profile with a blog, calendar and dashboard.'),
+    t('Simple profile'),
+  );
   $export['atrium_user_simple'] = $spaces_presets;
   return $export;
 }

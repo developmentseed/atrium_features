@@ -23,6 +23,10 @@ function _atrium_groups_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
+  $translatables['spaces-feature-groups'] = array(
+    t('Groups'),
+  );
+
   $export['spaces-feature-groups'] = $context;
   return $export;
 }
@@ -144,10 +148,10 @@ function _atrium_groups_spaces_presets() {
     ),
   );
 
-$translatables['atrium_og_private'] = array(
+  $translatables['atrium_og_private'] = array(
     t('A private group is accessible only to users added to that group by one of the group\'s managers.'),
     t('Private group'),
-);
+  );
   $export['atrium_og_private'] = $spaces_presets;
   $spaces_presets = new stdClass;
   $spaces_presets->disabled = FALSE; /* Edit this to true to make a default spaces_presets disabled initially */
@@ -220,10 +224,10 @@ $translatables['atrium_og_private'] = array(
     ),
   );
 
-$translatables['atrium_og_public'] = array(
+  $translatables['atrium_og_public'] = array(
     t('A public group is accessible to all users on the site. Users can join and leave public groups freely.'),
     t('Public group'),
-);
+  );
   $export['atrium_og_public'] = $spaces_presets;
   return $export;
 }

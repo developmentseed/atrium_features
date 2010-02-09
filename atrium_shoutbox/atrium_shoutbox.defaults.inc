@@ -30,6 +30,11 @@ function _atrium_shoutbox_context_default_contexts() {
       ),
     ),
   );
+  $context->condition_mode = 0;
+
+  $translatables['atrium-shoutbox'] = array(
+    t('Shoutbox'),
+  );
 
   $export['atrium-shoutbox'] = $context;
   $context = new stdClass;
@@ -62,6 +67,11 @@ function _atrium_shoutbox_context_default_contexts() {
         ),
       ),
     ),
+  );
+  $context->condition_mode = 0;
+
+  $translatables['atrium-shoutbox-og'] = array(
+    t('Shoutbox'),
   );
 
   $export['atrium-shoutbox-og'] = $context;

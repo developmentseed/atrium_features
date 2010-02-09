@@ -40,6 +40,11 @@ function _atrium_casetracker_context_default_contexts() {
     ),
     'menu' => 'casetracker',
   );
+  $context->condition_mode = 0;
+
+  $translatables['atrium-casetracker-book'] = array(
+    t('Casetracker'),
+  );
 
   $export['atrium-casetracker-book'] = $context;
   $context = new stdClass;
@@ -69,6 +74,11 @@ function _atrium_casetracker_context_default_contexts() {
         ),
       ),
     ),
+  );
+  $context->condition_mode = 0;
+
+  $translatables['atrium-casetracker-project'] = array(
+    t('Casetracker'),
   );
 
   $export['atrium-casetracker-project'] = $context;
@@ -119,6 +129,11 @@ function _atrium_casetracker_context_default_contexts() {
       ),
     ),
     'menu' => 'casetracker',
+  );
+  $context->condition_mode = 0;
+
+  $translatables['spaces-feature-casetracker'] = array(
+    t('Casetracker'),
   );
 
   $export['spaces-feature-casetracker'] = $context;

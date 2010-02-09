@@ -50,8 +50,6 @@ function _atrium_blog_content_default_fields() {
     'advanced_view' => '--',
     'advanced_view_args' => '',
     'widget' => array(
-      'autocomplete_match' => 'contains',
-      'size' => NULL,
       'default_value' => array(
         '0' => array(
           'nid' => NULL,
@@ -59,6 +57,8 @@ function _atrium_blog_content_default_fields() {
         ),
       ),
       'default_value_php' => NULL,
+      'autocomplete_match' => 'contains',
+      'size' => NULL,
       'label' => 'Referenced Page',
       'weight' => 0,
       'description' => 'Type in the title of another post to add a reference.',
@@ -113,6 +113,11 @@ function _atrium_blog_context_default_contexts() {
       ),
     ),
     'menu' => 'blog',
+  );
+  $context->condition_mode = 0;
+
+  $translatables['spaces-feature-blog'] = array(
+    t('Blog'),
   );
 
   $export['spaces-feature-blog'] = $context;

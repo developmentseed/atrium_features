@@ -45,6 +45,11 @@ function _atrium_book_context_default_contexts() {
     ),
     'menu' => 'notebook',
   );
+  $context->condition_mode = 0;
+
+  $translatables['spaces-feature-book'] = array(
+    t('Book'),
+  );
 
   $export['spaces-feature-book'] = $context;
   return $export;

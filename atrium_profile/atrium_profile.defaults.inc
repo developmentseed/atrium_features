@@ -277,6 +277,11 @@ function _atrium_profile_context_default_contexts() {
       ),
     ),
   );
+  $context->condition_mode = 0;
+
+  $translatables['atrium_profile'] = array(
+    t('Profile'),
+  );
 
   $export['atrium_profile'] = $context;
   return $export;

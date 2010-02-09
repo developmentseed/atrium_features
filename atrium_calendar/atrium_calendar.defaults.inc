@@ -165,6 +165,11 @@ function _atrium_calendar_context_default_contexts() {
       ),
     ),
   );
+  $context->condition_mode = 0;
+
+  $translatables['atrium-calendar-event'] = array(
+    t('Calendar'),
+  );
 
   $export['atrium-calendar-event'] = $context;
   $context = new stdClass;
@@ -205,6 +210,11 @@ function _atrium_calendar_context_default_contexts() {
       ),
     ),
     'menu' => 'calendar',
+  );
+  $context->condition_mode = 0;
+
+  $translatables['spaces-feature-calendar'] = array(
+    t('Calendar'),
   );
 
   $export['spaces-feature-calendar'] = $context;
