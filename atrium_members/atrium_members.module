@@ -142,12 +142,15 @@ function atrium_members_context_links_alter(&$links) {
 }
 
 /**
- * Implementation of hook_context_page_reaction().
+ * Implementation of hook_context_page_condition().
  * Good occasion to set the breadcrumb.
  */
-function atrium_members_context_page_reaction() {
+function atrium_members_context_page_condition() {
   $space = spaces_get_space();
   if ($space->type == 'user') {
+    // Set the members context.
+    context_set('context', 'spaces-feature-members', context_load('spaces-feature-members'));
+
     $breadcrumb = array(l(t('Home'), '<front>'));
     $item = menu_get_item('members');
     if ($item['access']) {
