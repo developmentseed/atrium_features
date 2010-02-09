@@ -249,23 +249,27 @@ function atrium_views_query_alter(&$view, &$query) {
     $subquery = strtr($subquery->query(), array('***ATRIUM_ACTIVITY_TIMESTAMP***' => 'node.changed'));
 
     // Main: Retrieve "only" comments.
+    $main->distinct = FALSE;
+
     // Switch LEFT to INNER JOIN against comments table.
     if (isset($main->table_queue['comments']['join'])) {
       $main->table_queue['comments']['join']->type = 'INNER';
     }
-    // Alter joins to the user table should go through comments, move node and
-    // comment to the beginning of the stack to ensure that order.
-    if (isset($main->table_queue['users']['join'])) {
-      $queue = array(
-        'node' => $main->table_queue['node'],
-        'comments' => $main->table_queue['comments'],
-      );
-      foreach ($main->table_queue as $k => $v) {
-        if (($k !== 'node') && ($k !== 'comments')) {
-          $queue[$k] = $v;
-        }
+    // Move node and comment to the beginning of the stack to ensure that any
+    // joins we switch further on in the stack have access to comments table.
+    $queue = array(
+      'node' => $main->table_queue['node'],
+      'comments' => $main->table_queue['comments'],
+    );
+    foreach ($main->table_queue as $k => $v) {
+      if (($k !== 'node') && ($k !== 'comments')) {
+        $queue[$k] = $v;
       }
-      $main->table_queue = $queue;
+    }
+    $main->table_queue = $queue;
+    // Alter join to the user table to go through comments,
+    if (isset($main->table_queue['users']['join'])) {
+      $main->table_queue['users']['join']->left_table = 'comments';
     }
     // Alter joins to the upload, files tables to go through comment_upload instead.
     if (isset($main->table_queue['upload']['join'])) {
