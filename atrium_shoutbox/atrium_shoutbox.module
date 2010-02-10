@@ -120,6 +120,11 @@ function atrium_shoutbox_page() {
  * that it can be used at several points (menu title callback, block, etc.).
  */
 function atrium_shoutbox_get_shoutbox($reset = FALSE) {
+  // Admin killswitch.
+  if (arg(0) === 'admin') {
+    return FALSE;
+  }
+
   static $shoutbox;
   if (!isset($shoutbox) || $reset) {
     // Add shoutbox js and current server timestamp. Note that we don't
