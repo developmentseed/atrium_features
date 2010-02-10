@@ -49,7 +49,7 @@ class AtriumMembersTest extends AtriumWebTestCase {
     $this->drupalLogin($this->atriumUsers['admin']);
     $this->drupalPost('features', array('atrium_members' => ATRIUM_MEMBERS_GROUP), 'Save configuration');
 
-    foreach (array('admin', 'manager') as $role) {
+    foreach (array('admin', 'manager', 'user') as $role) {
       $this->drupalLogin($this->atriumUsers[$role]);
       $this->drupalGet('members');
       foreach ($this->atriumUsers as $account2) {
@@ -57,16 +57,15 @@ class AtriumMembersTest extends AtriumWebTestCase {
       }
     }
 
-    $this->drupalLogin($this->atriumUsers['user']);
-    $this->drupalGet('members');
-    $this->assertText($this->atriumUsers['user']->name);
-    $this->assertNoText($this->atriumUsers['admin']->name);
-    $this->assertNoText($this->atriumUsers['manager']->name);
+    // Create a new group and users within that group. They should be able to
+    // see each other and 'admin' (the group administrator) but not other
+    // non-member users.
+    $this->drupalLogin($this->atriumUsers['admin']);
+    $private = $this->atriumCreateGroup('atrium_og_private');
 
-    // Create users within a group. They should be able to see each other and
-    // 'admin' (the group administrator) but not other non-member users.
-    $this->atriumUsers['group_user1'] = $this->atriumCreateUser('user', array($this->atriumGroups['public']));
-    $this->atriumUsers['group_user2'] = $this->atriumCreateUser('user', array($this->atriumGroups['public']));
+    $this->atriumUsers['group_user1'] = $this->atriumCreateUser('user', array($private));
+    $this->atriumUsers['group_user2'] = $this->atriumCreateUser('user', array($private));
+
     $this->drupalLogin($this->atriumUsers['group_user1']);
     $this->drupalGet('members');
     $this->assertText($this->atriumUsers['group_user1']->name);
