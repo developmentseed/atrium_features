@@ -19,7 +19,7 @@ define('ATRIUM_MEMBERS_GROUP', 1);
 function atrium_init() {
   // Alert the user that they are browsing an archived group.
   $space = spaces_get_space();
-  if ($space && $space->type === 'og' && !$space->group->status) {
+  if ($space && $space->type === 'og' && !$space->group->status && empty($_POST)) {
     drupal_set_message(atrium_archived_message($space->group), 'status', FALSE);
   }
 }

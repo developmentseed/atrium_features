@@ -237,7 +237,12 @@ function atrium_archive_submit($form, &$form_state) {
   $node->status = 0;
   node_save($node);
   drupal_set_message(t('The @type @title has been archived.', array('@type' => node_get_types('name', $node->type), '@title' => $node->title)));
-  purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $nid)));
+  if (og_is_group_type($node->type)) {
+    purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $nid)));
+  }
+  else {
+    $form_state['redirect'] = "node/$nid";
+  }
 }
 
 /**
@@ -260,7 +265,12 @@ function atrium_reactivate_submit($form, &$form_state) {
   $node->status = 1;
   node_save($node);
   drupal_set_message(t('The @type @title has been reactivated.', array('@type' => node_get_types('name', $node->type), '@title' => $node->title)));
-  purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $nid)));
+  if (og_is_group_type($node->type)) {
+    purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $nid)));
+  }
+  else {
+    $form_state['redirect'] = "node/$nid";
+  }
 }
 
 /**
