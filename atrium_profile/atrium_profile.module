@@ -6,6 +6,11 @@ include_once('atrium_profile.features.inc');
  * Implementation of hook_menu_alter().
  */
 function atrium_profile_menu_alter(&$items) {
+  // Remove node/add/profile as a suitable alternative is provided by
+  // content_profile.
+  if (isset($items['node/add/profile'])) {
+    unset($items['node/add/profile']);
+  }
   if (isset($items['user/%user/view'])) {
     $items['user/%user/view']['title'] = t('Profile');
   }
