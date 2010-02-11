@@ -107,23 +107,6 @@ function _atrium_casetracker_views_default_views() {
       'relationship' => 'none',
     ),
   ));
-  $handler->override_option('sorts', array(
-    'case_status_id' => array(
-      'order' => 'ASC',
-      'id' => 'case_status_id',
-      'table' => 'casetracker_case',
-      'field' => 'case_status_id',
-      'relationship' => 'none',
-    ),
-    'last_updated' => array(
-      'order' => 'DESC',
-      'granularity' => 'second',
-      'id' => 'last_updated',
-      'table' => 'node_comment_statistics',
-      'field' => 'last_updated',
-      'relationship' => 'none',
-    ),
-  ));
   $handler->override_option('filters', array(
     'case' => array(
       'operator' => '=',
@@ -350,7 +333,7 @@ function _atrium_casetracker_views_default_views() {
         'separator' => '',
       ),
     ),
-    'default' => '-1',
+    'default' => 'last_updated',
   ));
   $handler = $view->new_display('page', 'All cases', 'page_1');
   $handler->override_option('filters', array(
@@ -1157,6 +1140,19 @@ function _atrium_casetracker_views_default_views() {
       'relationship' => 'none',
     ),
   ));
+  $handler->override_option('sorts', array(
+    'last_updated' => array(
+      'order' => 'DESC',
+      'granularity' => 'second',
+      'id' => 'last_updated',
+      'table' => 'node_comment_statistics',
+      'field' => 'last_updated',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
   $handler->override_option('filters', array(
     'assign_to' => array(
       'operator' => 'or',
@@ -1387,6 +1383,19 @@ function _atrium_casetracker_views_default_views() {
       'override' => array(
         'button' => 'Use default',
       ),
+    ),
+  ));
+  $handler->override_option('sorts', array(
+    'last_updated' => array(
+      'order' => 'DESC',
+      'granularity' => 'second',
+      'id' => 'last_updated',
+      'table' => 'node_comment_statistics',
+      'field' => 'last_updated',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
     ),
   ));
   $handler->override_option('filters', array(
