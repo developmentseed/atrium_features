@@ -1,35 +1,4 @@
 <?php
-// $Id$
-
-/**
- * Implementation of hook_views_pre_build().
- */
-function atrium_casetracker_views_pre_build(&$view) {
-  switch ($view->name) {
-    // Smarts for user space
-    case 'atrium_casetracker':
-    case 'atrium_casetracker_mycases':
-      $space = spaces_get_space();
-      if ($space && $space->type == 'user') {
-        $filters = $view->display[$view->current_display]->display_options['filters'];
-        // Clear out the spaces filter
-        if (!empty($filters['current'])) {
-          unset($filters['current']);
-        }
-        // Ensure that the assigned to user filter points at the current user space
-        if (!empty($filters['assign_to'])) {
-          $filters['assign_to']['exposed'] = FALSE;
-          $filters['assign_to']['value'] = $space->sid;
-        }
-        $handler = $view->display[$view->current_display]->handler;
-        $handler->override_option('filters', $filters);
-      }
-      break;
-    // Project book logic
-    // We will hide project books from book listing displays as casetracker
-    // provides its own display.
-  }
-}
 
 /**
  * Implementation of hook_views_handlers().
