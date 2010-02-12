@@ -273,6 +273,13 @@ function _atrium_casetracker_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'casetracker_default_assign_to';
+  $strongarm->value = 'Anonymous';
+
+  $export['casetracker_default_assign_to'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'casetracker_view_assignee_options';
   $strongarm->value = 'atrium_ct_assignee_options';
 
