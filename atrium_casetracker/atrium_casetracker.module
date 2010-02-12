@@ -243,7 +243,20 @@ function atrium_casetracker_casetracker_case_summary($case, $project) {
 
   $status = casetracker_case_state_load($case->casetracker->case_status_id, 'status');
   $priority = casetracker_case_state_load($case->casetracker->case_priority_id, 'priority');
-  $assigned = t('assigned to !user', array('!user' => theme('username', user_load(array('uid' => $case->casetracker->assign_to)))));
+
+  if (is_numeric($case->casetracker->assign_to)) {
+    $assign_to = user_load(array('uid' => $case->casetracker->assign_to));
+  }
+  else {
+    $assign_to = user_load(array('name' => $case->casetracker->assign_to));
+  }
+
+  if (empty($assign_to) || $assign_to->uid == 0) {
+    $assigned =  '<em>' . t('Unassigned')  . '</em>';
+  }
+  else {
+    $assigned = t('Assigned to !user', array('!user' => theme('username', $assign_to)));
+  }
 
   $type = casetracker_case_state_load($case->casetracker->case_type_id, 'type');
   $project = l($project->title, "node/{$project->nid}");
