@@ -193,6 +193,16 @@ function _atrium_casetracker_user_default_permissions() {
     ),
   );
 
+  // Exported permission: assign cases
+  $permissions[] = array(
+    'name' => 'assign cases',
+    'roles' => array(
+      '0' => 'admin',
+      '1' => 'authenticated user',
+      '2' => 'manager',
+    ),
+  );
+
   // Exported permission: create casetracker_basic_case content
   $permissions[] = array(
     'name' => 'create casetracker_basic_case content',
