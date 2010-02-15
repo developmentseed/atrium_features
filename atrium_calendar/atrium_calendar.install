@@ -24,18 +24,19 @@ function atrium_calendar_update_6200() {
 function atrium_calendar_update_6201() {
   $ret = array();
 
-  module_load_include('php', 'feedapi2feeds', 'feedapi2feeds');
-  $migration = new FeedAPI2Feeds();
-  try {
-    $migration->migrateType('feed_ical');
+  if (drupal_get_path('module', 'feedapi2feeds')) {
+    module_load_include('php', 'feedapi2feeds', 'feedapi2feeds');
+    $migration = new FeedAPI2Feeds();
+    try {
+      $migration->migrateType('feed_ical');
+    }
+    catch (Exception $e) {
+      $ret[] = array('success' => TRUE, 'query' => $e->getMessage());
+    }
+    $msgs = $migration->getMessages();
+    foreach ($msgs as $msg) {
+      $ret[] = array('success' => TRUE, 'query' => $msg);
+    }
   }
-  catch (Exception $e) {
-    $ret[] = array('success' => TRUE, 'query' => $e->getMessage());
-  }
-  $msgs = $migration->getMessages();
-  foreach ($msgs as $msg) {
-    $ret[] = array('success' => TRUE, 'query' => $msg);
-  }
-
   return $ret;
 }
