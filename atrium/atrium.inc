@@ -124,10 +124,20 @@ function _atrium_form_spaces_features_form_alter(&$form, $form_state) {
       '#type' => 'select',
       '#description' => t('Choose the access mode for the member directory and profiles. Administrators and managers will be able to see all members regardless of this setting.'),
       '#options' => array(
-        ATRIUM_MEMBERS_ALL=> t('Users can view all members'),
+        ATRIUM_MEMBERS_ALL => t('Users can view all members'),
         ATRIUM_MEMBERS_GROUP => t('Users can only view members that belong to their groups')
       ),
       '#default_value' => variable_get('atrium_members', ATRIUM_MEMBERS_ALL),
+    );
+    $form['atrium']['atrium_notifications'] = array(
+      '#title' => t('Notifications'),
+      '#type' => 'select',
+      '#description' => t('Choose the notifications UI for this site.'),
+      '#options' => array(
+        ATRIUM_NOTIFICATIONS_TEAM => t('Small team: authors subscribe others to their posts'),
+        ATRIUM_NOTIFICATIONS_SUBSCRIBE => t('Community: users subscribe to posts on their own')
+      ),
+      '#default_value' => variable_get('atrium_notifications', ATRIUM_NOTIFICATIONS_TEAM),
     );
     $form['#submit'][] = 'atrium_form_spaces_features_form_submit';
   }
@@ -446,6 +456,24 @@ function atrium_user_default_permissions_extra() {
           'name' => 'view users outside groups',
           'roles' => array('manager', 'admin'),
         );
+        break;
+    }
+    switch (variable_get('atrium_notifications', ATRIUM_NOTIFICATIONS_TEAM)) {
+      case ATRIUM_NOTIFICATIONS_TEAM:
+        if (empty($install_locale)) {
+          !module_exists('notifications_team') ? drupal_install_modules(array('notifications_team')) : TRUE;
+          module_exists('notifications_ui') ? module_disable(array('notifications_ui')) : TRUE;
+        }
+        $permissions[] = array(
+          'name' => 'subscribe other users',
+          'roles' => array('authenticated user', 'manager', 'admin'),
+        );
+        break;
+      case ATRIUM_NOTIFICATIONS_SUBSCRIBE:
+        if (empty($install_locale)) {
+          module_exists('notifications_team') ? module_disable(array('notifications_team')) : TRUE;
+          !module_exists('notifications_ui') ? drupal_install_modules(array('notifications_ui')) : TRUE;
+        }
         break;
     }
     // If in the middle of installation, merge all perms together.

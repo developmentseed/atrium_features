@@ -197,7 +197,6 @@ function _atrium_context_default_contexts() {
 
   $translatables['spaces_dashboard-custom-1'] = array(
     t('Dashboard'),
-    t('Dashboard'),
   );
 
   $export['spaces_dashboard-custom-1'] = $context;
@@ -353,14 +352,6 @@ function _atrium_user_default_permissions() {
     ),
   );
 
-  // Exported permission: add list of open ids
-  $permissions[] = array(
-    'name' => 'add list of open ids',
-    'roles' => array(
-      '0' => 'admin',
-    ),
-  );
-
   // Exported permission: administer comments
   $permissions[] = array(
     'name' => 'administer comments',
@@ -494,16 +485,6 @@ function _atrium_user_default_permissions() {
   // Exported permission: skip notifications
   $permissions[] = array(
     'name' => 'skip notifications',
-    'roles' => array(
-      '0' => 'admin',
-      '1' => 'authenticated user',
-      '2' => 'manager',
-    ),
-  );
-
-  // Exported permission: subscribe other users
-  $permissions[] = array(
-    'name' => 'subscribe other users',
     'roles' => array(
       '0' => 'admin',
       '1' => 'authenticated user',
