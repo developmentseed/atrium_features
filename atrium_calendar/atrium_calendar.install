@@ -22,14 +22,20 @@ function atrium_calendar_update_6200() {
  * Update 6201: Migrate existing feed nodes.
  */
 function atrium_calendar_update_6201() {
+  $ret = array();
+
   module_load_include('php', 'feedapi2feeds', 'feedapi2feeds');
   $migration = new FeedAPI2Feeds();
-  $migration->migrateType('feed_ical');
-
-  $ret = array();
+  try {
+    $migration->migrateType('feed_ical');
+  }
+  catch (Exception $e) {
+    $ret[] = array('success' => TRUE, 'query' => $e->getMessage());
+  }
   $msgs = $migration->getMessages();
   foreach ($msgs as $msg) {
     $ret[] = array('success' => TRUE, 'query' => $msg);
   }
+
   return $ret;
 }
