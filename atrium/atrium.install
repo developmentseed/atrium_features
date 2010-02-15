@@ -211,3 +211,11 @@ function atrium_update_6011() {
   }
   return $return;
 }
+
+/**
+ * 6012: Install the Boxes module.
+ */
+function atrium_update_6012() {
+  drupal_install_modules(array('boxes'));
+  return array(array('success' => TRUE, 'query' => 'Installed boxes module'));
+}

@@ -193,6 +193,16 @@ function _atrium_casetracker_user_default_permissions() {
     ),
   );
 
+  // Exported permission: assign cases
+  $permissions[] = array(
+    'name' => 'assign cases',
+    'roles' => array(
+      '0' => 'admin',
+      '1' => 'authenticated user',
+      '2' => 'manager',
+    ),
+  );
+
   // Exported permission: create casetracker_basic_case content
   $permissions[] = array(
     'name' => 'create casetracker_basic_case content',
@@ -260,6 +270,13 @@ function _atrium_casetracker_strongarm() {
   $strongarm->value = 1;
 
   $export['atrium_update_type_casetracker_basic_project'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'casetracker_default_assign_to';
+  $strongarm->value = 'Anonymous';
+
+  $export['casetracker_default_assign_to'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
