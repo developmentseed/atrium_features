@@ -401,9 +401,9 @@ function atrium_user_default_permissions_extra() {
   // 2. A global flag that prevents alters from running when Features, CTools
   //    and other exportables tools are in the processing of building or
   //    exporting components.
-  global $install_locale;
+  global $profile;
   $permissions = array();
-  if (context_get('atrium', 'access_perms') || !empty($install_locale)) {
+  if (context_get('atrium', 'access_perms') || !empty($profile)) {
     if (!variable_get('user_register', FALSE)) {
       $permissions = array(
         array(
@@ -460,7 +460,7 @@ function atrium_user_default_permissions_extra() {
     }
     switch (variable_get('atrium_notifications', ATRIUM_NOTIFICATIONS_TEAM)) {
       case ATRIUM_NOTIFICATIONS_TEAM:
-        if (empty($install_locale)) {
+        if (empty($profile)) {
           !module_exists('notifications_team') ? drupal_install_modules(array('notifications_team')) : TRUE;
           module_exists('notifications_ui') ? module_disable(array('notifications_ui')) : TRUE;
         }
@@ -470,14 +470,14 @@ function atrium_user_default_permissions_extra() {
         );
         break;
       case ATRIUM_NOTIFICATIONS_SUBSCRIBE:
-        if (empty($install_locale)) {
+        if (empty($profile)) {
           module_exists('notifications_team') ? module_disable(array('notifications_team')) : TRUE;
           !module_exists('notifications_ui') ? drupal_install_modules(array('notifications_ui')) : TRUE;
         }
         break;
     }
     // If in the middle of installation, merge all perms together.
-    return !empty($install_locale) ? array_merge($permissions, _atrium_user_default_permissions()) : $permissions;
+    return !empty($profile) ? array_merge($permissions, _atrium_user_default_permissions()) : $permissions;
   }
   return _atrium_user_default_permissions();
 }
