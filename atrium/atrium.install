@@ -140,13 +140,18 @@ function atrium_update_6008() {
 }
 
 /**
- * Update 6009: Enforce the openatrium profile name
+ * Update 6009: Enforce the openatrium profile name, clear out OG content type
+ * usage variable for groups.
  */
 function atrium_update_6009() {
+  $ret = array();
+  variable_del('og_content_type_usage_group');
+  $ret[] = array('success' => TRUE, 'query' => "Reset OG content type usage for groups.");
   if (variable_get('install_profile', 'default') == 'atrium_installer') {
     variable_set('install_profile', 'openatrium');
-    return array(array('success' => true, 'query' => "Updated install profile name."));
+    $ret[] = array('success' => true, 'query' => "Updated install profile name.");
   }
+  return $ret;
 }
 
 /**
