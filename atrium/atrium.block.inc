@@ -9,7 +9,8 @@ function _atrium_block_welcome_admin() {
     $block['subject'] = t('Welcome to @title', array('@title' => variable_get('site_name', 'Drupal')));
 
     // Video.
-    $video = '<object width="560" height="315"><param name="wmode" value="opaque" /><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=9534372&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=4cba57&amp;fullscreen=1" /><embed wmode="opaque" src="http://vimeo.com/moogaloop.swf?clip_id=9534372&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=4cba57&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="560" height="315"></embed></object>';
+    // Set "wmode" to prevent z-index issues. see http://kb2.adobe.com/cps/155/tn_15523.html
+    $video = '<embed wmode="opaque" src="http://blip.tv/play/hZ4ygcbWBwA" type="application/x-shockwave-flash" width="560" height="345" allowscriptaccess="always" allowfullscreen="true"></embed>';
 
     // Build links.
     $links = array();
@@ -61,7 +62,8 @@ function _atrium_block_welcome_member() {
     $block['subject'] = t('Welcome to @title', array('@title' => $space->title()));
 
     // Video.
-    $video = '<object width="560" height="315"><param name="wmode" value="opaque" /><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=9534711&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=31868b&amp;fullscreen=1" /><embed wmode="opaque" src="http://vimeo.com/moogaloop.swf?clip_id=9534711&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=31868b&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="560" height="315"></embed></object>';
+    // Set "wmode" to prevent z-index issues. see http://kb2.adobe.com/cps/155/tn_15523.html
+    $video = '<embed wmode="opaque" src="http://blip.tv/play/hZ4ygcbWJgA" type="application/x-shockwave-flash" width="560" height="345" allowscriptaccess="always" allowfullscreen="true"></embed>';
 
     // Build links.
     $links = array();
