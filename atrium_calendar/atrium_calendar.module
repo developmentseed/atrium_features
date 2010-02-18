@@ -70,6 +70,16 @@ function atrium_calendar_block($op = 'list', $delta = 0, $edit = array()) {
 }
 
 /**
+ * Implementation of hook_menu_alter().
+ */
+function atrium_calendar_menu_alter(&$items) {
+  // Remove ical item node add page.
+  if (isset($items['node/add/feed-ical-item'])) {
+    unset($items['node/add/feed-ical-item']);
+  }
+}
+
+/**
  * Implementation of hook_nodeapi().
  */
 function atrium_calendar_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {

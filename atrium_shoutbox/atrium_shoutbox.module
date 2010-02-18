@@ -44,6 +44,16 @@ function atrium_shoutbox_menu() {
 }
 
 /**
+ * Implementation of hook_menu_alter().
+ */
+function atrium_shoutbox_menu_alter(&$items) {
+  // Remove shoutbox node add page.
+  if (isset($items['node/add/shoutbox'])) {
+    unset($items['node/add/shoutbox']);
+  }
+}
+
+/**
  * Shoutbox menu item title callback.
  */
 function atrium_shoutbox_title($title) {
