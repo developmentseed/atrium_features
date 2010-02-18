@@ -11,7 +11,7 @@ function atrium_views_pre_build(&$view) {
   // sure this doesn't affect our Views without going through every
   // default view and setting the distinct flag.
   global $user;
-  if ($user->uid != 0 && !user_access('administer nodes') && $view->base_table == 'node') {
+  if ($user->uid != 0 && !user_access('administer nodes') && in_array($view->base_table, array('node', 'comments'), TRUE)) {
     $view->display_handler->set_option('distinct', 1);
   }
 }
@@ -249,7 +249,17 @@ function atrium_views_query_alter(&$view, &$query) {
     $subquery = strtr($subquery->query(), array('***ATRIUM_ACTIVITY_TIMESTAMP***' => 'node.changed'));
 
     // Main: Retrieve "only" comments.
+
+    // Because of the node_access change introduced in Drupal 6.14, distinct
+    // has been added to most queries to prevent duplicate rows from appearing.
+    // For this query, which pulls comments, we need to remove DISTINCT from
+    // nid and add one to cid. But since cid has been pushed into the middle of
+    // the field stack (and it is not easy to reorder fields), we use a
+    // GROUP BY cid instead.
     $main->distinct = FALSE;
+    if (isset($main->fields['comments_cid'])) {
+      $main->add_groupby($main->fields['comments_cid']['alias']);
+    }
 
     // Switch LEFT to INNER JOIN against comments table.
     if (isset($main->table_queue['comments']['join'])) {
