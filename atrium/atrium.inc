@@ -284,46 +284,6 @@ function atrium_reactivate_submit($form, &$form_state) {
 }
 
 /**
- * Custom welcome/login page.
- */
-function atrium_welcome() {
-  if (!user_access('access content')) {
-    menu_set_active_item('user'); // we need tabs to show up
-    drupal_set_title(t('Please Login'));
-    $login = drupal_get_form('user_login');
-    return $login;
-  }
-  else {
-    $firstgroup = variable_get('atrium_firstgroup', FALSE);
-    if (!$firstgroup) {
-      if ($result = db_result(db_query("SELECT count(*) FROM {node} WHERE type = 'group'"))) {
-        variable_set('atrium_firstgroup', TRUE);
-        $firstgroup = TRUE;
-      }
-    }
-    if ($firstgroup) {
-      menu_set_active_item('dashboard');
-      return menu_execute_active_handler();
-    }
-    else {
-      drupal_set_title(t('Welcome to !sitename', array('!sitename' => variable_get('site_name', 'Atrium'))));
-
-      $output = "<div class='view-empty'>";
-      if (node_access('create', 'group')) {
-        $output .= t('Create your first !type to get started.', array('!type' => node_get_types('name', 'group')));
-        $output .= "<div class='buttons'>". l(t('Create !type', array('!type' => node_get_types('name', 'group'))), 'node/add/group', array('attributes' => array('class' => 'button'))) ."</div>";
-      }
-      else {
-        $output .= t('The site administator has not finished setting up this site. Please be patient and try again later.');
-      }
-      $output .= "</div>";
-
-      return $output;
-    }
-  }
-}
-
-/**
  * User help callback
  */
 function atrium_help_page($name = null) {

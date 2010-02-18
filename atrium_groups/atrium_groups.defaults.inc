@@ -119,11 +119,17 @@ function _atrium_groups_spaces_presets() {
     'context' => array(
       'spaces_dashboard-custom-1:reaction:block' => array(
         'blocks' => array(
+          'atrium-welcome_member' => array(
+            'module' => 'atrium',
+            'delta' => 'welcome_member',
+            'region' => 'content',
+            'weight' => 0,
+          ),
           'views-atrium_intranet-block_1' => array(
             'module' => 'views',
             'delta' => 'atrium_intranet-block_1',
             'region' => 'content',
-            'weight' => 0,
+            'weight' => 1,
           ),
           'views-atrium_blog_comments-block_1' => array(
             'module' => 'views',
@@ -152,6 +158,7 @@ function _atrium_groups_spaces_presets() {
     t('A private group is accessible only to users added to that group by one of the group\'s managers.'),
     t('Private group'),
   );
+
   $export['atrium_og_private'] = $spaces_presets;
   $spaces_presets = new stdClass;
   $spaces_presets->disabled = FALSE; /* Edit this to true to make a default spaces_presets disabled initially */
@@ -195,11 +202,17 @@ function _atrium_groups_spaces_presets() {
     'context' => array(
       'spaces_dashboard-custom-1:reaction:block' => array(
         'blocks' => array(
+          'atrium-welcome_member' => array(
+            'module' => 'atrium',
+            'delta' => 'welcome_member',
+            'region' => 'content',
+            'weight' => 0,
+          ),
           'views-atrium_intranet-block_1' => array(
             'module' => 'views',
             'delta' => 'atrium_intranet-block_1',
             'region' => 'content',
-            'weight' => 0,
+            'weight' => 1,
           ),
           'views-atrium_blog_comments-block_1' => array(
             'module' => 'views',
@@ -228,6 +241,7 @@ function _atrium_groups_spaces_presets() {
     t('A public group is accessible to all users on the site. Users can join and leave public groups freely.'),
     t('Public group'),
   );
+
   $export['atrium_og_public'] = $spaces_presets;
   return $export;
 }

@@ -39,14 +39,6 @@ function atrium_init() {
  */
 function atrium_menu() {
   $items = array();
-  $items['welcome'] = array(
-    'title' => 'Welcome',
-    'description' => 'Custom login page.',
-    'page callback' => 'atrium_welcome',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-    'file' => 'atrium.inc',
-  );
   $items['help'] = array(
     'title' => 'Help',
     'description' => 'Information and help about using the site.',

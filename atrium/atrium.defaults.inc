@@ -178,11 +178,17 @@ function _atrium_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
+        'atrium-welcome_admin' => array(
+          'module' => 'atrium',
+          'delta' => 'welcome_admin',
+          'region' => 'content',
+          'weight' => 0,
+        ),
         'views-atrium_intranet-block_1' => array(
           'module' => 'views',
           'delta' => 'atrium_intranet-block_1',
           'region' => 'content',
-          'weight' => 0,
+          'weight' => 1,
         ),
         'views-atrium_groups-block_2' => array(
           'module' => 'views',
@@ -848,7 +854,7 @@ function _atrium_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'site_frontpage';
-  $strongarm->value = 'welcome';
+  $strongarm->value = 'dashboard';
 
   $export['site_frontpage'] = $strongarm;
   $strongarm = new stdClass;
@@ -878,6 +884,8 @@ function _atrium_strongarm() {
     'atrium-help' => 0,
     'atrium-search' => 0,
     'atrium-user_links' => 0,
+    'atrium-welcome_admin' => 1,
+    'atrium-welcome_member' => 1,
     'atrium_calendar-mini' => 1,
     'atrium_casetracker-filters' => 0,
     'atrium_shoutbox-shoutbox' => 0,
