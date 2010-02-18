@@ -138,6 +138,8 @@ function atrium_block($op = 'list', $delta = 0) {
         'search' => array('info' => t('Atrium: Search form')),
         'user_links' => array('info' => t('Atrium: User links')),
         'help' => array('info' => t('Atrium: Help')),
+        'welcome_admin' => array('info' => t('Welcome (for admins)')),
+        'welcome_member' => array('info' => t('Welcome (for members)')),
       );
       if (module_exists('admin')) {
         $info = $info + array(
@@ -154,6 +156,19 @@ function atrium_block($op = 'list', $delta = 0) {
       }
       break;
   }
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function atrium_theme() {
+  return array(
+    'atrium_welcome' => array(
+      'arguments' => array('content' => '', 'links' => array(), 'admin' => ''),
+      'template' => 'atrium-welcome',
+      'path' => drupal_get_path('module', 'atrium') .'/theme',
+    ),
+  );
 }
 
 /**
@@ -404,6 +419,15 @@ function atrium_views_api() {
     'api' => 2,
     'path' => drupal_get_path('module', 'atrium') .'/includes',
   );
+}
+
+/**
+ * Preprocessor for theme('atrium_welcome').
+ */
+function atrium_preprocess_atrium_welcome($vars) {
+  if (!empty($vars['links'])) {
+    $vars['columns'] = array_chunk($vars['links'], ceil(count($vars['links']) / 2));
+  }
 }
 
 /**

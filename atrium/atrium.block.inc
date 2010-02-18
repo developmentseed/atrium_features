@@ -1,6 +1,94 @@
 <?php
 
 /**
+ * Welcome block for administrators.
+ */
+function _atrium_block_welcome_admin() {
+  if (user_access('administer site configuration')) {
+    $block = array();
+    $block['subject'] = t('Welcome to @title', array('@title' => variable_get('site_name', 'Drupal')));
+
+    // Video.
+    $video = '<object width="560" height="315"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=9534372&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=4cba57&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=9534372&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=4cba57&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="560" height="315"></embed></object>';
+
+    // Build links.
+    $links = array();
+    $item = menu_get_item('node/add/group');
+    if ($item['access']) {
+      $links[] = array(
+        'title' => "<span class='spaces-feature feature-atrium_groups'></span>". t('Add @type', array('@type' => node_get_types('name', 'group'))),
+        'href' => 'node/add/group',
+      );
+    }
+    $item = menu_get_item('members/add');
+    if ($item['access']) {
+      $links[] = array(
+        'title' => "<span class='spaces-feature feature-atrium_members'></span>". $item['title'],
+        'href' => 'members/add',
+      );
+    }
+    $item = menu_get_item('features');
+    if ($item['access']) {
+      $links[] = array(
+        'title' => t('Customize features'),
+        'href' => 'features',
+      );
+    }
+    $links[] = array(
+      'title' => t('Documentation & support'),
+      'href' => 'http://community.openatrium.com',
+    );
+
+    // Admin link.
+    $admin = '';
+    if (spaces_access_admin()) {
+      $link = l(t('customizing the dashboard'), $_GET['q'], array('fragment' => 'block-spaces_dashboard-editor', 'attributes' => array('class' => 'palette-toggle')));
+      $admin = t('You can remove this block by !customize_dashboard.', array('!customize_dashboard' => $link));
+    }
+
+    $block['content'] = theme('atrium_welcome', $video, $links, $admin);
+    return $block;
+  }
+}
+
+/**
+ * Welcome block for members.
+ */
+function _atrium_block_welcome_member() {
+  $space = spaces_get_space();
+  if (user_access('access content') && $space && $space->type === 'og') {
+    $block = array();
+    $block['subject'] = t('Welcome to @title', array('@title' => $space->title()));
+
+    // Video.
+    $video = '<object width="560" height="315"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=9534711&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=31868b&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=9534711&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=31868b&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="560" height="315"></embed></object>';
+
+    // Build links.
+    $links = array();
+    $feature_map = spaces_features_map('node');
+    foreach (system_admin_menu_block(menu_get_item('node/add')) as $menu_item) {
+      $args = explode('/', $menu_item['href']);
+      $type = str_replace('-', '_', array_pop($args));
+      if (isset($feature_map[$type])) {
+        $feature = $feature_map[$type];
+        $menu_item['title'] = t('Add @type', array('@type' => $menu_item['title']));
+        $menu_item['title'] = "<span class='spaces-feature feature-{$feature}'></span>{$menu_item['title']}";
+        $links[] = $menu_item;
+      }
+    }
+
+    // Admin link.
+    $admin = '';
+    if (spaces_access_admin()) {
+      $link = l(t('customizing the dashboard'), $_GET['q'], array('fragment' => 'block-spaces_dashboard-editor', 'attributes' => array('class' => 'palette-toggle')));
+      $admin = t('You can remove this block by !customize_dashboard.', array('!customize_dashboard' => $link));
+    }
+    $block['content'] = theme('atrium_welcome', $video, $links, $admin);
+    return $block;
+  }
+}
+
+/**
  * User starting point block.
  */
 function _atrium_block_account() {
