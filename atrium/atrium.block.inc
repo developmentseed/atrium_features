@@ -10,8 +10,7 @@ function _atrium_block_welcome_admin() {
 
     // Video.
     // Set "wmode" to prevent z-index issues. see http://kb2.adobe.com/cps/155/tn_15523.html
-    $video = '<embed wmode="opaque" src="http://blip.tv/play/hZ4ygcbWBwA" type="application/x-shockwave-flash" width="560" height="345" allowscriptaccess="always" allowfullscreen="true"></embed>';
-
+    $video = '<object width="560" height="345><param name="wmode" value="opaque" /><param name="movie" value="http://blip.tv/play/hZ4ygcbWBwA" /><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><embed wmode="opaque" src="http://blip.tv/play/hZ4ygcbWBwA" type="application/x-shockwave-flash" width="560" height="345" allowscriptaccess="always" allowfullscreen="true"></embed></object>'; 
     // Build links.
     $links = array();
     $item = menu_get_item('node/add/group');
@@ -63,7 +62,7 @@ function _atrium_block_welcome_member() {
 
     // Video.
     // Set "wmode" to prevent z-index issues. see http://kb2.adobe.com/cps/155/tn_15523.html
-    $video = '<embed wmode="opaque" src="http://blip.tv/play/hZ4ygcbWJgA" type="application/x-shockwave-flash" width="560" height="345" allowscriptaccess="always" allowfullscreen="true"></embed>';
+    $video = '<object width="560" height="345"><param name="wmode" value="opaque" /><param name="movie" value="http://blip.tv/play/hZ4ygcbWJgA" /><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><embed wmode="opaque" src="http://blip.tv/play/hZ4ygcbWJgA" type="application/x-shockwave-flash" width="560" height="345" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
 
     // Build links.
     $links = array();
