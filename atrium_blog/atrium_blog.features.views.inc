@@ -903,6 +903,7 @@ function _atrium_blog_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Recent comments');
+  $handler->override_option('empty', 'No recent comments found.');
   $handler->override_option('items_per_page', 5);
   $handler->override_option('style_plugin', 'list');
   $handler->override_option('style_options', array(
@@ -914,6 +915,7 @@ function _atrium_blog_views_default_views() {
   $handler->override_option('block_caching', '-1');
   $translatables['atrium_blog_comments'] = array(
     t('Defaults'),
+    t('No recent comments found.'),
     t('Recent comments'),
   );
 

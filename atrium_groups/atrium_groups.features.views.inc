@@ -104,6 +104,7 @@ function _atrium_groups_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'My groups');
+  $handler->override_option('empty', 'No groups found.');
   $handler->override_option('use_ajax', TRUE);
   $handler->override_option('items_per_page', 20);
   $handler->override_option('use_pager', 'mini');
@@ -450,6 +451,7 @@ function _atrium_groups_views_default_views() {
     ),
   ));
   $handler->override_option('title', 'Directory');
+  $handler->override_option('empty', '');
   $handler->override_option('use_ajax', FALSE);
   $handler->override_option('items_per_page', 25);
   $handler->override_option('use_pager', '1');
@@ -770,6 +772,7 @@ function _atrium_groups_views_default_views() {
     t('Directory'),
     t('My groups'),
     t('No archived groups found.'),
+    t('No groups found.'),
     t('Page: Archived groups'),
     t('Page: Group directory'),
     t('Page: My groups'),
