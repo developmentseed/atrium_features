@@ -34,4 +34,4 @@ features[views][] = "atrium_profile"
 features[views][] = "atrium_profile_blocks"
 name = "Atrium Profile"
 package = "Atrium"
-project = "atrium_profile"
+
