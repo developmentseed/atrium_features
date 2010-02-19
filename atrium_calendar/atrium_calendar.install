@@ -10,7 +10,7 @@ function atrium_calendar_install() {
  * Update 6200: Install Feeds.
  */
 function atrium_calendar_update_6200() {
-  drupal_install_modules(array('feeds'));
+  drupal_install_modules(array('ctools', 'feeds'));
   $modules = module_list();
   if (!isset($modules['feeds'])) {
     return array('#abort' => array('success' => FALSE, 'query' => 'Could not enable Feeds.'));
