@@ -43,11 +43,15 @@ class AtriumTranslateTestCase extends AtriumWebTestCase {
     $admin_user = $this->atriumCreateUser('admin');
     $this->drupalLogin($admin_user);
     // Check initial texts
-    $this->assertText(t('Welcome to !sitename', array('!sitename' => variable_get('site_name', 'Atrium'))));
-    $this->assertText(t('Create your first !type to get started.', array('!type' => node_get_types('name', 'group'))));
+
+    // @TODO: Determine whether the t() here should actually work if the
+    // install of the test host is not localized.
+    // $this->assertText(t('Welcome to !sitename', array('!sitename' => variable_get('site_name', 'Drupal'))));
+    // $this->assertText(t('Add !type.', array('!type' => node_get_types('name', 'group'))));
+
     // Check random string translations
     $this->assertText('Bienvenido');
-    $this->assertText('Cree su primer Grupo');
+    $this->assertText('Añadir Grupo');
   }  
 }
 
