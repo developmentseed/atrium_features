@@ -38,7 +38,7 @@ function atrium_casetracker_views_data() {
     ),
   );
   $data['casetracker_case2']['case_status_closed'] = array(
-    'title' => t('Case Tracker: Show closed cases'),
+    'title' => t('Show closed cases'),
     'filter' => array(
       'field' => 'case_status_id',
       'handler' => 'atrium_casetracker_handler_filter_status_closed',

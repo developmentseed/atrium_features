@@ -1,11 +1,20 @@
 <?php
-class atrium_casetracker_handler_filter_status_closed extends views_handler_filter_boolean_operator {
+class atrium_casetracker_handler_filter_status_closed extends views_handler_filter {
   function construct() {
-    $this->value_value = t('Show closed cases');  
+    $this->value_value = t('Show closed cases');
     if (isset($this->definition['label'])) {
       $this->value_value = $this->definition['label'];
     }
   }
+
+  function admin_summary() {
+    if (!empty($this->value)) {
+      return t('Yes');
+    }
+    return t('No');
+  }
+
+  function operator_form() { }
 
   function value_form(&$form, &$form_state) {
     $form['value'] = array(
@@ -18,7 +27,7 @@ class atrium_casetracker_handler_filter_status_closed extends views_handler_filt
       $identifier = $this->options['expose']['identifier'];
       if (!isset($form_state['input'][$identifier])) {
         $form_state['input'][$identifier] = $this->value;
-      }    
+      }
     }
   }
 
