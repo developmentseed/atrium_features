@@ -262,7 +262,7 @@ function _atrium_casetracker_views_default_views() {
     ),
     'case_status_closed' => array(
       'operator' => '=',
-      'value' => '0',
+      'value' => 0,
       'group' => '0',
       'exposed' => TRUE,
       'expose' => array(
@@ -270,6 +270,7 @@ function _atrium_casetracker_views_default_views() {
         'identifier' => 'case_status_closed',
         'label' => 'Show closed cases',
         'optional' => 0,
+        'single' => 0,
         'remember' => 0,
       ),
       'id' => 'case_status_closed',
@@ -1099,6 +1100,16 @@ function _atrium_casetracker_views_default_views() {
       'field' => 'current',
       'relationship' => 'none',
     ),
+    'case_status_closed' => array(
+      'id' => 'case_status_closed',
+      'table' => 'casetracker_case2',
+      'field' => 'case_status_closed',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+      'value' => 0,
+    ),
   ));
   $handler->override_option('title', 'Newest cases');
   $handler->override_option('empty', '');
@@ -1234,6 +1245,16 @@ function _atrium_casetracker_views_default_views() {
         'button' => 'Use default',
       ),
       'relationship' => 'none',
+    ),
+    'case_status_closed' => array(
+      'id' => 'case_status_closed',
+      'table' => 'casetracker_case2',
+      'field' => 'case_status_closed',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+      'value' => 0,
     ),
   ));
   $handler->override_option('access', array(
@@ -1465,6 +1486,16 @@ function _atrium_casetracker_views_default_views() {
       'table' => 'spaces',
       'field' => 'current',
       'relationship' => 'none',
+    ),
+    'case_status_closed' => array(
+      'id' => 'case_status_closed',
+      'table' => 'casetracker_case2',
+      'field' => 'case_status_closed',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+      'value' => 0,
     ),
   ));
   $handler->override_option('access', array(
