@@ -163,7 +163,9 @@ function messaging_shoutbox_shout($nid, $shout) {
   // 3) Convert entities back to plain-text.
   // Note: format is checked by check_markup().
   if (trim($shout['subject']) == '') {
-    $comment['subject'] = _messaging_shoutbox_clean($shout['text']);
+    $subject = decode_entities(strip_tags(filter_xss($shout['text'], array())));
+    $subject = truncate_utf8($subject, 63, TRUE, FALSE);
+    $comment['subject'] = $subject;
   }
   drupal_write_record('comments', $comment);
   
@@ -560,15 +562,4 @@ function theme_messaging_shoutbox_shoutform($form) {
   $output .= drupal_render($form);
   $output .= "</div>";
   return $output;
-}
-
-/**
- * Filter, clean up, trim
- */
-function _messaging_shoutbox_clean($text) {
-  // Clean up HTML
-  $text = decode_entities(strip_tags(filter_xss($text, array())));
-  // Replace URLs by links
-  $text = _filter_url($text, 'shout');
-  return $text;
 }
