@@ -139,19 +139,23 @@ function messaging_shoutbox_ajax($op = 'shout') {
 function messaging_shoutbox_shout($nid, $shout) {
   $comment = $shout;
   $comment['nid'] = $nid;
-  
+
+  // See comment_save() for the thread building code.
+  $max = db_result(db_query('SELECT MAX(thread) FROM {comments} WHERE nid = %d', $nid));
+  $max = rtrim($max, '/');
+  $thread = int2vancode(vancode2int($max) + 1) .'/';
+
   $comment += array(
     'nid' => $nid,
     'comment' => $shout['text'],
     'timestamp' => time(),
     'uid' => 0, // Defaults to anonymous
     'status' => COMMENT_NOT_PUBLISHED,
+    'thread' => $thread,
   );
   // Retrieve the username to store with the comment
-  if (!empty($comment['uid'])) {
-    if ($account = user_load(array('uid' => $comment['uid']))) {
-      $comment['name'] = $account->name;
-    }
+  if (!empty($comment['uid']) && ($account = user_load(array('uid' => $comment['uid'])))) {
+    $comment['name'] = $account->name;
   }
   // The body may be in any format, so we:
   // 1) Filter it into HTML
