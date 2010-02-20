@@ -83,7 +83,7 @@ function atrium_update_6005() {
       }
     }
     else {
-      watchdog('Atrium', t('The module %module appears to have an invalid schema_version entry'), array('%module' => $row->name), WATCHDOG_WARNING);
+      watchdog('Atrium', 'The module %module appears to have an invalid schema_version entry', array('%module' => $row->name), WATCHDOG_WARNING);
     }
   }
 
