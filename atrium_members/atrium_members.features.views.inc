@@ -199,6 +199,35 @@ function _atrium_members_views_default_views() {
       ),
       'relationship' => 'none',
     ),
+    'managelinkadmin' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => '<small class=\'label\'>[managelinkadmin]</small>',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 1,
+      'empty_zero' => 0,
+      'exclude' => 0,
+      'id' => 'managelinkadmin',
+      'table' => 'og_uid',
+      'field' => 'managelinkadmin',
+      'relationship' => 'none',
+    ),
   ));
   $handler->override_option('sorts', array(
     'name' => array(
@@ -266,7 +295,8 @@ function _atrium_members_views_default_views() {
       'groups' => 'groups',
       'rid' => 'rid',
       'is_admin' => 'name',
-      'managelink' => 'name',
+      'managelink' => 'managelink',
+      'managelinkadmin' => 'managelink',
     ),
     'info' => array(
       'picture' => array(
@@ -288,6 +318,9 @@ function _atrium_members_views_default_views() {
         'separator' => '',
       ),
       'managelink' => array(
+        'separator' => '',
+      ),
+      'managelinkadmin' => array(
         'separator' => '',
       ),
     ),
@@ -424,11 +457,11 @@ function _atrium_members_views_default_views() {
         'button' => 'Use default',
       ),
     ),
-    'is_manager' => array(
+    'is_admin' => array(
       'label' => '',
       'alter' => array(
         'alter_text' => 1,
-        'text' => '<small class=\'label\'>[is_manager]</small>',
+        'text' => '<small class=\'label\'>[is_admin]</small>',
         'make_link' => 0,
         'path' => '',
         'link_class' => '',
@@ -448,9 +481,9 @@ function _atrium_members_views_default_views() {
       'hide_empty' => 1,
       'empty_zero' => 0,
       'exclude' => 0,
-      'id' => 'is_manager',
+      'id' => 'is_admin',
       'table' => 'og_uid',
-      'field' => 'is_manager',
+      'field' => 'is_admin',
       'override' => array(
         'button' => 'Use default',
       ),
