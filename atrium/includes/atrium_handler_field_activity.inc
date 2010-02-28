@@ -36,7 +36,7 @@ class atrium_handler_field_activity extends views_handler_field {
     parent::construct();
     $this->additional_fields['nid'] = array('table' => 'node', 'field' => 'nid');
     $this->additional_fields['node_title'] = array('table' => 'node', 'field' => 'title');
-    $this->additional_fields['node_uid'] = array('table' => 'node', 'field' => 'uid');
+    $this->additional_fields['node_uid'] = array('table' => 'node_revisions', 'field' => 'uid');
     $this->additional_fields['comment_uid'] = array('table' => 'comments', 'field' => 'uid');
     $this->additional_fields['node_changed'] = array('table' => 'node', 'field' => 'changed');
     $this->additional_fields['node_created'] = array('table' => 'node', 'field' => 'created');
