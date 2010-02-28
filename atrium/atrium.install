@@ -1,6 +1,22 @@
 <?php
 
 /**
+ * Implementation of hook_requirements().
+ */
+function atrium_requirements($phase) {
+  $requirements = array();
+  if ($phase === 'runtime' && file_exists('profiles/openatrium/VERSION.txt')) {
+    $version = trim(file_get_contents('profiles/openatrium/VERSION.txt'));
+    $requirements['atrium'] = array(
+      'title' => 'Open Atrium',
+      'value' => check_plain($version),
+      'severity' => REQUIREMENT_OK,
+    );
+  }
+  return $requirements;
+}
+
+/**
  * Implementation of hook_install().
  */
 function atrium_install() {
