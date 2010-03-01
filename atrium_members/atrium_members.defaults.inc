@@ -204,6 +204,7 @@ function _atrium_members_spaces_presets() {
     t('A simple profile with a blog, calendar and dashboard.'),
     t('Simple profile'),
   );
+
   $export['atrium_user_simple'] = $spaces_presets;
   return $export;
 }

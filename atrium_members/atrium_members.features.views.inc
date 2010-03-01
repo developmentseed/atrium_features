@@ -17,19 +17,6 @@ function _atrium_members_views_default_views() {
   $view->api_version = 2;
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
-  $handler->override_option('relationships', array(
-    'nid' => array(
-      'label' => 'Group node (member)',
-      'required' => 0,
-      'id' => 'nid',
-      'table' => 'og_uid',
-      'field' => 'nid',
-      'relationship' => 'none',
-      'override' => array(
-        'button' => 'Override',
-      ),
-    ),
-  ));
   $handler->override_option('fields', array(
     'picture' => array(
       'label' => '',
