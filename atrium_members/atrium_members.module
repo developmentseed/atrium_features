@@ -203,7 +203,7 @@ function atrium_members_user($op, &$edit, &$account, $category = NULL) {
       if (variable_get('user_pictures', 0)) {
         $categories['picture'] = array(
           'name' => 'picture',
-          'title' => 'Picture',
+          'title' => t('Picture'),
           'weight' => 10,
         );
       }
@@ -218,7 +218,7 @@ function atrium_members_user($op, &$edit, &$account, $category = NULL) {
         if (count($enabled) > 1) {
           $categories['theme_select'] = array(
             'name' => 'theme_select',
-            'title' => 'Theme settings',
+            'title' => t('Theme settings'),
             'weight' => 10,
           );
         }
