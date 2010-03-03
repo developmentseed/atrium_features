@@ -183,7 +183,7 @@ function _atrium_form_user_login_alter(&$form, $form_state) {
   $dest = isset($_GET['destination']) ? $_GET['destination'] : '';
   if (!$dest || $dest == 'user/login') {
     $path = variable_get('site_frontpage', 'node');
-    $form['#action'] = url($_GET['q'], array('query' => 'destination='. $path));
+    $form['#redirect'] = $path;
   }
 }
 
