@@ -15,7 +15,7 @@ function atrium_blog_help($path) {
   }
 
   // Contextual help content.
-  if (context_isset('context', 'spaces-feature-blog')) {
+  if (context_isset('context', 'blog_listing')) {
     if ($path == 'node/add/blog') {
       $help = '';
       $help .= '<h3>'. t('Blog') .'</h3>';
