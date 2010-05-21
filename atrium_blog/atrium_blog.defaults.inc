@@ -83,7 +83,7 @@ function _atrium_blog_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'spaces-feature-blog';
+  $context->name = 'blog_listing';
   $context->description = '';
   $context->tag = 'Blog';
   $context->conditions = array(
@@ -116,11 +116,11 @@ function _atrium_blog_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['spaces-feature-blog'] = array(
+  $translatables['blog_listing'] = array(
     t('Blog'),
   );
 
-  $export['spaces-feature-blog'] = $context;
+  $export['blog_listing'] = $context;
   return $export;
 }
 
