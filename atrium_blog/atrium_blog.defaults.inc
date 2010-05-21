@@ -97,7 +97,7 @@ function _atrium_blog_context_default_contexts() {
     ),
     'views' => array(
       'values' => array(
-        'atrium_blog' => 'atrium_blog',
+        'atrium_blog_listing' => 'atrium_blog_listing',
       ),
     ),
   );
@@ -134,7 +134,7 @@ function _atrium_blog_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
-  else if ($module == "strongarm" && $api == "strongarm") {
+  elseif ($module == "strongarm" && $api == "strongarm") {
     return array("version" => 1);
   }
 }
