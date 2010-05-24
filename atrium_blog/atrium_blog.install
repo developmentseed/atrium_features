@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * Update for Kit compliance
+ */
+function atrium_blog_update_6001() {
+  $ret = array();
+  // Array of old names and new replacements. 
+  $views = array(
+    'atrium_blog' => array(
+      'views-atrium_blog-block_1' => 'views-atrium_blog_listing-block_1',
+      'views-atrium_blog-block_2' => 'views-atrium_blog_listing-block_2',
+      'atrium_blog-block_1' => 'atrium_blog_listing-block_1',
+      'atirum_blog-block_2' => 'atrium_blog_listing-block_2',
+    )
+  );
+  $context = array(
+    'spaces-feature-blog' => array(
+      'spaces-feature-blog' => 'blog_listing',
+    ),
+  );
+ $ret[] = atrium_kit_comply('views', $views); 
+ $ret[] = atrium_kit_comply('context', $context);
+ return $ret;
+
+}
+
+/**
+ * 
+ * @param array $type
+ *   The type of component.  Accepted types are 'views' and 'context'
+ * @param array $info
+ * 
+ *   Component information in array like:
+ *     array(
+ *       'component_name' => array(
+ *         'old_name' => 'new_name',
+ *         'old_name' => 'new_name',
+ *       )
+ *     );
+ *     
+ *     
+ */
+
+function atrium_kit_comply($type, $info) {
+  $ret = array();
+  switch ($type) {
+    case 'views':
+      foreach ($info as $name => $replace) {
+        $view = views_get_view($name);
+        // Proceed if view is not overridden.
+        if ($view->type == 'Default') {
+          // Replace block names in spaces_overrides
+          $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'context' AND object_id LIKE '%%spaces_dashboard%%'");
+          while ($result = db_fetch_object($query)) {
+            $n = 0;
+            if ($value = $result->value) {
+              $value = str_replace(array_keys($replace), array_values($replace), $value, $n);
+              if ($n) {
+                $ret[] = db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d", $value, $result->type, $result->id);
+              }
+            }
+          }
+          // Replace block names in spaces_presets
+          $query = db_query("SELECT * FROM {spaces_presets}");
+          while ($result = db_fetch_object($query)) {
+            $n = 0;
+            $value = str_replace(array_keys($replace), array_values($replace), $result->value, $n);
+            if ($n) {
+              $ret[] = db_query("UPDATE {spaces_presets} SET value = '%s' WHERE name = '%s'", $value, $result->name);
+            }
+          }
+          // Replace block names in context
+          $query = db_query("SELECT * FROM {context} WHERE name = 'spaces-feature-blog'");
+          while ($result = db_fetch_object($query)) {
+            $n = $m = 0;
+            $conditions = str_replace('atrium_blog', 'atrium_blog_listing', $result->conditions, $n);
+            $reactions = str_replace(array_keys($replace), array_values($replace), $reactions, $m);
+            if ($n || $m) {
+              $ret[] = db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = 'spaces-feature-blog'", $conditions, $reactions);
+            }
+          }
+        }
+      }
+      return $ret;
+    case 'context':
+      foreach ($info as $name => $replace) {
+        foreach ($replace as $old => $new) {
+          $ret[] = db_query("UPDATE {context} SET name = '%s' WHERE name = '%s'", $new, $old);
+        }
+        return $ret;
+      }
+      break;
+  }
+
+}
+
+
+
+
+
