@@ -4,8 +4,6 @@
  * Update for Kit compliance
  */
 function atrium_blog_update_6001() {
-  $ret = array();
-
   $components = array(
     'views' => array(
       'atrium_blog' => array(
@@ -19,11 +17,11 @@ function atrium_blog_update_6001() {
       'spaces-feature-blog' => 'blog_listing',
     ),
   );
-   
- $ret[] = atrium_kit_comply('views', $components); 
- $ret[] = atrium_kit_comply('context', $components);
- return $ret;
-
+  
+  atrium_kit_comply('views', $components); 
+  atrium_kit_comply('context', $components);
+  
+  return array(array('success' => true, 'query' => 'Atrium Blog updated for Kit compliance.'));
 }
 
 /**
@@ -54,7 +52,6 @@ function atrium_blog_update_6001() {
  * 
  */
 function atrium_kit_comply($type, $info) {
-  $ret = array();
   switch ($type) {
     // Handles changes to views blocks.
     case 'views':
@@ -72,7 +69,7 @@ function atrium_kit_comply($type, $info) {
               $value = str_replace("views-$old_view-$block", "views-$new_view-$block", $result->value);
               $value = str_replace("$old_view-$block", "$new_view-$block", $result->value);
               if ($value != $result->value) {
-                $ret[] = db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d", $value, $result->type, $result->id);
+                db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d", $value, $result->type, $result->id);
               }
             }
             // Replace block names in spaces_presets
@@ -81,7 +78,7 @@ function atrium_kit_comply($type, $info) {
               $value = str_replace("views-$old_view-$block", "views-$new_view-$block", $result->value);
               $value = str_replace("$old_view-$block", "$new_view-$block", $result->value);
               if ($value != $result->value) {
-                $ret[] = db_query("UPDATE {spaces_presets} SET value = '%s' WHERE name = '%s'", $value, $result->name);
+                db_query("UPDATE {spaces_presets} SET value = '%s' WHERE name = '%s'", $value, $result->name);
               }
             }
             // Replace block names in contexts
@@ -93,7 +90,7 @@ function atrium_kit_comply($type, $info) {
                   $reactions = str_replace("$old_view-$block", "$new_view-$block", $result->reactions);
                   $conditions = str_replace($current, $replacement, $result->conditions);
                   if ($reactions != $result->reactions || $conditions != $result->conditions) {
-                    $ret[] = db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $current);
+                    db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $current);
                   }
                 }
               }
@@ -101,12 +98,11 @@ function atrium_kit_comply($type, $info) {
           }
         }
       }
-      return $ret;
+
     case 'context':
       $contexts = $info['contexts'];
       foreach ($contexts as $old => $new) {
-        $ret[] = db_query("UPDATE {context} SET name = '%s' WHERE name = '%s'", $new, $old);
-        return $ret;
+        db_query("UPDATE {context} SET name = '%s' WHERE name = '%s'", $new, $old);
       }
       break;
   }
