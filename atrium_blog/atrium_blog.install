@@ -90,13 +90,14 @@ function atrium_kit_comply($type, $info) {
             foreach ($contexts as $current => $replacement) {
               $query = db_query("SELECT * FROM {context} WHERE name = '%s'", $current);
               while ($result = db_fetch_object($query)) {
-                $reactions = '';
-                foreach ($views as $old => $new) {
+                foreach ($new as $block) {
                   $reactions = str_replace("views-$old-$block", "views-$new-$block", $result->reactions);
                   $reactions = str_replace("$old-$block", "$new-$block", $result->reactions);
+                  $conditions = str_replace($current, $replacement, $result->conditions);
+                  if ($reactions != $result->reactions || $conditions != $result->conditions) {
+                    $ret[] = db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $current);
+                  }
                 }
-                $conditions = str_replace($current, $replacement, $result->conditions);
-                $ret[] = db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $current);
               }
             }
           }
