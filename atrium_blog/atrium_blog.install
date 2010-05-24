@@ -5,22 +5,23 @@
  */
 function atrium_blog_update_6001() {
   $ret = array();
-  // Array of old names and new replacements. 
-  $views = array(
-    'atrium_blog' => array(
-      'views-atrium_blog-block_1' => 'views-atrium_blog_listing-block_1',
-      'views-atrium_blog-block_2' => 'views-atrium_blog_listing-block_2',
-      'atrium_blog-block_1' => 'atrium_blog_listing-block_1',
-      'atirum_blog-block_2' => 'atrium_blog_listing-block_2',
-    )
-  );
-  $context = array(
-    'spaces-feature-blog' => array(
+
+  $components = array(
+    'views' => array(
+      'atrium_blog' => array(
+        'atrium_blog_listing' => array(
+          'block_1',
+          'block_2',
+        ),
+      ),
+    ),
+    'contexts' => array(
       'spaces-feature-blog' => 'blog_listing',
     ),
   );
- $ret[] = atrium_kit_comply('views', $views); 
- $ret[] = atrium_kit_comply('context', $context);
+   
+ $ret[] = atrium_kit_comply('views', $components); 
+ $ret[] = atrium_kit_comply('context', $components);
  return $ret;
 
 }
@@ -31,32 +32,44 @@ function atrium_blog_update_6001() {
  *   The type of component.  Accepted types are 'views' and 'context'
  * @param array $info
  * 
- *   Component information in array like:
- *     array(
- *       'component_name' => array(
- *         'old_name' => 'new_name',
- *         'old_name' => 'new_name',
- *       )
- *     );
- *     
- *     
+ * 
+ * Component array should look something like:
+ * 
+ *
+ * $components = array(
+ *   'views' => array(
+ *     'atrium_blog' => array(
+ *       'atrium_blog_listing' => array(
+ *         'block_1',
+ *         'block_2',
+ *       ),
+ *     ),
+ *   ),
+ *   'contexts' => array(
+ *     'spaces-feature-blog' => 'blog_listing',
+ *   ),
+ * );
+ *
+ * 
+ * 
  */
-
 function atrium_kit_comply($type, $info) {
   $ret = array();
   switch ($type) {
     case 'views':
-      foreach ($info as $name => $replace) {
-        $view = views_get_view($name);
+      $views = $info['views'];
+      $contexts = $info['contexts'];
+      foreach ($views as $old => $new) {
+        $view = views_get_view($old);
         // Proceed if view is not overridden.
         if ($view->type == 'Default') {
           // Replace block names in spaces_overrides
           $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'context' AND object_id LIKE '%%spaces_dashboard%%'");
           while ($result = db_fetch_object($query)) {
-            $n = 0;
-            if ($value = $result->value) {
-              $value = str_replace(array_keys($replace), array_values($replace), $value, $n);
-              if ($n) {
+            foreach ($new as $block) {
+              $value = str_replace("views-$old-$block", "views-$new-$block", $result->value);
+              $value = str_replace("$old-$block", "$new-$block", $result->value);
+              if ($value != $result->value) {
                 $ret[] = db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d", $value, $result->type, $result->id);
               }
             }
@@ -64,30 +77,36 @@ function atrium_kit_comply($type, $info) {
           // Replace block names in spaces_presets
           $query = db_query("SELECT * FROM {spaces_presets}");
           while ($result = db_fetch_object($query)) {
-            $n = 0;
-            $value = str_replace(array_keys($replace), array_values($replace), $result->value, $n);
-            if ($n) {
-              $ret[] = db_query("UPDATE {spaces_presets} SET value = '%s' WHERE name = '%s'", $value, $result->name);
+            foreach ($new as $block) {
+              $value = str_replace("views-$old-$block", "views-$new-$block", $result->value);
+              $value = str_replace("$old-$block", "$new-$block", $result->value);
+              if ($value != $result->value) {
+                $ret[] = db_query("UPDATE {spaces_presets} SET value = '%s' WHERE name = '%s'", $value, $result->name);
+              }
             }
           }
-          // Replace block names in context
-          $query = db_query("SELECT * FROM {context} WHERE name = 'spaces-feature-blog'");
-          while ($result = db_fetch_object($query)) {
-            $n = $m = 0;
-            $conditions = str_replace('atrium_blog', 'atrium_blog_listing', $result->conditions, $n);
-            $reactions = str_replace(array_keys($replace), array_values($replace), $reactions, $m);
-            if ($n || $m) {
-              $ret[] = db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = 'spaces-feature-blog'", $conditions, $reactions);
+          // Go through each context and replace views block names.
+          if (!empty($contexts)) {
+            foreach ($contexts as $current => $replacement) {
+              $query = db_query("SELECT * FROM {context} WHERE name = '%s'", $current);
+              while ($result = db_fetch_object($query)) {
+                $reactions = '';
+                foreach ($views as $old => $new) {
+                  $reactions = str_replace("views-$old-$block", "views-$new-$block", $result->reactions);
+                  $reactions = str_replace("$old-$block", "$new-$block", $result->reactions);
+                }
+                $conditions = str_replace($current, $replacement, $result->conditions);
+                $ret[] = db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $current);
+              }
             }
           }
         }
       }
       return $ret;
     case 'context':
-      foreach ($info as $name => $replace) {
-        foreach ($replace as $old => $new) {
-          $ret[] = db_query("UPDATE {context} SET name = '%s' WHERE name = '%s'", $new, $old);
-        }
+      $contexts = $info['contexts'];
+      foreach ($contexts as $old => $new) {
+        $ret[] = db_query("UPDATE {context} SET name = '%s' WHERE name = '%s'", $new, $old);
         return $ret;
       }
       break;
