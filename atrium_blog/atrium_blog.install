@@ -56,43 +56,41 @@ function atrium_blog_update_6001() {
 function atrium_kit_comply($type, $info) {
   $ret = array();
   switch ($type) {
+    // Handles changes to views blocks.
     case 'views':
       $views = $info['views'];
       $contexts = $info['contexts'];
-      foreach ($views as $old => $new) {
+      foreach ($views as $old_view => $new_view) {
         $view = views_get_view($old);
         // Proceed if view is not overridden.
         if ($view->type == 'Default') {
-          // Replace block names in spaces_overrides
-          $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'context' AND object_id LIKE '%%spaces_dashboard%%'");
-          while ($result = db_fetch_object($query)) {
-            foreach ($new as $block) {
-              $value = str_replace("views-$old-$block", "views-$new-$block", $result->value);
-              $value = str_replace("$old-$block", "$new-$block", $result->value);
+          // Go block by block and update spaces_dashboards, spaces_presets, and context.
+          foreach ($new_view as $block) {
+            // Replace block names in spaces_dashboard
+            $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'context' AND object_id LIKE '%%spaces_dashboard%%'");
+            while ($result = db_fetch_object($query)) {
+              $value = str_replace("views-$old_view-$block", "views-$new_view-$block", $result->value);
+              $value = str_replace("$old_view-$block", "$new_view-$block", $result->value);
               if ($value != $result->value) {
                 $ret[] = db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d", $value, $result->type, $result->id);
               }
             }
-          }
-          // Replace block names in spaces_presets
-          $query = db_query("SELECT * FROM {spaces_presets}");
-          while ($result = db_fetch_object($query)) {
-            foreach ($new as $block) {
-              $value = str_replace("views-$old-$block", "views-$new-$block", $result->value);
-              $value = str_replace("$old-$block", "$new-$block", $result->value);
+            // Replace block names in spaces_presets
+            $query = db_query("SELECT * FROM {spaces_presets}");
+            while ($result = db_fetch_object($query)) {
+              $value = str_replace("views-$old_view-$block", "views-$new_view-$block", $result->value);
+              $value = str_replace("$old_view-$block", "$new_view-$block", $result->value);
               if ($value != $result->value) {
                 $ret[] = db_query("UPDATE {spaces_presets} SET value = '%s' WHERE name = '%s'", $value, $result->name);
               }
             }
-          }
-          // Go through each context and replace views block names.
-          if (!empty($contexts)) {
-            foreach ($contexts as $current => $replacement) {
-              $query = db_query("SELECT * FROM {context} WHERE name = '%s'", $current);
-              while ($result = db_fetch_object($query)) {
-                foreach ($new as $block) {
-                  $reactions = str_replace("views-$old-$block", "views-$new-$block", $result->reactions);
-                  $reactions = str_replace("$old-$block", "$new-$block", $result->reactions);
+            // Replace block names in contexts
+            if (!empty($contexts)) {
+              foreach ($contexts as $current => $replacement) {
+                $query = db_query("SELECT * FROM {context} WHERE name = '%s'", $current);
+                while ($result = db_fetch_object($query)) {
+                  $reactions = str_replace("views-$old_view-$block", "views-$new_view-$block", $result->reactions);
+                  $reactions = str_replace("$old_view-$block", "$new_view-$block", $result->reactions);
                   $conditions = str_replace($current, $replacement, $result->conditions);
                   if ($reactions != $result->reactions || $conditions != $result->conditions) {
                     $ret[] = db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $current);
