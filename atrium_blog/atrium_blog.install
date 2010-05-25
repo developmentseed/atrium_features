@@ -7,9 +7,14 @@ function atrium_blog_update_6001() {
   $components = array(
     'views' => array(
       'atrium_blog' => array(
-        'atrium_blog_listing' => array(
+        'blog_listing' => array(
           'block_1',
           'block_2',
+        ),
+      ),
+      'atrium_blog_comments' => array(
+        'blog_comments' => array(
+          'block_1',
         ),
       ),
     ),

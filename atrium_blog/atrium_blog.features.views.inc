@@ -6,9 +6,9 @@
 function _atrium_blog_views_default_views() {
   $views = array();
 
-  // Exported view: atrium_blog_comments
+  // Exported view: blog_comments
   $view = new view;
-  $view->name = 'atrium_blog_comments';
+  $view->name = 'blog_comments';
   $view->description = 'Atrium > Blog comments';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -241,7 +241,7 @@ function _atrium_blog_views_default_views() {
   $handler = $view->new_display('block', 'Recent comments', 'block_1');
   $handler->override_option('block_description', 'Recent comments');
   $handler->override_option('block_caching', '-1');
-  $translatables['atrium_blog_comments'] = array(
+  $translatables['blog_comments'] = array(
     t('Defaults'),
     t('No recent comments found.'),
     t('Recent comments'),
@@ -249,9 +249,9 @@ function _atrium_blog_views_default_views() {
 
   $views[$view->name] = $view;
 
-  // Exported view: atrium_blog_listing
+  // Exported view: blog_listing
   $view = new view;
-  $view->name = 'atrium_blog_listing';
+  $view->name = 'blog_listing';
   $view->description = 'Atrium > blog';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -926,7 +926,7 @@ function _atrium_blog_views_default_views() {
     'page_1' => 0,
     'block_1' => 0,
   ));
-  $translatables['atrium_blog_listing'] = array(
+  $translatables['blog_listing'] = array(
     t('Archive'),
     t('Block'),
     t('Blog'),

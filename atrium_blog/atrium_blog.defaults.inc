@@ -97,16 +97,16 @@ function _atrium_blog_context_default_contexts() {
     ),
     'views' => array(
       'values' => array(
-        'atrium_blog_listing' => 'atrium_blog_listing',
+        'blog_listing' => 'log_listing',
       ),
     ),
   );
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-atrium_blog_comments-block_1' => array(
+        'views-blog_comments-block_1' => array(
           'module' => 'views',
-          'delta' => 'atrium_blog_comments-block_1',
+          'delta' => 'blog_comments-block_1',
           'region' => 'right',
           'weight' => 0,
         ),
