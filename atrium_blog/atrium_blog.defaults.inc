@@ -97,7 +97,7 @@ function _atrium_blog_context_default_contexts() {
     ),
     'views' => array(
       'values' => array(
-        'blog_listing' => 'log_listing',
+        'blog_listing' => 'blog_listing',
       ),
     ),
   );
