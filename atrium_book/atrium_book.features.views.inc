@@ -238,6 +238,7 @@ function _atrium_book_views_default_views() {
     'title' => 'Notebook',
     'description' => '',
     'weight' => '0',
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'Page: Archived books', 'page_2');
   $handler->override_option('fields', array(
@@ -415,6 +416,7 @@ function _atrium_book_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
   $translatables['book_listing'] = array(
     t('Defaults'),
