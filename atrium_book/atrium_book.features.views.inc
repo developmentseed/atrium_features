@@ -6,9 +6,9 @@
 function _atrium_book_views_default_views() {
   $views = array();
 
-  // Exported view: atrium_book
+  // Exported view: atrium_book_listing
   $view = new view;
-  $view->name = 'atrium_book';
+  $view->name = 'atrium_book_listing';
   $view->description = 'Atrium > Book';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -416,7 +416,7 @@ function _atrium_book_views_default_views() {
     'description' => '',
     'weight' => 0,
   ));
-  $translatables['atrium_book'] = array(
+  $translatables['atrium_book_listing'] = array(
     t('Defaults'),
     t('Latest changes'),
     t('No archived books found.'),

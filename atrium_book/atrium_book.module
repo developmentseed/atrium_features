@@ -6,7 +6,7 @@ include_once('atrium_book.features.inc');
  * Implementation of hook_help().
  */
 function atrium_book_help($path, $arg) {
-  if (($path == 'help#atrium_book') || context_isset('context', 'spaces-feature-book')) {
+  if (($path == 'help#atrium_book') || context_isset('context', 'book_listing')) {
     switch ($path) {
       case 'node/add/book':
       case 'node/%/edit':
@@ -71,4 +71,17 @@ function atrium_book_menu() {
     'file' => 'atrium_book.pages.inc',
   );
   return $items;
+}
+
+/**
+ * Implementation of hook_context_links_alter();
+ */
+function atrium_book_context_links_alter(&$links) {
+  if (context_get('context', 'book_listing') && isset($links['book']) && $space = spaces_get_space()) {
+    $item = menu_get_item('node/add/book');
+    $node = menu_get_object();
+    if ($item['access'] && !empty($node->book['mlid'])) {
+      $links['book']['query'] = "parent={$node->book['mlid']}";
+    }
+  }
 }

@@ -369,14 +369,7 @@ function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
  * Implementation of hook_context_links_alter();
  */
 function atrium_context_links_alter(&$links) {
-  if (context_get('context', 'spaces-feature-book') && isset($links['book']) && $space = spaces_get_space()) {
-    $item = menu_get_item('node/add/book');
-    $node = menu_get_object();
-    if ($item['access'] && !empty($node->book['mlid'])) {
-      $links['book']['query'] = "parent={$node->book['mlid']}";
-    }
-  }
-  else if (context_get('spaces', 'dashboard') && spaces_access_admin()) {
+  if (context_get('spaces', 'dashboard') && spaces_access_admin()) {
     $links['spaces-dashboard'] = array(
       'title' => t('Customize dashboard'),
       'href' => $_GET['q'],
@@ -670,4 +663,90 @@ function atrium_search_form($form_state) {
 function atrium_search_form_submit($form, &$form_state) {
   $search = $form_state['values']['search'];
   drupal_goto('search', array('keys' => $search));
+}
+
+/**
+ * Update feature components for Kit compliance
+ * 
+ * @param array $type
+ *   The type of component.  Accepted types are 'views' and 'context'
+ * @param array $info
+ * 
+ * 
+ * Component array should look something like:
+ * 
+ *
+ * $components = array(
+ *   'views' => array(
+ *     'atrium_blog' => array(
+ *       'atrium_blog_listing' => array(
+ *         'block_1',
+ *         'block_2',
+ *       ),
+ *     ),
+ *   ),
+ *   'contexts' => array(
+ *     'spaces-feature-blog' => 'blog_listing',
+ *   ),
+ * );
+ * 
+ */
+function atrium_kit_comply($type, $info) {
+  switch ($type) {
+    // Handles changes to views blocks.
+    case 'views':
+      $views = $info['views'];
+      $contexts = $info['contexts'];
+      foreach ($views as $old_view => $new_view) {
+        $view = views_get_view($old_view);
+        // Proceed if view is not overridden.
+        if ($view->type != 'Overriden') {
+          // Go block by block and update spaces_dashboards, spaces_presets, and context.
+          foreach ($new_view as $new_view_name => $blocks) {
+            foreach ($blocks as $block) {
+              // Replace block names in spaces_dashboard
+              $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'context' AND object_id LIKE 'spaces_dashboard%%'");
+              while ($result = db_fetch_object($query)) {
+                $value = '';
+                $value = str_replace("views-$old_view-$block", "views-$new_view_name-$block", $result->value);
+                $value = str_replace("$old_view-$block", "$new_view_name-$block", $result->value);
+                if ($value != $result->value) {
+                  db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d AND object_id = '%s'", $value, $result->type, $result->id, $result->object_id);
+                }
+              }
+              // Replace block names in spaces_presets
+              $query = db_query("SELECT * FROM {spaces_presets}");
+              while ($result = db_fetch_object($query)) {
+                $value = str_replace("views-$old_view-$block", "views-$new_view_name-$block", $result->value);
+                $value = str_replace("$old_view-$block", "$new_view_name-$block", $result->value);
+                if ($value != $result->value) {
+                  db_query("UPDATE {spaces_presets} SET value = '%s' WHERE name = '%s'", $value, $result->name);
+                }
+              }
+              // Replace block names in contexts
+              if (!empty($contexts)) {
+                foreach ($contexts as $current => $replacement) {
+                  $query = db_query("SELECT * FROM {context} WHERE name = '%s'", $current);
+                  while ($result = db_fetch_object($query)) {
+                    $reactions = str_replace("views-$old_view-$block", "views-$new_view_name-$block", $result->reactions);
+                    $reactions = str_replace("$old_view-$block", "$new_view_name-$block", $result->reactions);
+                    $conditions = str_replace($current, $replacement, $result->conditions);
+                    if ($reactions != $result->reactions || $conditions != $result->conditions) {
+                      db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $current);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+    case 'context':
+      $contexts = $info['contexts'];
+      foreach ($contexts as $old => $new) {
+        db_query("UPDATE {context} SET name = '%s' WHERE name = '%s'", $new, $old);
+      }
+      break;
+  }
 }

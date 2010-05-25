@@ -8,7 +8,7 @@ function _atrium_book_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'spaces-feature-book';
+  $context->name = 'book_listing';
   $context->description = '';
   $context->tag = 'Book';
   $context->conditions = array(
@@ -22,7 +22,7 @@ function _atrium_book_context_default_contexts() {
     ),
     'views' => array(
       'values' => array(
-        'atrium_book' => 'atrium_book',
+        'atrium_book_listing' => 'atrium_book_listing',
       ),
     ),
   );
@@ -47,11 +47,11 @@ function _atrium_book_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['spaces-feature-book'] = array(
+  $translatables['book_listing'] = array(
     t('Book'),
   );
 
-  $export['spaces-feature-book'] = $context;
+  $export['book_listing'] = $context;
   return $export;
 }
 
