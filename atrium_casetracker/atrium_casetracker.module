@@ -6,7 +6,7 @@ require('atrium_casetracker.features.inc');
  * Implementation of hook_help().
  */
 function atrium_casetracker_help($path, $arg) {
-  if (($path == 'help#atrium_casetracker') || context_isset('context', 'atrium_casetracker_listing')) {
+  if (($path == 'help#atrium_casetracker') || context_isset('context', 'spaces-feature-casetracker')) {
     switch ($path) {
       case 'node/add/casetracker-basic-case':
       case 'node/add/casetracker-basic-project':
@@ -167,7 +167,7 @@ function atrium_casetracker_theme_registry_alter(&$theme_registry) {
  */
 function atrium_casetracker_preprocess_views_view(&$vars) {
   $view = $vars['view'];
-  if ($view->name == 'atrium_casetracker_cases') {
+  if ($view->name == 'atrium_casetracker') {
     // Whisk away exposed filter for display in a block
     _atrium_casetracker_block_filters($vars['exposed']);
     $vars['exposed'] = '';
@@ -179,7 +179,7 @@ function atrium_casetracker_preprocess_views_view(&$vars) {
  */
 function atrium_casetracker_preprocess_views_view_table(&$vars) {
   $view = $vars['view'];
-  if ($view->name == 'atrium_casetracker_cases') {
+  if ($view->name == 'atrium_casetracker') {
     $vars['class'] .= " cases";
 
     global $user;
