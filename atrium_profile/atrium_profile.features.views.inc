@@ -6,9 +6,9 @@
 function _atrium_profile_views_default_views() {
   $views = array();
 
-  // Exported view: atrium_profile
+  // Exported view: atrium_profile_listing
   $view = new view;
-  $view->name = 'atrium_profile';
+  $view->name = 'atrium_profile_listing';
   $view->description = 'Atrium > Profile';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -323,7 +323,7 @@ function _atrium_profile_views_default_views() {
     'default' => 'default',
     'page_1' => 'page_1',
   ));
-  $translatables['atrium_profile'] = array(
+  $translatables['atrium_profile_listing'] = array(
     t('Defaults'),
     t('Profile'),
     t('Profile fields'),
@@ -331,9 +331,9 @@ function _atrium_profile_views_default_views() {
 
   $views[$view->name] = $view;
 
-  // Exported view: atrium_profile_blocks
+  // Exported view: profile_blocks
   $view = new view;
-  $view->name = 'atrium_profile_blocks';
+  $view->name = 'profile_blocks';
   $view->description = 'Atrium > Profile blocks';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -769,7 +769,7 @@ function _atrium_profile_views_default_views() {
   $handler->override_option('row_options', array());
   $handler->override_option('block_description', 'User\'s groups');
   $handler->override_option('block_caching', -1);
-  $translatables['atrium_profile_blocks'] = array(
+  $translatables['profile_blocks'] = array(
     t('Activity'),
     t('Defaults'),
     t('Groups'),

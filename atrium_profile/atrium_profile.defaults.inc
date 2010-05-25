@@ -249,28 +249,28 @@ function _atrium_profile_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'atrium_profile';
+  $context->name = 'profile_listing';
   $context->description = '';
   $context->tag = 'Profile';
   $context->conditions = array(
     'views' => array(
       'values' => array(
-        'atrium_profile' => 'atrium_profile',
+        'profile_listing' => 'profile_listing',
       ),
     ),
   );
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-atrium_profile_blocks-block_2' => array(
+        'views-profile_blocks-block_2' => array(
           'module' => 'views',
-          'delta' => 'atrium_profile_blocks-block_2',
+          'delta' => 'profile_blocks-block_2',
           'region' => 'right',
           'weight' => 0,
         ),
-        'views-atrium_profile_blocks-block_1' => array(
+        'views-profile_blocks-block_1' => array(
           'module' => 'views',
-          'delta' => 'atrium_profile_blocks-block_1',
+          'delta' => 'profile_blocks-block_1',
           'region' => 'content',
           'weight' => 0,
         ),
@@ -279,11 +279,11 @@ function _atrium_profile_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['atrium_profile'] = array(
+  $translatables['profile_listing'] = array(
     t('Profile'),
   );
 
-  $export['atrium_profile'] = $context;
+  $export['profile_listing'] = $context;
   return $export;
 }
 

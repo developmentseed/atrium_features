@@ -46,7 +46,7 @@ function atrium_profile_user($op, &$edit, &$account, $category = NULL) {
  */
 function atrium_profile_views_pre_build(&$view) {
   // Remove email display if site is in public mode.
-  if ($view->name == 'atrium_profile' && variable_get('user_register', 0)) {
+  if ($view->name == 'profile_listing' && variable_get('user_register', 0)) {
     $fields = $view->display_handler->get_option('fields');
     if (isset($fields['mail'])) {
       unset($fields['mail']);
