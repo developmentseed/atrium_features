@@ -6,9 +6,9 @@
 function _atrium_calendar_views_default_views() {
   $views = array();
 
-  // Exported view: atrium_calendar
+  // Exported view: calendar_listing
   $view = new view;
-  $view->name = 'atrium_calendar';
+  $view->name = 'calendar_listing';
   $view->description = 'Atrium > Calendar';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -233,7 +233,7 @@ function _atrium_calendar_views_default_views() {
   ));
   $handler->override_option('block_description', 'Calendar');
   $handler->override_option('block_caching', -1);
-  $translatables['atrium_calendar'] = array(
+  $translatables['calendar_listing'] = array(
     t('Block'),
     t('Calendar'),
     t('Defaults'),
@@ -241,9 +241,9 @@ function _atrium_calendar_views_default_views() {
 
   $views[$view->name] = $view;
 
-  // Exported view: atrium_calendar_feed_items
+  // Exported view: calendar_feed_items
   $view = new view;
-  $view->name = 'atrium_calendar_feed_items';
+  $view->name = 'calendar_feed_items';
   $view->description = 'Atrium > Calendar feed items';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -436,7 +436,7 @@ function _atrium_calendar_views_default_views() {
   $handler = $view->new_display('block', 'Block', 'block_1');
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
-  $translatables['atrium_calendar_feed_items'] = array(
+  $translatables['calendar_feed_items'] = array(
     t('Block'),
     t('Defaults'),
     t('Events'),
@@ -444,9 +444,9 @@ function _atrium_calendar_views_default_views() {
 
   $views[$view->name] = $view;
 
-  // Exported view: atrium_calendar_feeds
+  // Exported view: calendar_feeds
   $view = new view;
-  $view->name = 'atrium_calendar_feeds';
+  $view->name = 'calendar_feeds';
   $view->description = 'Atrium > Calendar feeds';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -627,7 +627,7 @@ function _atrium_calendar_views_default_views() {
     'description' => '',
     'weight' => 0,
   ));
-  $translatables['atrium_calendar_feeds'] = array(
+  $translatables['calendar_feeds'] = array(
     t('Defaults'),
     t('Feeds'),
     t('Page'),
@@ -635,9 +635,9 @@ function _atrium_calendar_views_default_views() {
 
   $views[$view->name] = $view;
 
-  // Exported view: atrium_calendar_upcoming
+  // Exported view: calendar_upcoming
   $view = new view;
-  $view->name = 'atrium_calendar_upcoming';
+  $view->name = 'calendar_upcoming';
   $view->description = 'Atrium > Upcoming events';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -869,7 +869,7 @@ function _atrium_calendar_views_default_views() {
   ));
   $handler->override_option('block_description', 'Upcoming events');
   $handler->override_option('block_caching', -1);
-  $translatables['atrium_calendar_upcoming'] = array(
+  $translatables['calendar_upcoming'] = array(
     t('Block: Upcoming events'),
     t('Defaults'),
     t('No upcoming events found.'),

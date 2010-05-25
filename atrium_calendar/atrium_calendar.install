@@ -40,3 +40,42 @@ function atrium_calendar_update_6201() {
   }
   return $ret;
 }
+
+/**
+ * Update for Kit compliance
+ */
+function atrium_calendar_update_6202() {
+  
+  $components = array(
+    'views' => array(
+      'atrium_calendar' => array(
+        'calendar_listing' => array(
+          'block_1',
+        ),
+      ),
+      'atrium_calendar_feed_items' => array(
+        'calendar_feed_items' => array(
+          'block_1',
+        ),
+      ),
+      'atrium_calendar_feeds' => array(
+        'calendar_feeds' => array(
+        ),
+      ),
+      'atrium_calendar_upcoming' => array(
+        'calendar_upcoming' => array(
+          'block_1',
+        ),
+      ),                  
+    ),
+    'contexts' => array(
+      'atrium-calendar-event' => 'calendar_event',
+      'spaces-feature-calendar' => 'calendar_calendar',
+    ),
+  );
+  
+  atrium_kit_comply('views', $components); 
+  atrium_kit_comply('context', $components);
+  
+  return array(array('success' => true, 'query' => 'Atrium Calendar updated for Kit compliance.'));
+}

@@ -140,7 +140,7 @@ function _atrium_calendar_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'atrium-calendar-event';
+  $context->name = 'calendar_event';
   $context->description = '';
   $context->tag = 'Calendar';
   $context->conditions = array(
@@ -167,15 +167,15 @@ function _atrium_calendar_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['atrium-calendar-event'] = array(
+  $translatables['calendar_event'] = array(
     t('Calendar'),
   );
 
-  $export['atrium-calendar-event'] = $context;
+  $export['calendar_event'] = $context;
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'spaces-feature-calendar';
+  $context->name = 'calendar_calendar';
   $context->description = '';
   $context->tag = 'Calendar';
   $context->conditions = array(
@@ -191,10 +191,10 @@ function _atrium_calendar_context_default_contexts() {
     ),
     'views' => array(
       'values' => array(
-        'atrium_calendar' => 'atrium_calendar',
-        'atrium_calendar_feed_items' => 'atrium_calendar_feed_items',
-        'atrium_calendar_feeds' => 'atrium_calendar_feeds',
-        'atrium_calendar_upcoming' => 'atrium_calendar_upcoming',
+        'calendar_listing' => 'calendar_listing',
+        'calendar_feed_items' => 'calendar_feed_items',
+        'calendar_feeds' => 'calendar_feeds',
+        'calendar_upcoming' => 'calendar_upcoming',
       ),
     ),
   );
@@ -213,11 +213,11 @@ function _atrium_calendar_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['spaces-feature-calendar'] = array(
+  $translatables['calendar_calendar'] = array(
     t('Calendar'),
   );
 
-  $export['spaces-feature-calendar'] = $context;
+  $export['calendar_calendar'] = $context;
   return $export;
 }
 
