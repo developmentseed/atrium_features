@@ -46,17 +46,17 @@ function _atrium_calendar_content_default_fields() {
     'default_format' => 'long',
     'widget' => array(
       'default_value' => 'blank',
-      'default_value_custom' => '',
+      'default_value_code' => '',
       'default_value2' => 'same',
-      'default_value_custom2' => '',
+      'default_value_code2' => '',
       'input_format' => 'm/d/Y - g:ia',
       'input_format_custom' => '',
       'increment' => '1',
       'text_parts' => array(),
       'year_range' => '-3:+3',
-      'default_value_code' => '',
-      'default_value_code2' => '',
       'label_position' => 'above',
+      'default_value_custom' => '',
+      'default_value_custom2' => '',
       'label' => 'Date',
       'weight' => '-3',
       'description' => '',
@@ -140,41 +140,6 @@ function _atrium_calendar_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'calendar_event';
-  $context->description = '';
-  $context->tag = 'Calendar';
-  $context->conditions = array(
-    'node' => array(
-      'values' => array(
-        'event' => 'event',
-      ),
-      'options' => array(
-        'node_form' => 0,
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'atrium_calendar-mini' => array(
-          'module' => 'atrium_calendar',
-          'delta' => 'mini',
-          'region' => 'right',
-          'weight' => 0,
-        ),
-      ),
-    ),
-  );
-  $context->condition_mode = 0;
-
-  $translatables['calendar_event'] = array(
-    t('Calendar'),
-  );
-
-  $export['calendar_event'] = $context;
-  $context = new stdClass;
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
   $context->name = 'calendar_calendar';
   $context->description = '';
   $context->tag = 'Calendar';
@@ -218,6 +183,41 @@ function _atrium_calendar_context_default_contexts() {
   );
 
   $export['calendar_calendar'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'calendar_event';
+  $context->description = '';
+  $context->tag = 'Calendar';
+  $context->conditions = array(
+    'node' => array(
+      'values' => array(
+        'event' => 'event',
+      ),
+      'options' => array(
+        'node_form' => 0,
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'atrium_calendar-mini' => array(
+          'module' => 'atrium_calendar',
+          'delta' => 'mini',
+          'region' => 'right',
+          'weight' => 0,
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  $translatables['calendar_event'] = array(
+    t('Calendar'),
+  );
+
+  $export['calendar_event'] = $context;
   return $export;
 }
 
@@ -231,10 +231,10 @@ function _atrium_calendar_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
-  else if ($module == "feeds" && $api == "feeds_importer_default") {
+  elseif ($module == "feeds" && $api == "feeds_importer_default") {
     return array("version" => 1);
   }
-  else if ($module == "strongarm" && $api == "strongarm") {
+  elseif ($module == "strongarm" && $api == "strongarm") {
     return array("version" => 1);
   }
 }
