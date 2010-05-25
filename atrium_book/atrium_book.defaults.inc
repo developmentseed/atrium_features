@@ -22,7 +22,7 @@ function _atrium_book_context_default_contexts() {
     ),
     'views' => array(
       'values' => array(
-        'atrium_book_listing' => 'atrium_book_listing',
+        'book_listing' => 'book_listing',
       ),
     ),
   );

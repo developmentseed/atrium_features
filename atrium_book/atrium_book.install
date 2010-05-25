@@ -7,7 +7,7 @@ function atrium_book_update_6001() {
   $components = array(
     'views' => array(
       'atrium_book' => array(
-        'atrium_book_listing' => array(
+        'book_listing' => array(
           // No blocks.
         ),
       ),
