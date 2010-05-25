@@ -1,0 +1,24 @@
+<?php 
+
+/**
+ * Update for Kit compliance
+ */
+function atrium_book_update_6001() {
+  $components = array(
+    'views' => array(
+      'atrium_book' => array(
+        'atrium_book_listing' => array(
+          // No blocks.
+        ),
+      ),
+    ),
+    'contexts' => array(
+      'spaces-feature-book' => 'book_listing',
+    ),
+  );
+  
+  atrium_kit_comply('views', $components); 
+  atrium_kit_comply('context', $components);
+  
+  return array(array('success' => true, 'query' => 'Atrium Notebook updated for Kit compliance.'));
+}

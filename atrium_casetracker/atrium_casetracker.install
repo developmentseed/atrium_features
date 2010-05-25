@@ -79,3 +79,37 @@ function atrium_casetracker_update_6003() {
   $ret[] = update_sql("UPDATE {system} SET weight = 1 WHERE name = 'atrium_casetracker' AND type = 'module'");
   return $ret;
 }
+
+
+/**
+ * Update for Kit compliance
+ */
+function atrium_casetracker_update_6004() {
+  $components = array(
+    'views' => array(
+      'atrium_casetracker' => array(
+        'atrium_casetracker_cases' => array(
+          'block_1',
+          'block_2',
+          'block_3',
+        ),
+        'atrium_ct_assignee_options' => array(
+          'atrium_casetracker_assignee_options' => array(), // No blocks
+        ),
+        'atrium_ct_project_options' => array(
+          'atrium_casetracker_project_options' => array(), // No blocks.
+        ),
+      ),
+    ),
+    'contexts' => array(
+      'spaces-feature-casetracker' => 'atrium_casetracker_listing',
+      'atrium-casetracker-book' => 'atrium_casetracker_book',
+      'atrium-casetracker-project' => 'atrium_casetracker_project',
+    ),
+  );
+  
+  atrium_kit_comply('views', $components); 
+  atrium_kit_comply('context', $components);
+  
+  return array(array('success' => true, 'query' => 'Atrium Notebook updated for Kit compliance.'));
+}
