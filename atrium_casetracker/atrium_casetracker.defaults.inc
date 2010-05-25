@@ -8,7 +8,7 @@ function _atrium_casetracker_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'atrium-casetracker-book';
+  $context->name = 'atrium_casetracker_book';
   $context->description = '';
   $context->tag = 'Casetracker';
   $context->conditions = array(
@@ -42,15 +42,15 @@ function _atrium_casetracker_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['atrium-casetracker-book'] = array(
+  $translatables['atrium_casetracker_book'] = array(
     t('Casetracker'),
   );
 
-  $export['atrium-casetracker-book'] = $context;
+  $export['atrium_casetracker_book'] = $context;
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'atrium-casetracker-project';
+  $context->name = 'atrium_casetracker_project';
   $context->description = '';
   $context->tag = 'Casetracker';
   $context->conditions = array(
@@ -66,9 +66,9 @@ function _atrium_casetracker_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-atrium_casetracker-block_1' => array(
+        'views-atrium_casetracker_cases-block_1' => array(
           'module' => 'views',
-          'delta' => 'atrium_casetracker-block_1',
+          'delta' => 'atrium_casetracker_cases-block_1',
           'region' => 'content',
           'weight' => 0,
         ),
@@ -77,15 +77,15 @@ function _atrium_casetracker_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['atrium-casetracker-project'] = array(
+  $translatables['atrium_casetracker_project'] = array(
     t('Casetracker'),
   );
 
-  $export['atrium-casetracker-project'] = $context;
+  $export['atrium_casetracker_project'] = $context;
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'spaces-feature-casetracker';
+  $context->name = 'atrium_casetracker_listing';
   $context->description = '';
   $context->tag = 'Casetracker';
   $context->conditions = array(
@@ -100,7 +100,7 @@ function _atrium_casetracker_context_default_contexts() {
     ),
     'views' => array(
       'values' => array(
-        'atrium_casetracker' => 'atrium_casetracker',
+        'atrium_casetracker_cases' => 'atrium_casetracker_cases',
         'atrium_casetracker_projects' => 'atrium_casetracker_projects',
       ),
     ),
@@ -114,9 +114,9 @@ function _atrium_casetracker_context_default_contexts() {
           'region' => 'right',
           'weight' => 2,
         ),
-        'views-atrium_casetracker-block_2' => array(
+        'views-atrium_casetracker_cases-block_2' => array(
           'module' => 'views',
-          'delta' => 'atrium_casetracker-block_2',
+          'delta' => 'atrium_casetracker_cases-block_2',
           'region' => 'right',
           'weight' => 3,
         ),
@@ -132,11 +132,11 @@ function _atrium_casetracker_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['spaces-feature-casetracker'] = array(
+  $translatables['atrium_casetracker_listing'] = array(
     t('Casetracker'),
   );
 
-  $export['spaces-feature-casetracker'] = $context;
+  $export['atrium_casetracker_listing'] = $context;
   return $export;
 }
 

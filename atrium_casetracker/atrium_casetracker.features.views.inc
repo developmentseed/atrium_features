@@ -6,9 +6,9 @@
 function _atrium_casetracker_views_default_views() {
   $views = array();
 
-  // Exported view: atrium_casetracker
+  // Exported view: atrium_casetracker_cases
   $view = new view;
-  $view->name = 'atrium_casetracker';
+  $view->name = 'atrium_casetracker_cases';
   $view->description = 'Atrium > Case Tracker';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -1511,7 +1511,7 @@ function _atrium_casetracker_views_default_views() {
   $handler->override_option('style_options', array());
   $handler->override_option('block_description', 'Latest cases');
   $handler->override_option('block_caching', -1);
-  $translatables['atrium_casetracker'] = array(
+  $translatables['atrium_casetracker_cases'] = array(
     t('All cases'),
     t('Defaults'),
     t('Latest cases'),
@@ -1813,9 +1813,9 @@ function _atrium_casetracker_views_default_views() {
 
   $views[$view->name] = $view;
 
-  // Exported view: atrium_ct_assignee_options
+  // Exported view: atrium_casetracker_assignee_options
   $view = new view;
-  $view->name = 'atrium_ct_assignee_options';
+  $view->name = 'atrium_casetracker_assignee_options';
   $view->description = 'Atrium case tracker >  User options query builder';
   $view->tag = 'casetracker';
   $view->view_php = '';
@@ -1915,15 +1915,15 @@ function _atrium_casetracker_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('items_per_page', 0);
-  $translatables['atrium_ct_assignee_options'] = array(
+  $translatables['atrium_casetracker_assignee_options'] = array(
     t('Defaults'),
   );
 
   $views[$view->name] = $view;
 
-  // Exported view: atrium_ct_project_options
+  // Exported view: atrium_casetracker_project_options
   $view = new view;
-  $view->name = 'atrium_ct_project_options';
+  $view->name = 'atrium_casetracker_project_options';
   $view->description = 'Atrium case tracker > Project options query builder';
   $view->tag = 'casetracker';
   $view->view_php = '';
@@ -2005,7 +2005,7 @@ function _atrium_casetracker_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('items_per_page', 0);
-  $translatables['atrium_ct_project_options'] = array(
+  $translatables['atrium_casetracker_project_options'] = array(
     t('Defaults'),
   );
 
