@@ -6,9 +6,9 @@
 function _atrium_groups_views_default_views() {
   $views = array();
 
-  // Exported view: atrium_groups
+  // Exported view: groups_listing
   $view = new view;
-  $view->name = 'atrium_groups';
+  $view->name = 'groups_listing';
   $view->description = 'Atrium > Groups';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -819,7 +819,7 @@ function _atrium_groups_views_default_views() {
     'description' => '',
     'weight' => 0,
   ));
-  $translatables['atrium_groups'] = array(
+  $translatables['groups_listing'] = array(
     t('Archived groups'),
     t('Block: My groups (sidebar)'),
     t('Defaults'),

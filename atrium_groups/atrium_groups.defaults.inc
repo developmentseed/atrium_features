@@ -8,13 +8,13 @@ function _atrium_groups_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'spaces-feature-groups';
+  $context->name = 'groups_listing';
   $context->description = '';
   $context->tag = 'Groups';
   $context->conditions = array(
     'views' => array(
       'values' => array(
-        'atrium_groups' => 'atrium_groups',
+        'groups_listing' => 'groups_listing',
       ),
     ),
   );
@@ -23,11 +23,11 @@ function _atrium_groups_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['spaces-feature-groups'] = array(
+  $translatables['groups_listing'] = array(
     t('Groups'),
   );
 
-  $export['spaces-feature-groups'] = $context;
+  $export['groups_listing'] = $context;
   return $export;
 }
 
