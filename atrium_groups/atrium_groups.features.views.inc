@@ -300,6 +300,7 @@ function _atrium_groups_views_default_views() {
     'title' => 'Groups',
     'description' => '',
     'weight' => '0',
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'Page: Group directory', 'page_2');
   $handler->override_option('fields', array(
@@ -559,6 +560,7 @@ function _atrium_groups_views_default_views() {
     'title' => 'Groups',
     'description' => '',
     'weight' => '0',
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'Page: Archived groups', 'page_3');
   $handler->override_option('fields', array(
@@ -818,6 +820,7 @@ function _atrium_groups_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
   $translatables['groups_listing'] = array(
     t('Archived groups'),
