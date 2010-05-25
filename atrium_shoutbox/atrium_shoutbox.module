@@ -6,7 +6,7 @@ include_once('atrium_shoutbox.features.inc');
  * Implementation of hook_help().
  */
 function atrium_shoutbox_help($path, $arg) {
-  if (($path == 'help#atrium_shoutbox') || context_isset('context', 'spaces-shoutbox-og')) {
+  if (($path == 'help#atrium_shoutbox') || context_isset('context', 'shoutbox_og')) {
     $help = '';
     $help .= '<h3>'. t('Shoutbox') .'</h3>';
     $help .= '<p>'. t('The shoutbox gives your team a space to microblog.') .'</p>';
@@ -72,7 +72,7 @@ function atrium_shoutbox_block($op = 'list', $delta = 0) {
     case 'list':
       return array('shoutbox' => array('info' =>  t('Shoutbox')));
     case 'view':
-      if ($delta == 'shoutbox' && spaces_access_feature('view', 'atrium_shoutbox') && !context_isset('context', 'spaces-shoutbox-og')) {
+      if ($delta == 'shoutbox' && spaces_access_feature('view', 'atrium_shoutbox') && !context_isset('context', 'shoutbox_og')) {
         if ($shoutbox = atrium_shoutbox_get_shoutbox()) {
           if (($space = spaces_get_space()) && $space->type === 'og') {
             $link = l(t('Full view'), 'shoutbox');
@@ -118,7 +118,7 @@ function atrium_shoutbox_context_links_alter(&$links) {
 function atrium_shoutbox_page() {
   $shoutbox = atrium_shoutbox_get_shoutbox();
   if ($shoutbox && $shoutbox['node']) {
-    $rendered = views_embed_view('atrium_shoutbox_shouts', 'page_1', array($node->nid));
+    $rendered = views_embed_view('shoutbox_shouts', 'page_1', array($node->nid));
     return drupal_get_form('messaging_shoutbox_shoutform', $shoutbox['node'], 'atrium_shoutbox_shouts', 'page_1', $rendered);
   }
   return $shoutbox ? $shoutbox['rendered'] : '';
@@ -148,7 +148,7 @@ function atrium_shoutbox_get_shoutbox($reset = FALSE) {
     $shoutbox = array();
     $space = spaces_get_space();
     if ($space->type === 'og') {
-      if ($view = views_get_view('atrium_shoutbox')) {
+      if ($view = views_get_view('shoutbox_shoutboxes')) {
         $view->set_display('default');
         $view->execute();
         if (is_array($view->result) && count($view->result)) {
@@ -165,7 +165,7 @@ function atrium_shoutbox_get_shoutbox($reset = FALSE) {
         }
         // Get the view and pass it to the form, as we will want access to the
         // raw view resultset ourselves.
-        if (node_access('view', $node) && $view = views_get_view('atrium_shoutbox_shouts')) {
+        if (node_access('view', $node) && $view = views_get_view('shoutbox_shouts')) {
           $shoutbox['node'] = $node;
           $shoutbox['view'] = $view;
           $shoutbox['rendered'] = $view->execute_display('default', array($node->nid));
@@ -173,7 +173,7 @@ function atrium_shoutbox_get_shoutbox($reset = FALSE) {
       }
     }
     else {
-      $view = views_get_view('atrium_shoutbox_shouts');
+      $view = views_get_view('shoutbox_shouts');
       $shoutbox['node'] = FALSE;
       $shoutbox['view'] = $view;
       $shoutbox['rendered'] = $view->execute_display('default');

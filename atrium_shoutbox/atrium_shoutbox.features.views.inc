@@ -6,9 +6,9 @@
 function _atrium_shoutbox_views_default_views() {
   $views = array();
 
-  // Exported view: atrium_shoutbox
+  // Exported view: shoutbox_shoutboxes
   $view = new view;
-  $view->name = 'atrium_shoutbox';
+  $view->name = 'shoutbox_shoutboxes';
   $view->description = 'Spaces Shoutbox: helper view to look up shoutbox in active space';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -76,15 +76,15 @@ function _atrium_shoutbox_views_default_views() {
     'links' => 0,
     'comments' => 0,
   ));
-  $translatables['atrium_shoutbox'] = array(
+  $translatables['shoutbox_shoutboxes'] = array(
     t('Defaults'),
   );
 
   $views[$view->name] = $view;
 
-  // Exported view: atrium_shoutbox_shouts
+  // Exported view: shoutbox_shouts
   $view = new view;
-  $view->name = 'atrium_shoutbox_shouts';
+  $view->name = 'shoutbox_shouts';
   $view->description = 'View a shouts for a given shoutbox';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -796,7 +796,7 @@ function _atrium_shoutbox_views_default_views() {
     'description' => '',
     'weight' => 0,
   ));
-  $translatables['atrium_shoutbox_shouts'] = array(
+  $translatables['shoutbox_shouts'] = array(
     t('Admin'),
     t('Defaults'),
     t('Shoutbox'),
@@ -805,9 +805,9 @@ function _atrium_shoutbox_views_default_views() {
 
   $views[$view->name] = $view;
 
-  // Exported view: atrium_shoutbox_users
+  // Exported view: shoutbox_users
   $view = new view;
-  $view->name = 'atrium_shoutbox_users';
+  $view->name = 'shoutbox_users';
   $view->description = 'Block of users that can filter the messaging shoutbox';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -892,7 +892,7 @@ function _atrium_shoutbox_views_default_views() {
   $handler->override_option('use_pager', 'mini');
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
-  $translatables['atrium_shoutbox_users'] = array(
+  $translatables['shoutbox_users'] = array(
     t('Block'),
     t('Defaults'),
     t('Members'),

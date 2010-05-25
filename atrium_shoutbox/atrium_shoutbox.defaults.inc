@@ -8,7 +8,7 @@ function _atrium_shoutbox_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'atrium-shoutbox';
+  $context->name = 'shoutbox_sitewide';
   $context->description = '';
   $context->tag = 'Shoutbox';
   $context->conditions = array(
@@ -40,13 +40,13 @@ function _atrium_shoutbox_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'atrium-shoutbox-og';
+  $context->name = 'shoutbox_og';
   $context->description = '';
   $context->tag = 'Shoutbox';
   $context->conditions = array(
     'views' => array(
       'values' => array(
-        'atrium_shoutbox_shouts:page_1' => 'atrium_shoutbox_shouts:page_1',
+        'shoutbox_shouts:page_1' => 'shoutbox_shouts:page_1',
       ),
     ),
   );
@@ -59,9 +59,9 @@ function _atrium_shoutbox_context_default_contexts() {
           'region' => 'right',
           'weight' => 0,
         ),
-        'views-atrium_shoutbox_users-block_1' => array(
+        'views-shoutbox_users-block_1' => array(
           'module' => 'views',
-          'delta' => 'atrium_shoutbox_users-block_1',
+          'delta' => 'shoutbox_users-block_1',
           'region' => 'right',
           'weight' => 1,
         ),
@@ -70,11 +70,11 @@ function _atrium_shoutbox_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['atrium-shoutbox-og'] = array(
+  $translatables['shoutbox_og'] = array(
     t('Shoutbox'),
   );
 
-  $export['atrium-shoutbox-og'] = $context;
+  $export['shoutbox_og'] = $context;
   return $export;
 }
 
