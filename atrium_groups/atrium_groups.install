@@ -15,10 +15,15 @@ function atrium_groups_update_6001() {
     'contexts' => array(
       'spaces-feature-groups' => 'groups_listing',
     ),
+    'spaces_presets' => array(
+      'atrium_og_private' => 'atrium_groups_private',
+      'atrium_og_public' => 'atrium_groups_public',
+    ),
   );
   
   atrium_kit_comply('views', $components); 
   atrium_kit_comply('context', $components);
+  atrium_kit_comply('spaces_preset', $components);
   
   return array(array('success' => true, 'query' => 'Atrium Groups updated for Kit compliance.'));
 }

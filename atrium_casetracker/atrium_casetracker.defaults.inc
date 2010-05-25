@@ -50,41 +50,6 @@ function _atrium_casetracker_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'casetracker_project';
-  $context->description = '';
-  $context->tag = 'Casetracker';
-  $context->conditions = array(
-    'node' => array(
-      'values' => array(
-        'casetracker_basic_project' => 'casetracker_basic_project',
-      ),
-      'options' => array(
-        'node_form' => 0,
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'views-casetracker_cases-block_1' => array(
-          'module' => 'views',
-          'delta' => 'casetracker_cases-block_1',
-          'region' => 'content',
-          'weight' => 0,
-        ),
-      ),
-    ),
-  );
-  $context->condition_mode = 0;
-
-  $translatables['casetracker_project'] = array(
-    t('Casetracker'),
-  );
-
-  $export['casetracker_project'] = $context;
-  $context = new stdClass;
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
   $context->name = 'casetracker_listing';
   $context->description = '';
   $context->tag = 'Casetracker';
@@ -137,6 +102,41 @@ function _atrium_casetracker_context_default_contexts() {
   );
 
   $export['casetracker_listing'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'casetracker_project';
+  $context->description = '';
+  $context->tag = 'Casetracker';
+  $context->conditions = array(
+    'node' => array(
+      'values' => array(
+        'casetracker_basic_project' => 'casetracker_basic_project',
+      ),
+      'options' => array(
+        'node_form' => 0,
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-casetracker_cases-block_1' => array(
+          'module' => 'views',
+          'delta' => 'casetracker_cases-block_1',
+          'region' => 'content',
+          'weight' => 0,
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  $translatables['casetracker_project'] = array(
+    t('Casetracker'),
+  );
+
+  $export['casetracker_project'] = $context;
   return $export;
 }
 
@@ -150,7 +150,7 @@ function _atrium_casetracker_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
-  else if ($module == "strongarm" && $api == "strongarm") {
+  elseif ($module == "strongarm" && $api == "strongarm") {
     return array("version" => 1);
   }
 }

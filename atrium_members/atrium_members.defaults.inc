@@ -154,7 +154,7 @@ function _atrium_members_spaces_presets() {
   $spaces_presets = new stdClass;
   $spaces_presets->disabled = FALSE; /* Edit this to true to make a default spaces_presets disabled initially */
   $spaces_presets->api_version = 3;
-  $spaces_presets->name = 'atrium_user_simple';
+  $spaces_presets->name = 'atrium_members_simple';
   $spaces_presets->title = 'Simple profile';
   $spaces_presets->description = 'A simple profile with a blog, calendar and dashboard.';
   $spaces_presets->space_type = 'user';
@@ -200,12 +200,12 @@ function _atrium_members_spaces_presets() {
     ),
   );
 
-  $translatables['atrium_user_simple'] = array(
+  $translatables['atrium_members_simple'] = array(
     t('A simple profile with a blog, calendar and dashboard.'),
     t('Simple profile'),
   );
 
-  $export['atrium_user_simple'] = $spaces_presets;
+  $export['atrium_members_simple'] = $spaces_presets;
   return $export;
 }
 
@@ -288,7 +288,7 @@ function _atrium_members_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'spaces_preset_user';
-  $strongarm->value = 'atrium_user_simple';
+  $strongarm->value = 'atrium_members_simple';
 
   $export['spaces_preset_user'] = $strongarm;
   return $export;

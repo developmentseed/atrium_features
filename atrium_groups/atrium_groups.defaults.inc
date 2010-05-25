@@ -79,7 +79,7 @@ function _atrium_groups_spaces_presets() {
   $spaces_presets = new stdClass;
   $spaces_presets->disabled = FALSE; /* Edit this to true to make a default spaces_presets disabled initially */
   $spaces_presets->api_version = 3;
-  $spaces_presets->name = 'atrium_og_private';
+  $spaces_presets->name = 'atrium_groups_private';
   $spaces_presets->title = 'Private group';
   $spaces_presets->description = 'A private group is accessible only to users added to that group by one of the group\'s managers.';
   $spaces_presets->space_type = 'og';
@@ -154,16 +154,16 @@ function _atrium_groups_spaces_presets() {
     ),
   );
 
-  $translatables['atrium_og_private'] = array(
+  $translatables['atrium_groups_private'] = array(
     t('A private group is accessible only to users added to that group by one of the group\'s managers.'),
     t('Private group'),
   );
 
-  $export['atrium_og_private'] = $spaces_presets;
+  $export['atrium_groups_private'] = $spaces_presets;
   $spaces_presets = new stdClass;
   $spaces_presets->disabled = FALSE; /* Edit this to true to make a default spaces_presets disabled initially */
   $spaces_presets->api_version = 3;
-  $spaces_presets->name = 'atrium_og_public';
+  $spaces_presets->name = 'atrium_groups_public';
   $spaces_presets->title = 'Public group';
   $spaces_presets->description = 'A public group is accessible to all users on the site. Users can join and leave public groups freely.';
   $spaces_presets->space_type = 'og';
@@ -237,12 +237,12 @@ function _atrium_groups_spaces_presets() {
     ),
   );
 
-  $translatables['atrium_og_public'] = array(
+  $translatables['atrium_groups_public'] = array(
     t('A public group is accessible to all users on the site. Users can join and leave public groups freely.'),
     t('Public group'),
   );
 
-  $export['atrium_og_public'] = $spaces_presets;
+  $export['atrium_groups_public'] = $spaces_presets;
   return $export;
 }
 
@@ -405,7 +405,7 @@ function _atrium_groups_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'spaces_preset_og';
-  $strongarm->value = 'atrium_og_private';
+  $strongarm->value = 'atrium_groups_private';
 
   $export['spaces_preset_og'] = $strongarm;
   $strongarm = new stdClass;

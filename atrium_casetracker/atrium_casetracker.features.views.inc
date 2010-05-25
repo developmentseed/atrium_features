@@ -548,6 +548,7 @@ function _atrium_casetracker_views_default_views() {
     'title' => 'Case Tracker',
     'description' => '',
     'weight' => '0',
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'My cases', 'page_2');
   $handler->override_option('filters', array(
@@ -756,6 +757,7 @@ function _atrium_casetracker_views_default_views() {
     'title' => 'Case Tracker',
     'description' => '',
     'weight' => '0',
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'Project cases', 'page_3');
   $handler->override_option('arguments', array(
@@ -977,6 +979,7 @@ function _atrium_casetracker_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('block', 'Project cases (newest)', 'block_1');
   $handler->override_option('arguments', array(
@@ -1527,292 +1530,6 @@ function _atrium_casetracker_views_default_views() {
 
   $views[$view->name] = $view;
 
-  // Exported view: casetracker_projects
-  $view = new view;
-  $view->name = 'casetracker_projects';
-  $view->description = 'Atrium > Case Tracker projects';
-  $view->tag = 'atrium';
-  $view->view_php = '';
-  $view->base_table = 'node';
-  $view->is_cacheable = FALSE;
-  $view->api_version = 2;
-  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
-  $handler = $view->new_display('default', 'Defaults', 'default');
-  $handler->override_option('fields', array(
-    'title' => array(
-      'label' => '',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'alt' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-      ),
-      'link_to_node' => 1,
-      'exclude' => 0,
-      'id' => 'title',
-      'table' => 'node',
-      'field' => 'title',
-      'relationship' => 'none',
-    ),
-    'case_count' => array(
-      'label' => 'Total cases',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'link_class' => '',
-        'alt' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'strip_tags' => 0,
-        'html' => 0,
-      ),
-      'type' => '0',
-      'exclude' => 0,
-      'id' => 'case_count',
-      'table' => 'casetracker_case',
-      'field' => 'case_count',
-      'override' => array(
-        'button' => 'Override',
-      ),
-      'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('sorts', array(
-    'title' => array(
-      'order' => 'ASC',
-      'id' => 'title',
-      'table' => 'node',
-      'field' => 'title',
-      'override' => array(
-        'button' => 'Override',
-      ),
-      'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('filters', array(
-    'status' => array(
-      'operator' => '=',
-      'value' => 1,
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'status',
-      'table' => 'node',
-      'field' => 'status',
-      'relationship' => 'none',
-    ),
-    'current' => array(
-      'operator' => 'all',
-      'value' => 'all',
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'current',
-      'table' => 'spaces',
-      'field' => 'current',
-      'relationship' => 'none',
-    ),
-    'project' => array(
-      'operator' => '=',
-      'value' => '',
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'project',
-      'table' => 'node',
-      'field' => 'project',
-      'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('access', array(
-    'type' => 'spaces_feature',
-    'spaces_feature' => 'atrium_casetracker',
-  ));
-  $handler->override_option('cache', array(
-    'type' => 'none',
-  ));
-  $handler->override_option('title', 'Projects');
-  $handler->override_option('empty', 'No projects found.');
-  $handler->override_option('items_per_page', 40);
-  $handler->override_option('use_pager', '1');
-  $handler->override_option('style_plugin', 'grid');
-  $handler->override_option('style_options', array(
-    'grouping' => '',
-    'columns' => '2',
-    'alignment' => 'vertical',
-  ));
-  $handler = $view->new_display('page', 'Projects', 'page_1');
-  $handler->override_option('path', 'casetracker/projects');
-  $handler->override_option('menu', array(
-    'type' => 'tab',
-    'title' => 'Projects',
-    'description' => '',
-    'weight' => '10',
-    'name' => 'navigation',
-  ));
-  $handler->override_option('tab_options', array(
-    'type' => 'none',
-    'title' => '',
-    'description' => '',
-    'weight' => 0,
-  ));
-  $handler = $view->new_display('page', 'Archived projects', 'page_2');
-  $handler->override_option('filters', array(
-    'status' => array(
-      'operator' => '=',
-      'value' => 0,
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'status',
-      'table' => 'node',
-      'field' => 'status',
-      'relationship' => 'none',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-    ),
-    'project' => array(
-      'operator' => '=',
-      'value' => '',
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'project',
-      'table' => 'node',
-      'field' => 'project',
-      'relationship' => 'none',
-    ),
-    'current' => array(
-      'operator' => 'all',
-      'value' => 'all',
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'current',
-      'table' => 'spaces',
-      'field' => 'current',
-      'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('title', 'Archived projects');
-  $handler->override_option('empty', 'No archived projects found.');
-  $handler->override_option('path', 'casetracker/archive');
-  $handler->override_option('menu', array(
-    'type' => 'tab',
-    'title' => 'Archived',
-    'description' => '',
-    'weight' => '20',
-    'name' => 'navigation',
-  ));
-  $handler->override_option('tab_options', array(
-    'type' => 'none',
-    'title' => '',
-    'description' => '',
-    'weight' => 0,
-  ));
-  $handler = $view->new_display('block', 'Block: Projects', 'block_1');
-  $handler->override_option('fields', array(
-    'title' => array(
-      'label' => '',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'alt' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-      ),
-      'link_to_node' => 1,
-      'exclude' => 0,
-      'id' => 'title',
-      'table' => 'node',
-      'field' => 'title',
-      'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('sorts', array(
-    'changed' => array(
-      'order' => 'DESC',
-      'granularity' => 'second',
-      'id' => 'changed',
-      'table' => 'node',
-      'field' => 'changed',
-      'override' => array(
-        'button' => 'Override',
-      ),
-      'relationship' => 'none',
-    ),
-  ));
-  $handler->override_option('access', array(
-    'type' => 'perm',
-    'perm' => 'access content',
-  ));
-  $handler->override_option('use_ajax', TRUE);
-  $handler->override_option('items_per_page', 10);
-  $handler->override_option('use_pager', 'mini');
-  $handler->override_option('use_more', 0);
-  $handler->override_option('use_more_text', 'View more');
-  $handler->override_option('style_plugin', 'list');
-  $handler->override_option('style_options', array(
-    'grouping' => '',
-    'type' => 'ul',
-  ));
-  $handler->override_option('block_description', 'Projects');
-  $handler->override_option('block_caching', -1);
-  $translatables['casetracker_projects'] = array(
-    t('Archived projects'),
-    t('Block: Projects'),
-    t('Defaults'),
-    t('No archived projects found.'),
-    t('No projects found.'),
-    t('Projects'),
-    t('View more'),
-  );
-
-  $views[$view->name] = $view;
-
   // Exported view: casetracker_override_assignee_options
   $view = new view;
   $view->name = 'casetracker_override_assignee_options';
@@ -2007,6 +1724,294 @@ function _atrium_casetracker_views_default_views() {
   $handler->override_option('items_per_page', 0);
   $translatables['casetracker_override_project_options'] = array(
     t('Defaults'),
+  );
+
+  $views[$view->name] = $view;
+
+  // Exported view: casetracker_projects
+  $view = new view;
+  $view->name = 'casetracker_projects';
+  $view->description = 'Atrium > Case Tracker projects';
+  $view->tag = 'atrium';
+  $view->view_php = '';
+  $view->base_table = 'node';
+  $view->is_cacheable = FALSE;
+  $view->api_version = 2;
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+  $handler = $view->new_display('default', 'Defaults', 'default');
+  $handler->override_option('fields', array(
+    'title' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+      ),
+      'link_to_node' => 1,
+      'exclude' => 0,
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'relationship' => 'none',
+    ),
+    'case_count' => array(
+      'label' => 'Total cases',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'strip_tags' => 0,
+        'html' => 0,
+      ),
+      'type' => '0',
+      'exclude' => 0,
+      'id' => 'case_count',
+      'table' => 'casetracker_case',
+      'field' => 'case_count',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('sorts', array(
+    'title' => array(
+      'order' => 'ASC',
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('filters', array(
+    'status' => array(
+      'operator' => '=',
+      'value' => 1,
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'relationship' => 'none',
+    ),
+    'current' => array(
+      'operator' => 'all',
+      'value' => 'all',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'current',
+      'table' => 'spaces',
+      'field' => 'current',
+      'relationship' => 'none',
+    ),
+    'project' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'project',
+      'table' => 'node',
+      'field' => 'project',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'spaces_feature',
+    'spaces_feature' => 'atrium_casetracker',
+  ));
+  $handler->override_option('cache', array(
+    'type' => 'none',
+  ));
+  $handler->override_option('title', 'Projects');
+  $handler->override_option('empty', 'No projects found.');
+  $handler->override_option('items_per_page', 40);
+  $handler->override_option('use_pager', '1');
+  $handler->override_option('style_plugin', 'grid');
+  $handler->override_option('style_options', array(
+    'grouping' => '',
+    'columns' => '2',
+    'alignment' => 'vertical',
+  ));
+  $handler = $view->new_display('page', 'Projects', 'page_1');
+  $handler->override_option('path', 'casetracker/projects');
+  $handler->override_option('menu', array(
+    'type' => 'tab',
+    'title' => 'Projects',
+    'description' => '',
+    'weight' => '10',
+    'name' => 'navigation',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
+  $handler = $view->new_display('page', 'Archived projects', 'page_2');
+  $handler->override_option('filters', array(
+    'status' => array(
+      'operator' => '=',
+      'value' => 0,
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'relationship' => 'none',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+    ),
+    'project' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'project',
+      'table' => 'node',
+      'field' => 'project',
+      'relationship' => 'none',
+    ),
+    'current' => array(
+      'operator' => 'all',
+      'value' => 'all',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'current',
+      'table' => 'spaces',
+      'field' => 'current',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('title', 'Archived projects');
+  $handler->override_option('empty', 'No archived projects found.');
+  $handler->override_option('path', 'casetracker/archive');
+  $handler->override_option('menu', array(
+    'type' => 'tab',
+    'title' => 'Archived',
+    'description' => '',
+    'weight' => '20',
+    'name' => 'navigation',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
+  $handler = $view->new_display('block', 'Block: Projects', 'block_1');
+  $handler->override_option('fields', array(
+    'title' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+      ),
+      'link_to_node' => 1,
+      'exclude' => 0,
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('sorts', array(
+    'changed' => array(
+      'order' => 'DESC',
+      'granularity' => 'second',
+      'id' => 'changed',
+      'table' => 'node',
+      'field' => 'changed',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'perm',
+    'perm' => 'access content',
+  ));
+  $handler->override_option('use_ajax', TRUE);
+  $handler->override_option('items_per_page', 10);
+  $handler->override_option('use_pager', 'mini');
+  $handler->override_option('use_more', 0);
+  $handler->override_option('use_more_text', 'View more');
+  $handler->override_option('style_plugin', 'list');
+  $handler->override_option('style_options', array(
+    'grouping' => '',
+    'type' => 'ul',
+  ));
+  $handler->override_option('block_description', 'Projects');
+  $handler->override_option('block_caching', -1);
+  $translatables['casetracker_projects'] = array(
+    t('Archived projects'),
+    t('Block: Projects'),
+    t('Defaults'),
+    t('No archived projects found.'),
+    t('No projects found.'),
+    t('Projects'),
+    t('View more'),
   );
 
   $views[$view->name] = $view;
