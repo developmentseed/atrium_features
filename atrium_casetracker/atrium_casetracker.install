@@ -111,5 +111,5 @@ function atrium_casetracker_update_6004() {
   atrium_kit_comply('views', $components); 
   atrium_kit_comply('context', $components);
   
-  return array(array('success' => true, 'query' => 'Atrium Notebook updated for Kit compliance.'));
+  return array(array('success' => true, 'query' => 'Atrium Casetracker updated for Kit compliance.'));
 }
