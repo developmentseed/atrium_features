@@ -130,7 +130,7 @@ function atrium_members_addform_access() {
  * Implementation of hook_context_links_alter().
  */
 function atrium_members_context_links_alter(&$links) {
-  if (context_get('context', 'spaces-feature-members') && module_exists('ucreate') && user_access('create users')) {
+  if (context_get('context', 'members_section') && module_exists('ucreate') && user_access('create users')) {
     $item = menu_get_item('members/add');
     if ($item['access']) {
       $links['atrium_users'] = array(
@@ -149,7 +149,7 @@ function atrium_members_context_page_condition() {
   $space = spaces_get_space();
   if ($space->type == 'user') {
     // Set the members context.
-    context_set('context', 'spaces-feature-members', context_load('spaces-feature-members'));
+    context_set('context', 'members_section', context_load('members_section'));
 
     $breadcrumb = array(l(t('Home'), '<front>'));
     $item = menu_get_item('members');
@@ -162,7 +162,7 @@ function atrium_members_context_page_condition() {
     }
     drupal_set_breadcrumb($breadcrumb);
   }
-  else if (context_get('context', 'spaces-feature-members')) {
+  else if (context_get('context', 'members_section')) {
     $breadcrumb = array(l(t('Home'), '<front>'));
     $item = menu_get_item('members');
     if ($item['access']) {

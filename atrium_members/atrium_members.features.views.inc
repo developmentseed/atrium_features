@@ -6,9 +6,9 @@
 function _atrium_members_views_default_views() {
   $views = array();
 
-  // Exported view: atrium_members
+  // Exported view: members_listing
   $view = new view;
-  $view->name = 'atrium_members';
+  $view->name = 'members_listing';
   $view->description = 'Atrium > Members';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -536,7 +536,7 @@ function _atrium_members_views_default_views() {
     'description' => '',
     'weight' => '0',
   ));
-  $translatables['atrium_members'] = array(
+  $translatables['members_listing'] = array(
     t('Active users'),
     t('Blocked users'),
     t('Defaults'),

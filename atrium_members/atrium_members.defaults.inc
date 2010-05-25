@@ -8,13 +8,13 @@ function _atrium_members_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'atrium-members-directory';
+  $context->name = 'members_directory';
   $context->description = '';
   $context->tag = 'Members';
   $context->conditions = array(
     'views' => array(
       'values' => array(
-        'atrium_members' => 'atrium_members',
+        'members_listing' => 'members_listing',
       ),
     ),
   );
@@ -32,15 +32,15 @@ function _atrium_members_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['atrium-members-directory'] = array(
+  $translatables['members_directory'] = array(
     t('Members'),
   );
 
-  $export['atrium-members-directory'] = $context;
+  $export['members_directory'] = $context;
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'spaces-feature-members';
+  $context->name = 'members_section';
   $context->description = '';
   $context->tag = 'Members';
   $context->conditions = array(
@@ -52,7 +52,7 @@ function _atrium_members_context_default_contexts() {
     ),
     'views' => array(
       'values' => array(
-        'atrium_members' => 'atrium_members',
+        'members_listing' => 'members_listing',
       ),
     ),
   );
@@ -61,11 +61,11 @@ function _atrium_members_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['spaces-feature-members'] = array(
+  $translatables['members_section'] = array(
     t('Members'),
   );
 
-  $export['spaces-feature-members'] = $context;
+  $export['members_section'] = $context;
   return $export;
 }
 
