@@ -79,10 +79,10 @@ function _atrium_members_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
-  else if ($module == "spaces" && $api == "spaces") {
+  elseif ($module == "spaces" && $api == "spaces") {
     return array("version" => 3);
   }
-  else if ($module == "strongarm" && $api == "strongarm") {
+  elseif ($module == "strongarm" && $api == "strongarm") {
     return array("version" => 1);
   }
 }

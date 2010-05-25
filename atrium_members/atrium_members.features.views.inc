@@ -327,6 +327,7 @@ function _atrium_members_views_default_views() {
     'title' => 'Users',
     'description' => '',
     'weight' => '0',
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'Blocked users', 'page_2');
   $handler->override_option('filters', array(
@@ -379,6 +380,7 @@ function _atrium_members_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'Member directory', 'page_3');
   $handler->override_option('fields', array(
@@ -535,6 +537,7 @@ function _atrium_members_views_default_views() {
     'title' => 'Members',
     'description' => '',
     'weight' => '0',
+    'name' => 'navigation',
   ));
   $translatables['members_listing'] = array(
     t('Active users'),
