@@ -74,7 +74,7 @@ function atrium_groups_spaces_og_breadcrumb_alter(&$bc) {
  * Good occasion to set the breadcrumb.
  */
 function atrium_groups_context_page_reaction() {
-  if (!spaces_get_space() && context_get('context', 'spaces-feature-groups')) {
+  if (!spaces_get_space() && context_get('context', 'groups_listing')) {
     $breadcrumb = array(
       l(t('Home'), '<front>', array('purl' =>array('disabled' => TRUE))),
       l(t('Groups'), 'og', array('purl' =>array('disabled' => TRUE))),
@@ -87,7 +87,7 @@ function atrium_groups_context_page_reaction() {
  * Implementation of hook_context_links_alter().
  */
 function atrium_groups_context_links_alter(&$links) {
-  if (context_get('context', 'spaces-feature-groups')) {
+  if (context_get('context', 'groups_listing')) {
     $item = menu_get_item('node/add/group');
     if ($item['access']) {
       $links['atrium_groups'] = array('title' => t('Add @type', array('@type' => $item['title'])), 'href' => $item['href']);
