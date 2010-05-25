@@ -568,6 +568,7 @@ function _atrium_shoutbox_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'Shoutbox (admin)', 'page_3');
   $handler->override_option('fields', array(
@@ -795,6 +796,7 @@ function _atrium_shoutbox_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
   $translatables['shoutbox_shouts'] = array(
     t('Admin'),

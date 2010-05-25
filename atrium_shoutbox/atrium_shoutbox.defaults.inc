@@ -8,38 +8,6 @@ function _atrium_shoutbox_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'shoutbox_sitewide';
-  $context->description = '';
-  $context->tag = 'Shoutbox';
-  $context->conditions = array(
-    'sitewide' => array(
-      'values' => array(
-        '1' => 1,
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'atrium_shoutbox-shoutbox' => array(
-          'module' => 'atrium_shoutbox',
-          'delta' => 'shoutbox',
-          'region' => 'palette',
-          'weight' => 0,
-        ),
-      ),
-    ),
-  );
-  $context->condition_mode = 0;
-
-  $translatables['atrium-shoutbox'] = array(
-    t('Shoutbox'),
-  );
-
-  $export['atrium-shoutbox'] = $context;
-  $context = new stdClass;
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
   $context->name = 'shoutbox_og';
   $context->description = '';
   $context->tag = 'Shoutbox';
@@ -75,6 +43,38 @@ function _atrium_shoutbox_context_default_contexts() {
   );
 
   $export['shoutbox_og'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'shoutbox_sitewide';
+  $context->description = '';
+  $context->tag = 'Shoutbox';
+  $context->conditions = array(
+    'sitewide' => array(
+      'values' => array(
+        '1' => 1,
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'atrium_shoutbox-shoutbox' => array(
+          'module' => 'atrium_shoutbox',
+          'delta' => 'shoutbox',
+          'region' => 'palette',
+          'weight' => 0,
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  $translatables['shoutbox_sitewide'] = array(
+    t('Shoutbox'),
+  );
+
+  $export['shoutbox_sitewide'] = $context;
   return $export;
 }
 
@@ -88,7 +88,7 @@ function _atrium_shoutbox_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
-  else if ($module == "strongarm" && $api == "strongarm") {
+  elseif ($module == "strongarm" && $api == "strongarm") {
     return array("version" => 1);
   }
 }
