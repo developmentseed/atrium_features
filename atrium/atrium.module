@@ -677,12 +677,13 @@ function atrium_kit_comply($type, $info) {
   switch ($type) {
     // Handles changes to views blocks.
     case 'views':
+    case 'blocks':
       $views = $info['views'];
       $contexts = $info['contexts'];
       foreach ($views as $old_view => $new_view) {
         $view = views_get_view($old_view);
         // Proceed if view is not overridden.
-        if ($view->type != 'Overriden') {
+        if ($view->type != 'Overriden' || $type == 'blocks') {
           // Go block by block and update spaces_dashboards, spaces_presets, and context.
           foreach ($new_view as $new_view_name => $blocks) {
             foreach ($blocks as $block) {

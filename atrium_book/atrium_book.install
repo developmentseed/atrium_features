@@ -12,6 +12,14 @@ function atrium_book_update_6001() {
         ),
       ),
     ),
+    'blocks' => array(
+      'atrium' => array(
+        'atrium_book' => array(
+          'book',
+          'book_all',
+        ),
+      ),
+    ),
     'contexts' => array(
       'spaces-feature-book' => 'book_listing',
     ),

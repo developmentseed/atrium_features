@@ -30,8 +30,8 @@ function _atrium_casetracker_context_default_contexts() {
           'region' => 'right',
           'weight' => 0,
         ),
-        'atrium-book' => array(
-          'module' => 'atrium',
+        'atrium_book-book' => array(
+          'module' => 'atrium_book',
           'delta' => 'book',
           'region' => 'right',
           'weight' => 1,
