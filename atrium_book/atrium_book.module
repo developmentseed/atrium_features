@@ -101,6 +101,25 @@ function atrium_book_block($op = 'list', $delta = 0) {
 }
 
 /**
+ * Implemenation of hook_nodeapi().
+ */
+function atrium_book_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
+  switch ($op) {
+    case 'insert':
+    case 'update':
+    case 'delete':
+      // Wipe the atrium book tree cache for a space when a book is modified.
+      if (!empty($node->book['bid'])) {
+        $space = spaces_get_space();
+        if ($space) {
+          cache_clear_all("atrium_book:{$space->type}:{$space->id}", 'cache', TRUE);
+        }
+      }
+      break;
+  }
+}
+
+/**
  * Implementation of hook_context_links_alter();
  */
 function atrium_book_context_links_alter(&$links) {

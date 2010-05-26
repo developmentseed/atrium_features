@@ -344,17 +344,6 @@ function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
         drupal_set_message(atrium_archived_message($node), 'status', FALSE);
       }
       break;
-    case 'insert':
-    case 'update':
-    case 'delete':
-      // Wipe the atrium book tree cache for a space when a book is modified.
-      if (!empty($node->book['bid'])) {
-        $space = spaces_get_space();
-        if ($space) {
-          cache_clear_all("atrium_book:{$space->type}:{$space->id}", 'cache', TRUE);
-        }
-      }
-      break;
   }
 }
 
