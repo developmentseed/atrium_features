@@ -101,7 +101,6 @@ function atrium_menu_alter(&$items) {
 
   // Kill undesirable menu items
   $yank = array(
-    'book',
     'rss.xml',
     'node/%node/outline',
   );
@@ -133,12 +132,6 @@ function atrium_block($op = 'list', $delta = 0) {
         'welcome_admin' => array('info' => t('Welcome (for admins)')),
         'welcome_member' => array('info' => t('Welcome (for members)')),
       );
-      if (module_exists('admin')) {
-        $info = $info + array(
-          'book' => array('info' => t('Atrium: Book')),
-          'book_all' => array('info' => t('Atrium: Book (all)')),
-        );
-      }
       return $info;
     case 'view':
       module_load_include('inc', 'atrium', 'atrium.block');

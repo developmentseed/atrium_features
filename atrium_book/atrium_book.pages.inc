@@ -4,15 +4,15 @@
  * Page callback for book feature.
  */
 function atrium_book_overview() {
-  $context = context_load('spaces-feature-book');
-  context_set('context', 'spaces-feature-book', $context);
+  $context = context_load('book_listing');
+  context_set('context', 'book_listing', $context);
 
   $nid = variable_get('atrium_book', 0);
   if ($nid && is_numeric($nid) && $node = node_load($nid)) {
     menu_set_active_item("node/{$node->nid}");
     return node_view($node, FALSE, TRUE, TRUE);
   }
-  return views_embed_view('atrium_book', 'page_1');
+  return views_embed_view('book_listing', 'page_1');
 }
 
 /**

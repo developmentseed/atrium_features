@@ -1,0 +1,60 @@
+/* Legacy block menu */
+div.block-atrium_book ul.menu ul,
+div.block-atrium_book ul.menu li {
+  padding:0px;
+  border:0px;
+  }
+
+  div.block-atrium_book ul.menu ul {
+    border-left:24px solid #f8f8f8;
+    padding-left:1px;
+    }
+
+    div.block-atrium_book ul.menu ul ul { border-color:#f4f4f4; }
+    div.block-atrium_book ul.menu ul ul ul { border-color:#eee; }
+    div.block-atrium_book ul.menu ul ul ul ul { border-color:#e8e8e8; }
+
+  div.block-atrium_book ul.menu li.collapsed,
+  div.block-atrium_book ul.menu li.expanded { background:#fff url(images/expanded.png) 0px 0px no-repeat; }
+
+  div.block-atrium_book ul.menu li.leaf { background:#fff url(images/expanded.png) 8px 7px no-repeat; }
+  
+/* RESET, now do it again */
+div.drilldown ul.menu ul,
+div.drilldown ul.menu li {
+  padding:0px;
+  border:0px;
+  }
+
+  div.drilldown ul.menu ul ul {
+    border-left:24px solid #f8f8f8;
+    padding-left:1px;
+    }
+
+    div.drilldown ul.menu ul ul ul { border-color:#f4f4f4;}
+    div.drilldown ul.menu ul ul ul ul { border-color:#eee;}
+    div.drilldown ul.menu ul ul ul ul ul { border-color:#e8e8e8;}
+
+  div.drilldown ul.menu li.collapsed,
+  div.drilldown ul.menu li.expanded { background:transparent; }
+
+  div.drilldown ul.drilldown-active-menu li.expanded {
+    cursor:pointer;
+    background:url(images/top.png) 7px 7px no-repeat;
+    }
+
+div.block-atrium_book ul.menu a,
+div.drilldown ul.menu a {
+  display:block;
+  line-height:15px;
+  border:0px;
+  padding:4px 10px 5px 0px;
+  border-bottom:1px solid #eee;
+  margin-left:25px;
+  }
+
+  div.block-atrium_book ul.menu a.active,
+  div.drilldown ul.menu a.active {
+    font-weight:bold;
+    color:#333;
+    }

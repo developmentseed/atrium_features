@@ -2,6 +2,10 @@
 
 include_once('atrium_book.features.inc');
 
+function atrium_book_init() {
+  drupal_add_css(drupal_get_path('module', 'atrium_book') .'/atrium_book.css');
+}
+
 /**
  * Implementation of hook_help().
  */
@@ -74,6 +78,29 @@ function atrium_book_menu() {
 }
 
 /**
+ * Implementation of hook_block().
+ */
+function atrium_book_block($op = 'list', $delta = 0) {
+  switch ($op) {
+    case 'list':
+      if (module_exists('admin')) {
+        $info = array(
+          'book' => array('info' => t('Atrium Book: Book')),
+          'book_all' => array('info' => t('Atrium Book: Book (all)')),
+        );
+      }
+      return $info;
+    case 'view':
+      module_load_include('inc', 'atrium_book', 'atrium_book.block');
+      $function = "_atrium_book_block_{$delta}";
+      if (function_exists($function)) {
+        return call_user_func($function);
+      }
+      break;
+  }
+}
+
+/**
  * Implementation of hook_context_links_alter();
  */
 function atrium_book_context_links_alter(&$links) {
@@ -83,5 +110,15 @@ function atrium_book_context_links_alter(&$links) {
     if ($item['access'] && !empty($node->book['mlid'])) {
       $links['book']['query'] = "parent={$node->book['mlid']}";
     }
+  }
+}
+
+/**
+ * Implementation of hook_menu_alter().
+ */
+function atrium_book_menu_alter(&$items) {
+  // Kill undesirable menu item
+  if (!empty($items['book'])) {
+    unset($items['book']);
   }
 }
