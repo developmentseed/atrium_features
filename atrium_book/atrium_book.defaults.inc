@@ -35,7 +35,7 @@ function _atrium_book_context_default_contexts() {
           'region' => 'right',
           'weight' => 0,
         ),
-        'atrium-book_all' => array(
+        'atrium_book-book_all' => array(
           'module' => 'atrium_book',
           'delta' => 'book_all',
           'region' => 'right',
