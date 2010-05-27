@@ -35,9 +35,9 @@ class atrium_casetracker_handler_filter_status_closed extends views_handler_filt
     if (empty($this->value)) {
       $this->ensure_my_table();
 
-      $inactive_states = atrium_casetracker_get_inactive_states();
-      foreach ($inactive_states as $state_id) {
-        $this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field <> %d", $state_id);
+      if ($inactive_states = atrium_casetracker_get_inactive_states()) {
+        $placeholders = db_placeholders($inactive_states);
+        $this->query->add_where($this->options['group'], "{$this->table_alias}.{$this->real_field} NOT IN($placeholders)", $inactive_states);
       }
     }
   }
