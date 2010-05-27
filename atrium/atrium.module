@@ -736,8 +736,13 @@ function atrium_kit_comply($type, $info) {
     case 'spaces_preset':
       $presets = $info['spaces_presets'];
       foreach ($presets as $old_preset => $new_preset) {
-        // Update spaces_presets table
-        db_query("UPDATE {spaces_presets} SET name = '%s' WHERE name = '%s'", $new_preset, $old_preset);
+        $query = db_query("SELECT * FROM {spaces_presets} WHERE name = '%s'", $old_preset);
+        while ($result = db_fetch_object($query)) {
+          $value = '';
+          $value = str_replace($old_preset, $new_preset, $result->value);
+          // Update spaces_presets table
+          db_query("UPDATE {spaces_presets} SET name = '%s', value = '%s' WHERE name = '%s'", $new_preset, $value, $old_preset);
+        }
         // Update spaces_overrides table
         $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'variable' AND value LIKE '%\%s%'", $old_preset);
         while ($result = db_fetch_object($query)) {
