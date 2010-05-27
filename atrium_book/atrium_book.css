@@ -1,3 +1,68 @@
+/**
+ * Menus ==============================================================
+ */
+#block-atrium_book-book div.block-content,
+#block-atrium_book-book_all div.block-content,
+div.page-region div.drilldown div.block-content {
+  -moz-border-radius:0px;
+  -webkit-border-radius:0px;
+  padding:0px;
+  border-top:0px;
+  background:#fff;
+  }
+
+div.page-region .block.drilldown h2.block-title {
+  padding:0px;
+  border-bottom:0px;
+  }
+
+div.drilldown span.trail a {
+  line-height:15px;
+  padding:3px 9px 5px;
+  border-top:1px solid #fff;
+  border-bottom:1px solid #ddd;
+  background:#eee url(images/sprite_book.png) 5px -160px no-repeat;
+  display:block;
+  }
+
+  div.drilldown span.trail a.depth-0 {
+    padding:6px 9px 8px;
+    background:transparent;
+    border:0px;
+    }
+
+  div.drilldown span.trail a.depth-1 { padding-left:25px; }
+
+  div.drilldown span.trail a.depth-2 {
+    padding-left:50px;
+    background-position:30px -160px;
+    }
+
+  div.drilldown span.trail a.depth-3 {
+    padding-left:75px;
+    background-position:55px -160px;
+    }
+
+  div.drilldown span.trail a.depth-4 {
+    padding-left:100px;
+    background-position:80px -160px;
+    }
+
+  div.drilldown span.trail a.depth-5 {
+    padding-left:125px;
+    background-position:105px -160px;
+    }
+
+  div.drilldown span.trail a.depth-6 {
+    padding-left:150px;
+    background-position:130px -160px;
+    }
+
+  div.drilldown span.trail a.depth-7 {
+    padding-left:175px;
+    background-position:155px -160px;
+    }
+    
 /* Legacy block menu */
 div.block-atrium_book ul.menu ul,
 div.block-atrium_book ul.menu li {
@@ -15,9 +80,9 @@ div.block-atrium_book ul.menu li {
     div.block-atrium_book ul.menu ul ul ul ul { border-color:#e8e8e8; }
 
   div.block-atrium_book ul.menu li.collapsed,
-  div.block-atrium_book ul.menu li.expanded { background:#fff url(images/expanded.png) 0px 0px no-repeat; }
+  div.block-atrium_book ul.menu li.expanded { background:#fff url(images/sprite_book.png) 0px -60px no-repeat; }
 
-  div.block-atrium_book ul.menu li.leaf { background:#fff url(images/expanded.png) 8px 7px no-repeat; }
+  div.block-atrium_book ul.menu li.leaf { background:#fff url(images/sprite_book.png) 0px -110px no-repeat; }
   
 /* RESET, now do it again */
 div.drilldown ul.menu ul,
@@ -40,7 +105,7 @@ div.drilldown ul.menu li {
 
   div.drilldown ul.drilldown-active-menu li.expanded {
     cursor:pointer;
-    background:url(images/top.png) 7px 7px no-repeat;
+    background:url(images/sprite_book.png) 0px -60px no-repeat;
     }
 
 div.block-atrium_book ul.menu a,
