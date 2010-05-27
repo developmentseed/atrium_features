@@ -15,8 +15,14 @@ function atrium_book_update_6001() {
     'blocks' => array(
       'atrium' => array(
         'atrium_book' => array(
-          'book',
-          'book_all',
+          'book' => array(
+            'module' => 'atrium_book',
+            'delta' => 'book',
+          ),
+          'book_all' => array(
+            'module' => 'atrium_book',
+            'delta' => 'book_all',
+          ),
         ),
       ),
     ),
@@ -25,8 +31,9 @@ function atrium_book_update_6001() {
     ),
   );
   
-  atrium_kit_comply('views', $components); 
-  atrium_kit_comply('context', $components);
+  atrium_kit_comply_presets($components); 
+  atrium_kit_comply_overrides($components);
+  atrium_kit_comply_contexts($components);
   
   return array(array('success' => true, 'query' => 'Atrium Notebook updated for Kit compliance.'));
 }

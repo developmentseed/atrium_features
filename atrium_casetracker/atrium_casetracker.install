@@ -89,14 +89,26 @@ function atrium_casetracker_update_6004() {
     'views' => array(
       'atrium_casetracker' => array(
         'casetracker_cases' => array(
-          'block_1',
-          'block_2',
-          'block_3', 
+          'block_1' => array(
+            'module' => 'views',
+            'delta' => 'block_1',
+          ),
+          'block_2' => array(
+            'module' => 'views',
+            'delta' => 'block_2',
+          ),
+          'block_3' => array(
+            'module' => 'views',
+            'delta' => 'block_3',
+          ), 
         ),
       ),
       'atrium_casetracker_projects' => array(
         'casetracker_projects' => array(
-          'block_1', 
+          'block_1' => array(
+            'module' => 'views',
+            'delta' => 'block_1',
+          ),
         ),
       ),
       'atrium_ct_assignee_options' => array(
@@ -115,8 +127,9 @@ function atrium_casetracker_update_6004() {
     ),
   );
   
-  atrium_kit_comply('views', $components); 
-  atrium_kit_comply('context', $components);
+  atrium_kit_comply_presets($components); 
+  atrium_kit_comply_overrides($components);
+  atrium_kit_comply_contexts($components);
   
   return array(array('success' => true, 'query' => 'Atrium Casetracker updated for Kit compliance.'));
 }

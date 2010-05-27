@@ -673,112 +673,173 @@ function atrium_search_form_submit($form, &$form_state) {
  * );
  * 
  */
-function atrium_kit_comply($type, $info) {
-  switch ($type) {
-    // Handles changes to views blocks.
-    case 'views':
-    case 'blocks':
-      $views = $info['views'];
-      $contexts = $info['contexts'];
-      foreach ($views as $old_view => $new_view) {
-        $view = views_get_view($old_view);
-        // Proceed if view is not overridden.
-        if ($view->type != 'Overriden' || $type == 'blocks') {
-          // Go block by block and update spaces_dashboards, spaces_presets, and context.
-          foreach ($new_view as $new_view_name => $blocks) {
-            foreach ($blocks as $block) {
-              // Replace block names in spaces_dashboard
-              $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'context' AND object_id LIKE 'spaces_dashboard%%'");
-              while ($result = db_fetch_object($query)) {
-                // Replace keys and values w/ new names
-                $value = unserialize($result->value);
-                $current_blocks = $value['blocks'];
-                if ($type == 'views') {
-                  // Replace key name
-                  if (array_key_exists("views-$old_view-$block", $current_blocks)) {
-                    $current_blocks["views-$new_view_name-$block"] = $current_blocks["views-$old_view-$block"];
-                    unset($current_blocks["views-$old_view-$block"]);
-                  }
-                  // Rename values
-                  foreach ($current_blocks as $key => $current_block) {
-                    $current_block = str_replace("$old_view-$block", "$new_view_name-$block", $current_block);
-                    $current_blocks[$key] = $current_block;
-                  }
-                }
-                else {
-                  // Blocks provided by menus do not use "views" prefix.
-                  // Replace key name
-                  if (array_key_exists("views-$old_view-$block", $current_blocks)) {
-                    $current_blocks["$new_view_name-$block"] = $current_blocks["$old_view-$block"];
-                    unset($current_blocks["$old_view-$block"]);
-                  }
-                  // Rename values
-                  foreach ($current_blocks as $key => $current_block) {
-                    $current_block = str_replace("$old_view-$block", "$new_view_name-$block", $current_block);
-                    $current_blocks[$key] = $current_block;
-                  }
-                }
-                $value['blocks'] = $current_blocks;
-                $value = serialize($value);
-                if ($value != $result->value) {
-                  db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d AND object_id = '%s'", $value, $result->type, $result->id, $result->object_id);
+function atrium_kit_comply_presets($info, $type = 'views') {
+  $views = $info['views'];
+  foreach ($views as $old_view_name => $new_view) {
+    $view = views_get_view($old_view_name);
+    // Proceed if view is not overridden.
+    if ($view->type != 'Overriden' || $type == 'blocks') {
+      // Go block by block and update spaces_dashboards, spaces_presets, and context.
+      foreach ($new_view as $new_view_name => $blocks) {
+        foreach ($blocks as $block) {
+          $query = db_query("SELECT * FROM {spaces_presets}");
+          while ($result = db_fetch_object($query)) {
+            $value = unserialize($result->value);
+            foreach ($value as $type) {
+              if ($type == 'context') {
+                foreach ($type as $name => $def) {
+                  // Call api function to replace keys and values.
+                  $value[$type][$name] = atrium_kit_comply_rename($def, $type, $old_view_name, $new_view_name, $block);
                 }
               }
-              // Replace block names in spaces_presets
-              $query = db_query("SELECT * FROM {spaces_presets}");
+            }
+            $value = serialize($value);
+            if ($value != $result->value) {
+              db_query("UPDATE {spaces_presets} SET value = '%s' WHERE name = '%s'", $value, $result->name);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+function atrium_kit_comply_overrides($info, $type = 'views') {
+  $views = $info['views'];
+  foreach ($views as $old_view_name => $new_view) {
+    $view = views_get_view($old_view_name);
+    // Proceed if view is not overridden.
+    if ($view->type != 'Overriden' || $type == 'blocks') {
+      // Go block by block and update spaces_dashboards, spaces_presets, and context.
+      foreach ($new_view as $new_view_name => $blocks) {
+        foreach ($blocks as $block) {
+          // Replace block names in spaces_dashboard
+          $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'context' AND object_id LIKE 'spaces_dashboard%%'");
+          while ($result = db_fetch_object($query)) {
+            $value = unserialize($result->value);
+            $value = _atrium_kit_comply_rename($value, $type, $old_view_name, $new_view_name, $block);
+            $value = serialize($value);
+            if ($value != $result->value) {
+              db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d AND object_id = '%s'", $value, $result->type, $result->id, $result->object_id);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+function atrium_kit_comply_contexts($info, $type = 'views') {
+  $contexts = $info['contexts'];
+  // Update names for overridden contexts.
+  foreach ($contexts as $old => $new) {
+    db_query("UPDATE {context} SET name = '%s' WHERE name = '%s'", $new, $old);
+
+    // Update components in contexts.
+    $views = $info['views'];
+    foreach ($views as $old_view_name => $new_view) {
+      $view = views_get_view($old_view_name);
+      // Proceed if view is not overridden.
+      if ($view->type != 'Overriden' || $type == 'blocks') {
+        // Go block by block and update contexts.
+        foreach ($new_view as $new_view_name => $blocks) {
+          foreach ($blocks as $block) {
+            foreach ($contexts as $current => $replacement) {
+              $query = db_query("SELECT * FROM {context} WHERE name = '%s'", $current);
               while ($result = db_fetch_object($query)) {
-                $value = str_replace("views-$old_view-$block", "views-$new_view_name-$block", $result->value);
-                $value = str_replace("$old_view-$block", "$new_view_name-$block", $result->value);
-                if ($value != $result->value) {
-                  db_query("UPDATE {spaces_presets} SET value = '%s' WHERE name = '%s'", $value, $result->name);
-                }
-              }
-              // Replace block names in contexts
-              if (!empty($contexts)) {
-                foreach ($contexts as $current => $replacement) {
-                  $query = db_query("SELECT * FROM {context} WHERE name = '%s'", $current);
-                  while ($result = db_fetch_object($query)) {
-                    $reactions = str_replace("views-$old_view-$block", "views-$new_view_name-$block", $result->reactions);
-                    $reactions = str_replace("$old_view-$block", "$new_view_name-$block", $result->reactions);
-                    $conditions = str_replace($current, $replacement, $result->conditions);
-                    if ($reactions != $result->reactions || $conditions != $result->conditions) {
-                      db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $current);
+                // Update views names in conditions.
+                $conditions = unserialize($result->conditions);
+                foreach ($conditions as $type => $value) {
+                  if ($type == 'views') {
+                    foreach ($value as $k => $v) {
+                      if ($k == $old) {
+                        $conditions[$type][$new] = $conditions[$type][$k];
+                        unset($conditions[$type][$k]);
+                        $conditions[$type][$new] = $new;
+                      }
                     }
                   }
+                }
+                $conditions = serialize($conditions);
+                // Update views/blocks names in reactions
+                $reactions = unserialize($result->reactions);
+                $reactions = _atrium_kit_comply_rename($reactions, 'views', $old_view_name, $new_view_name, $block);
+                if ($reactions != $result->reactions || $conditions != $result->conditions) {
+                  db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $current);
                 }
               }
             }
           }
         }
       }
+    }
+  }
+}
 
-    case 'context':
-      $contexts = $info['contexts'];
-      foreach ($contexts as $old => $new) {
-        db_query("UPDATE {context} SET name = '%s' WHERE name = '%s'", $new, $old);
-      }
-      break;
-      
-    // Spaces presets
-    case 'spaces_preset':
-      $presets = $info['spaces_presets'];
-      foreach ($presets as $old_preset => $new_preset) {
-        $query = db_query("SELECT * FROM {spaces_presets} WHERE name = '%s'", $old_preset);
-        while ($result = db_fetch_object($query)) {
-          $value = '';
-          $value = str_replace($old_preset, $new_preset, $result->value);
-          // Update spaces_presets table
-          db_query("UPDATE {spaces_presets} SET name = '%s', value = '%s' WHERE name = '%s'", $new_preset, $value, $old_preset);
-        }
-        // Update spaces_overrides table
-        $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'variable' AND value LIKE '%\%s%'", $old_preset);
-        while ($result = db_fetch_object($query)) {
-          $value = str_replace($old_preset, $new_preset, $result->value);
-          if ($value != $result->value) {
-            db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d AND object_id = '%s'", $value, $result->type, $result->id, $result->object_id);
+function atrium_kit_comply_spaces_presets($info, $type = 'views') {
+  // Replace 'name' value in the spaces_presets table.
+  // Replace 'value' value in the spaces_overrides table where object_type = 'variable'
+  $presets = $info['spaces_presets'];
+  foreach ($presets as $old_preset => $new_preset) {
+    db_query("UPDATE {spaces_presets} SET name = '%s' WHERE name = '%s'", $new_preset, $old_preset);
+    $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'variable' AND value LIKE '%\%s%'", $old_preset);
+    while ($result = db_fetch_object($query)) {
+      db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d AND object_id = '%s'", $new_preset, $result->type, $result->id, $result->object_id);
+    }
+    // Replace 'value' in spaces_presets in the 'variable' key
+    $query = db_query("SELECT * FROM {spaces_presets}");
+    while ($result = db_fetch_object($query)) {
+      $value = unserialize($result->value);
+      foreach ($value as $type) {
+        if ($type == 'variable') {
+          foreach ($type as $variable => $setting) {
+            if ($setting == $old_preset) {
+              $value[$type][$variable] = $new_preset;
+            }
           }
         }
       }
-      break;
+      $value = serialize($value);
+      if ($value != $result->value) {
+        db_query("UPDATE {spaces_presets} SET value = '%s' WHERE name = '%s'", $value, $result->name);
+      }
+    }
   }
 }
+
+/*
+ * $source should always be an array to operate on, not serialized data.
+ */
+function _atrium_kit_comply_rename($source, $type, $old_view_name, $new_view_name, $block) {
+  $block = $block['delta'];
+  $current_blocks = $source['blocks'];
+  if ($type == 'views') {
+    // Replace key name
+    if (array_key_exists("views-$old_view_name-$block", $current_blocks)) {
+      $current_blocks["views-$new_view_name-$block"] = $current_blocks["views-$old_view_name-$block"];
+      unset($current_blocks["views-$old_view_name-$block"]);
+    }
+    // Rename values
+    foreach ($current_blocks as $key => $current_block) {
+      $current_block = str_replace("$old_view_name-$block", "$new_view_name-$block", $current_block);
+      $current_blocks[$key] = $current_block;
+    }
+  }
+  else {
+    // Blocks provided by menus do not use "views" prefix.
+    // Replace key name
+    if (array_key_exists("views-$old_view_name-$block", $current_blocks)) {
+      $current_blocks["$new_view_name-$block"] = $current_blocks["$old_view_name-$block"];
+      unset($current_blocks["$old_view_name-$block"]);
+    }
+    // Rename values
+    foreach ($current_blocks as $key => $current_block) {
+      $current_block = str_replace("$old_view_name-$block", "$new_view_name-$block", $current_block);
+      $current_blocks[$key] = $current_block;
+    }
+  }
+  $source['blocks'] = $current_blocks;
+  return $source;
+}
+
+

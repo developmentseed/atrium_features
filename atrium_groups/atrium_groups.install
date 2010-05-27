@@ -8,7 +8,10 @@ function atrium_groups_update_6001() {
     'views' => array(
       'atrium_groups' => array(
         'groups_listing' => array(
-          'block_2', 
+          'block_2' => array(
+            'module' => 'views',
+            'delta' => 'block_2',
+          ),
         ),
       ),
     ),
@@ -21,9 +24,10 @@ function atrium_groups_update_6001() {
     ),
   );
   
-  atrium_kit_comply('views', $components); 
-  atrium_kit_comply('context', $components);
-  atrium_kit_comply('spaces_preset', $components);
+  atrium_kit_comply_presets($components); 
+  atrium_kit_comply_contexts($components);
+  atrium_kit_comply_overrides($components);
+  atrium_kit_comply_spaces_presets($components);
   
   return array(array('success' => true, 'query' => 'Atrium Groups updated for Kit compliance.'));
 }

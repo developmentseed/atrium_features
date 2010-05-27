@@ -8,13 +8,22 @@ function atrium_blog_update_6001() {
     'views' => array(
       'atrium_blog' => array(
         'blog_listing' => array(
-          'block_1',
-          'block_2',
+          'block_1' => array(
+            'module' => 'views',
+            'delta' => 'block_1',
+          ),
+          'block_2' => array(
+            'module' => 'views',
+            'delta' => 'block_1',
+          ),
         ),
       ),
       'atrium_blog_comments' => array(
         'blog_comments' => array(
-          'block_1',
+          'block_1' => array(
+            'module' => 'views',
+            'delta' => 'block_1',
+          ),
         ),
       ),
     ),
@@ -23,8 +32,9 @@ function atrium_blog_update_6001() {
     ),
   );
   
-  atrium_kit_comply('views', $components); 
-  atrium_kit_comply('context', $components);
+  atrium_kit_comply_presets($components);
+  atrium_kit_comply_overrides($components);
+  atrium_kit_comply_contexts($components);
   
   return array(array('success' => true, 'query' => 'Atrium Blog updated for Kit compliance.'));
 }
