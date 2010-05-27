@@ -690,9 +690,36 @@ function atrium_kit_comply($type, $info) {
               // Replace block names in spaces_dashboard
               $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'context' AND object_id LIKE 'spaces_dashboard%%'");
               while ($result = db_fetch_object($query)) {
-                $value = '';
-                $value = str_replace("views-$old_view-$block", "views-$new_view_name-$block", $result->value);
-                $value = str_replace("$old_view-$block", "$new_view_name-$block", $result->value);
+                // Replace keys and values w/ new names
+                $value = unserialize($result->value);
+                $current_blocks = $value['blocks'];
+                if ($type == 'views') {
+                  // Replace key name
+                  if (array_key_exists("views-$old_view-$block", $current_blocks)) {
+                    $current_blocks["views-$new_view_name-$block"] = $current_blocks["views-$old_view-$block"];
+                    unset($current_blocks["views-$old_view-$block"]);
+                  }
+                  // Rename values
+                  foreach ($current_blocks as $key => $current_block) {
+                    $current_block = str_replace("$old_view-$block", "$new_view_name-$block", $current_block);
+                    $current_blocks[$key] = $current_block;
+                  }
+                }
+                else {
+                  // Blocks provided by menus do not use "views" prefix.
+                  // Replace key name
+                  if (array_key_exists("views-$old_view-$block", $current_blocks)) {
+                    $current_blocks["$new_view_name-$block"] = $current_blocks["$old_view-$block"];
+                    unset($current_blocks["$old_view-$block"]);
+                  }
+                  // Rename values
+                  foreach ($current_blocks as $key => $current_block) {
+                    $current_block = str_replace("$old_view-$block", "$new_view_name-$block", $current_block);
+                    $current_blocks[$key] = $current_block;
+                  }
+                }
+                $value['blocks'] = $current_blocks;
+                $value = serialize($value);
                 if ($value != $result->value) {
                   db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d AND object_id = '%s'", $value, $result->type, $result->id, $result->object_id);
                 }
