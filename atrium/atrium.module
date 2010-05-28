@@ -790,11 +790,11 @@ function atrium_kit_comply_spaces_presets($info, $type = 'views') {
     $query = db_query("SELECT * FROM {spaces_presets}");
     while ($result = db_fetch_object($query)) {
       $value = unserialize($result->value);
-      foreach ($value as $type) {
-        if ($type == 'variable') {
-          foreach ($type as $variable => $setting) {
-            if ($setting == $old_preset) {
-              $value[$type][$variable] = $new_preset;
+      foreach ($value as $key => $settings) {
+        if ($key == 'variable') {
+          foreach ($settings as $name => $def) {
+            if ($def == $old_preset) {
+              $value[$key][$name] = $new_preset;
             }
           }
         }
