@@ -744,28 +744,27 @@ function atrium_kit_comply_contexts($info, $type = 'views') {
         // Go block by block and update contexts.
         foreach ($new_view as $new_view_name => $blocks) {
           foreach ($blocks as $block) {
-            foreach ($contexts as $current => $replacement) {
-              $query = db_query("SELECT * FROM {context} WHERE name = '%s'", $current);
-              while ($result = db_fetch_object($query)) {
-                // Update views names in conditions.
-                $conditions = unserialize($result->conditions);
-                foreach ($conditions as $condition => $value) {
-                  if ($condition == 'views') {
-                    foreach ($value as $k => $v) {
-                      if ($k == $old_view_name) {
-                        $conditions[$condition][$new_view_name] = $conditions[$condition][$new_view_name];
-                        unset($conditions[$condition][$k]);
-                      }
+            $query = db_query("SELECT * FROM {context} WHERE name = '%s'", $new);
+            while ($result = db_fetch_object($query)) {
+              // Update views names in conditions.
+              $conditions = unserialize($result->conditions);
+              foreach ($conditions as $condition => $values) {
+                if ($condition == 'views') {
+                  foreach ($values['values'] as $vname => $value) {
+                    if ($vname == $old_view_name) {
+                      $conditions[$condition]['values'][$new_view_name] = $new_view_name;
+                      unset($conditions[$condition]['values'][$old_view_name]);
                     }
                   }
                 }
-                $conditions = serialize($conditions);
-                // Update views/blocks names in reactions
-                $reactions = unserialize($result->reactions);
-                $reactions = _atrium_kit_comply_rename($reactions, 'views', $old_view_name, $new_view_name, $block);
-                if ($reactions != $result->reactions || $conditions != $result->conditions) {
-                  db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $current);
-                }
+              }
+              $conditions = serialize($conditions);
+              // Update views/blocks names in reactions
+              $reactions = unserialize($result->reactions);
+              $reactions = _atrium_kit_comply_rename($reactions, 'views', $old_view_name, $new_view_name, $block);
+              $reactions = serialize($reactions);
+              if ($reactions != $result->reactions || $conditions != $result->conditions) {
+                db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $new);
               }
             }
           }

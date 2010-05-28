@@ -20,6 +20,9 @@ function atrium_shoutbox_update_6001() {
            ),
          ),
        ),
+       'atrium_shoutbox_shouts:page_1' => array(
+         'shoutbox_shouts:page_1' => array(),
+       ),
     ),
     'contexts' => array(
       'atrium-shoutbox' => 'shoutbox_sitewide',
