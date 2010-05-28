@@ -685,11 +685,11 @@ function atrium_kit_comply_presets($info, $type = 'views') {
           $query = db_query("SELECT * FROM {spaces_presets}");
           while ($result = db_fetch_object($query)) {
             $value = unserialize($result->value);
-            foreach ($value as $type => $settings) {
-              if ($type == 'context') {
+            foreach ($value as $key => $settings) {
+              if ($key == 'context') {
                 foreach ($settings as $name => $def) {
                   // Call api function to replace keys and values.
-                  $value[$type][$name] = _atrium_kit_comply_rename($def, $type, $old_view_name, $new_view_name, $block);
+                  $value[$key][$name] = _atrium_kit_comply_rename($def, $type, $old_view_name, $new_view_name, $block);
                 }
               }
             }
