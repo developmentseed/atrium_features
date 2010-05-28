@@ -43,45 +43,6 @@ function _atrium_form_node_form_alter(&$form, $form_state) {
     }
   }
 
-  // Book mods
-  if ($form['#id'] == 'node-form' && book_type_is_allowed($form['#node']->type)) {
-    $node = $form['#node'];
-
-    if (!empty($form['book'])) {
-      // Fieldset mods
-      $form['book']['#weight'] = !empty($form['body_field']['#weight']) ? $form['body_field']['#weight'] : 0;
-      $form['book']['#collapsible'] =
-      $form['book']['#collapsed'] = FALSE;
-
-      if (!empty($form['book']['bid']['#options'])) {
-        // Remove "none" option -- do not allow book pages to be orphaned
-        unset($form['book']['bid']['#options'][0]);
-        // Filter book options by current space
-        if ($view = views_get_view('atrium_book_current')) {
-          $view->set_display();
-          $view->set_items_per_page(0);
-          $view->execute();
-
-          // Collect books in this space into an array
-          $books = array();
-          $books[$node->nid] = 1;
-          if (is_array($view->result) && count($view->result)) {
-            foreach($view->result as $row) {
-              $books[$row->nid] = 1;
-            }
-          }
-
-          // Use collected array to filter options
-          foreach ($form['book']['bid']['#options'] as $k => $v) {
-            if (is_numeric($k) && !isset($books[$k])) {
-              unset($form['book']['bid']['#options'][$k]);
-            }
-          }
-        }
-      }
-    }
-  }
-
   // Disable node forms in archived spaces.
   $space = spaces_get_space();
   if (!atrium_archivable($node) && $space && $space->type === 'og' && !$space->group->status) {
