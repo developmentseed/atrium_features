@@ -674,7 +674,7 @@ function atrium_search_form_submit($form, &$form_state) {
  * 
  */
 function atrium_kit_comply_presets($info, $type = 'views') {
-  $views = $info['views'];
+  $type == 'views' ? $views = $info['views'] : $views = $info['blocks'];
   foreach ($views as $old_view_name => $new_view) {
     $view = views_get_view($old_view_name);
     // Proceed if view is not overridden.
@@ -705,7 +705,7 @@ function atrium_kit_comply_presets($info, $type = 'views') {
 }
 
 function atrium_kit_comply_overrides($info, $type = 'views') {
-  $views = $info['views'];
+  $type == 'views' ? $views = $info['views'] : $views = $info['blocks'];
   foreach ($views as $old_view_name => $new_view) {
     $view = views_get_view($old_view_name);
     // Proceed if view is not overridden.
@@ -731,7 +731,7 @@ function atrium_kit_comply_overrides($info, $type = 'views') {
 
 function atrium_kit_comply_contexts($info, $type = 'views') {
   // Update components in contexts.
-  $views = $info['views'];
+  $type == 'views' ? $views = $info['views'] : $views = $info['blocks'];
   foreach ($views as $old_view_name => $new_view) {
     $view = views_get_view($old_view_name);
     // Proceed if view is not overridden.
@@ -757,7 +757,7 @@ function atrium_kit_comply_contexts($info, $type = 'views') {
             // Update views/blocks names in reactions
             $reactions = unserialize($result->reactions);
             if (!empty($reactions['block']['blocks'])) {
-              $reactions['block'] = _atrium_kit_comply_rename($reactions['block'], 'views', $old_view_name, $new_view_name, $block);
+              $reactions['block'] = _atrium_kit_comply_rename($reactions['block'], $type, $old_view_name, $new_view_name, $block);
             }
             $reactions = serialize($reactions);
             if ($reactions != $result->reactions || $conditions != $result->conditions) {

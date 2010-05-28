@@ -35,5 +35,9 @@ function atrium_book_update_6001() {
   atrium_kit_comply_overrides($components);
   atrium_kit_comply_contexts($components);
   
+  atrium_kit_comply_presets($components, 'blocks'); 
+  atrium_kit_comply_overrides($components, 'blocks');
+  atrium_kit_comply_contexts($components, 'blocks');
+  
   return array(array('success' => true, 'query' => 'Atrium Notebook updated for Kit compliance.'));
 }
