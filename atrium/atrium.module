@@ -749,13 +749,12 @@ function atrium_kit_comply_contexts($info, $type = 'views') {
               while ($result = db_fetch_object($query)) {
                 // Update views names in conditions.
                 $conditions = unserialize($result->conditions);
-                foreach ($conditions as $type => $value) {
-                  if ($type == 'views') {
+                foreach ($conditions as $condition => $value) {
+                  if ($condition == 'views') {
                     foreach ($value as $k => $v) {
-                      if ($k == $old) {
-                        $conditions[$type][$new] = $conditions[$type][$k];
-                        unset($conditions[$type][$k]);
-                        $conditions[$type][$new] = $new;
+                      if ($k == $old_view_name) {
+                        $conditions[$condition][$new_view_name] = $conditions[$condition][$new_view_name];
+                        unset($conditions[$condition][$k]);
                       }
                     }
                   }
