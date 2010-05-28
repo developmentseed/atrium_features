@@ -809,30 +809,32 @@ function atrium_kit_comply_spaces_presets($info, $type = 'views') {
  * $source should always be an array to operate on, not serialized data.
  */
 function _atrium_kit_comply_rename($source, $type, $old_view_name, $new_view_name, $block) {
-  $block = $block['delta'];
+  $block_name = $block['delta'];
+  $module = $block['module'];
   $current_blocks = $source['blocks'];
   if ($type == 'views') {
     // Replace key name
-    if (array_key_exists("views-$old_view_name-$block", $current_blocks)) {
-      $current_blocks["views-$new_view_name-$block"] = $current_blocks["views-$old_view_name-$block"];
-      unset($current_blocks["views-$old_view_name-$block"]);
+    if (array_key_exists("views-$old_view_name-$block_name", $current_blocks)) {
+      $current_blocks["views-$new_view_name-$block_name"] = $current_blocks["views-$old_view_name-$block_name"];
+      unset($current_blocks["views-$old_view_name-$block_name"]);
     }
     // Rename values
     foreach ($current_blocks as $key => $current_block) {
-      $current_block = str_replace("$old_view_name-$block", "$new_view_name-$block", $current_block);
+      $current_block = str_replace("$old_view_name-$block_name", "$new_view_name-$block_name", $current_block);
       $current_blocks[$key] = $current_block;
     }
   }
   else {
-    // Blocks provided by menus do not use "views" prefix.
+    // Blocks provided by modules do not use "views" prefix.
     // Replace key name
-    if (array_key_exists("views-$old_view_name-$block", $current_blocks)) {
-      $current_blocks["$new_view_name-$block"] = $current_blocks["$old_view_name-$block"];
-      unset($current_blocks["$old_view_name-$block"]);
+    if (array_key_exists("$old_view_name-$block_name", $current_blocks)) {
+      $current_blocks["$new_view_name-$block_name"] = $current_blocks["$old_view_name-$block_name"];
+      $current_blocks["$new_view_name-$block_name"]['module'] = $module;
+      unset($current_blocks["$old_view_name-$block_name"]);
     }
     // Rename values
     foreach ($current_blocks as $key => $current_block) {
-      $current_block = str_replace("$old_view_name-$block", "$new_view_name-$block", $current_block);
+      $current_block = str_replace("$old_view_name-$block_name", "$new_view_name-$block_name", $current_block);
       $current_blocks[$key] = $current_block;
     }
   }
