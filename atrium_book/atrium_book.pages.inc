@@ -29,7 +29,7 @@ function atrium_book_settings() {
   );
 
   // Collect books in this space into an array
-  if ($view = views_get_view('atrium_book_current')) {
+  if ($view = views_get_view('book_current')) {
     $view->set_display();
     $view->set_items_per_page(0);
     $view->execute();

@@ -68,7 +68,7 @@ function _atrium_book_block_book_all() {
           'content' => $cache->data,
         );
       }
-      else if ($view = views_get_view('atrium_book_current')) {
+      else if ($view = views_get_view('book_current')) {
         // Since the tree is *complete* and will be cached, we clear out
         // $_GET['q'] for the duration of the build to prevent stray active
         // classes from being added to links in the tree.
@@ -97,7 +97,7 @@ function _atrium_book_block_book_all() {
       }
     }
     // Boring old block.
-    else if ($view = views_get_view('atrium_book_current')) {
+    else if ($view = views_get_view('book_current')) {
       $data = array();
       $view->execute_display('default', array($type));
       if (is_array($view->result) && count($view->result)) {
