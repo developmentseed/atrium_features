@@ -730,47 +730,47 @@ function atrium_kit_comply_overrides($info, $type = 'views') {
 }
 
 function atrium_kit_comply_contexts($info, $type = 'views') {
-  $contexts = $info['contexts'];
-  // Update names for overridden contexts.
-  foreach ($contexts as $old => $new) {
-    db_query("UPDATE {context} SET name = '%s' WHERE name = '%s'", $new, $old);
-
-    // Update components in contexts.
-    $views = $info['views'];
-    foreach ($views as $old_view_name => $new_view) {
-      $view = views_get_view($old_view_name);
-      // Proceed if view is not overridden.
-      if ($view->type != 'Overriden' || $type == 'blocks') {
-        // Go block by block and update contexts.
-        foreach ($new_view as $new_view_name => $blocks) {
-          foreach ($blocks as $block) {
-            $query = db_query("SELECT * FROM {context} WHERE name = '%s'", $new);
-            while ($result = db_fetch_object($query)) {
-              // Update views names in conditions.
-              $conditions = unserialize($result->conditions);
-              foreach ($conditions as $condition => $values) {
-                if ($condition == 'views') {
-                  foreach ($values['values'] as $vname => $value) {
-                    if ($vname == $old_view_name) {
-                      $conditions[$condition]['values'][$new_view_name] = $new_view_name;
-                      unset($conditions[$condition]['values'][$old_view_name]);
-                    }
+  // Update components in contexts.
+  $views = $info['views'];
+  foreach ($views as $old_view_name => $new_view) {
+    $view = views_get_view($old_view_name);
+    // Proceed if view is not overridden.
+    if ($view->type != 'Overriden' || $type == 'blocks') {
+      // Go block by block and update contexts.
+      foreach ($new_view as $new_view_name => $blocks) {
+        foreach ($blocks as $block) {
+          $query = db_query("SELECT * FROM {context}");
+          while ($result = db_fetch_object($query)) {
+            // Update views names in conditions.
+            $conditions = unserialize($result->conditions);
+            foreach ($conditions as $condition => $values) {
+              if ($condition == 'views') {
+                foreach ($values['values'] as $vname => $value) {
+                  if ($vname == $old_view_name) {
+                    $conditions[$condition]['values'][$new_view_name] = $new_view_name;
+                    unset($conditions[$condition]['values'][$old_view_name]);
                   }
                 }
               }
-              $conditions = serialize($conditions);
-              // Update views/blocks names in reactions
-              $reactions = unserialize($result->reactions);
-              $reactions = _atrium_kit_comply_rename($reactions, 'views', $old_view_name, $new_view_name, $block);
-              $reactions = serialize($reactions);
-              if ($reactions != $result->reactions || $conditions != $result->conditions) {
-                db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $new);
-              }
+            }
+            $conditions = serialize($conditions);
+            // Update views/blocks names in reactions
+            $reactions = unserialize($result->reactions);
+            if (!empty($reactions['block']['blocks'])) {
+              $reactions['block'] = _atrium_kit_comply_rename($reactions['block'], 'views', $old_view_name, $new_view_name, $block);
+            }
+            $reactions = serialize($reactions);
+            if ($reactions != $result->reactions || $conditions != $result->conditions) {
+              db_query("UPDATE {context} SET conditions = '%s', reactions = '%s' WHERE name = '%s'", $conditions, $reactions, $result->name);
             }
           }
         }
       }
     }
+  }
+  // Update names for overridden contexts.
+  foreach ($info['contexts'] as $old => $new) {
+    db_query("UPDATE {context} SET name = '%s' WHERE name = '%s'", $new, $old);
   }
 }
 
