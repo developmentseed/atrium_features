@@ -262,6 +262,11 @@ function _atrium_block_create() {
       $menu_item['html'] = TRUE;
       $links["$feature-{$type}"] = $menu_item;
     }
+    else {
+      $menu_item['title'] = "<span class='spaces-feature node-{$type}'></span>{$menu_item['title']}";
+      $menu_item['html'] = TRUE;
+      $links["{$type}"] = $menu_item;
+    }
   }
   ksort($links);
   return array('subject' => "<span class='icon'></span> {$item['title']}", 'content' => theme('links', $links));
