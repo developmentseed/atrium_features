@@ -70,8 +70,7 @@ function atrium_members_menu() {
  */
 function atrium_members_menu_alter(&$items) {
   $dummy = array();
-  $categories = module_invoke('atrium_members', 'user', 'categories', $dummy, $dummy);
-
+  $categories = atrium_members_user('categories', $dummy, $dummy);
   foreach ($categories as $category) {
     $item = $items['user/%user_category/edit/'. $category['name']];
     $item['page callback'] = 'drupal_get_form';
@@ -183,7 +182,7 @@ function atrium_members_context_page_condition() {
  */
 function atrium_members_form_user_profile_form_alter(&$form) {
   $dummy = array();
-  $categories = module_invoke('atrium_members', 'user', 'categories', $dummy, $dummy);
+  $categories = atrium_members_user('categories', $dummy, $dummy);
   foreach ($categories as $info) {
     if (!empty($form[$info['name']])) {
       $form[$info['name']]['#access'] = FALSE;
