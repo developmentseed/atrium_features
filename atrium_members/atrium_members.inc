@@ -66,7 +66,7 @@ function atrium_members_addform($form_state, $group) {
  */
 function theme_atrium_members_addform($form) {
   drupal_add_js(drupal_get_path('module', 'atrium_members') .'/atrium_members.js');
-  $output .= "<div id='atrium-members-addform-messages'>";
+  $output = "<div id='atrium-members-addform-messages'>";
   $output .= drupal_render($form['messages']);
   $output .= "</div>";
   $output .= drupal_render($form);
