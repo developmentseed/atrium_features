@@ -19,25 +19,6 @@ function atrium_profile_menu_alter(&$items) {
   }
   if (isset($items['user/%user/openid'])) {
     $items['user/%user/openid']['title'] = t('OpenID');
-    $items['user/%user_category/edit/openid'] = $items['user/%user/openid'] + $items['user/%user_category/edit/openid'];
-    unset($items['user/%user/openid']);
-  }
-}
-
-/**
- * Implementation of hook_user().
- */
-function atrium_profile_user($op, &$edit, &$account, $category = NULL) {
-  global $user;
-  switch ($op) {
-    case 'categories':
-      $data = array();
-      $data[] = array(
-        'name' => 'openid',
-        'title' => t('OpenID'),
-        'weight' => 10,
-      );
-      return $data;
   }
 }
 
