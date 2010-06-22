@@ -594,13 +594,8 @@ function _atrium_strongarm() {
     'layout' => 'vertical',
     'position' => 'nw',
     'blocks' => array(
-      'admin-create' => 'admin-create',
-      'admin-menu' => 'admin-menu',
-      'admin-devel' => 'admin-devel',
-      'context_ui-editor' => 0,
-      'context_ui-devel' => 0,
-      'spaces_dashboard-editor' => 0,
-      'spaces-menu_editor' => 0,
+      'admin-create' => -1,
+      'admin-menu' => 1,
     ),
   );
 
