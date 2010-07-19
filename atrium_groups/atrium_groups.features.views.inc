@@ -909,7 +909,7 @@ function _atrium_groups_views_default_views() {
       'relationship' => 'none',
     ),
   ));
-  $handler->override_option('block_description', '');
+  $handler->override_option('block_description', 'User groups');
   $handler->override_option('block_caching', -1);
   $translatables['atrium_groups'] = array(
     t('Archived groups'),
@@ -923,6 +923,7 @@ function _atrium_groups_views_default_views() {
     t('Page: Archived groups'),
     t('Page: Group directory'),
     t('Page: My groups'),
+    t('User groups'),
     t('View more'),
   );
 
