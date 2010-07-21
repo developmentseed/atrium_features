@@ -240,3 +240,48 @@ function atrium_update_6012() {
   drupal_install_modules(array('boxes'));
   return array(array('success' => TRUE, 'query' => 'Installed boxes module'));
 }
+
+/**
+ * 6013: Update for Kit compliance
+ */
+function atrium_update_6013() {
+  $components = array(
+    'views' => array(
+      'atrium_intranet' => array(
+        'activity_listing' => array(
+          'block_1' => array(
+            'module' => 'views',
+            'delta' => 'block_1',
+          ),
+          'block_2' => array(
+            'module' => 'views',
+            'delta' => 'block_2',
+          ),
+        ),
+      ),
+      'atrium_search' => array(
+        'search_listing' => array(
+          // No blocks.
+        ),
+      ),
+      'atrium_taxonomy' => array(
+        'taxonomy_term' => array(
+          'block_1' => array(
+            'module' => 'views',
+            'delta' => 'block_1',
+          ),
+        ),
+      ),
+    ),
+    'contexts' => array(
+      'atrium-intranet-global' => 'global',
+      'atrium-section-taxonomy' => 'taxonomy_term',
+    ),
+  );
+
+  atrium_kit_comply_presets($components);
+  atrium_kit_comply_overrides($components);
+  atrium_kit_comply_contexts($components);
+
+  return array(array('success' => true, 'query' => 'Atrium updated for Kit compliance.'));
+}

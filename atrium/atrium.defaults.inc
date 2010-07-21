@@ -8,7 +8,7 @@ function _atrium_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'atrium-intranet-global';
+  $context->name = 'global';
   $context->description = '';
   $context->tag = 'Intranet';
   $context->conditions = array(
@@ -80,30 +80,30 @@ function _atrium_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['atrium-intranet-global'] = array(
+  $translatables['global'] = array(
     t('Intranet'),
   );
 
-  $export['atrium-intranet-global'] = $context;
+  $export['global'] = $context;
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'atrium-section-taxonomy';
+  $context->name = 'taxonomy_term';
   $context->description = '';
   $context->tag = 'Intranet';
   $context->conditions = array(
     'views' => array(
       'values' => array(
-        'atrium_taxonomy' => 'atrium_taxonomy',
+        'taxonomy_term' => 'taxonomy_term',
       ),
     ),
   );
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-atrium_taxonomy-block_1' => array(
+        'views-taxonomy_term-block_1' => array(
           'module' => 'views',
-          'delta' => 'atrium_taxonomy-block_1',
+          'delta' => 'taxonomy_term-block_1',
           'region' => 'right',
           'weight' => 0,
         ),
@@ -112,11 +112,11 @@ function _atrium_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['atrium-section-taxonomy'] = array(
+  $translatables['taxonomy_term'] = array(
     t('Intranet'),
   );
 
-  $export['atrium-section-taxonomy'] = $context;
+  $export['taxonomy_term'] = $context;
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
@@ -184,15 +184,15 @@ function _atrium_context_default_contexts() {
           'region' => 'content',
           'weight' => 0,
         ),
-        'views-atrium_intranet-block_1' => array(
+        'views-activity_listing-block_1' => array(
           'module' => 'views',
-          'delta' => 'atrium_intranet-block_1',
+          'delta' => 'activity_listing-block_1',
           'region' => 'content',
           'weight' => 1,
         ),
-        'views-atrium_groups-block_2' => array(
+        'views-groups_listing-block_2' => array(
           'module' => 'views',
-          'delta' => 'atrium_groups-block_2',
+          'delta' => 'groups_listing-block_2',
           'region' => 'right',
           'weight' => 0,
         ),

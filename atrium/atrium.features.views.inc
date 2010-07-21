@@ -6,10 +6,10 @@
 function _atrium_views_default_views() {
   $views = array();
 
-  // Exported view: atrium_intranet
+  // Exported view: activity_listing
   $view = new view;
-  $view->name = 'atrium_intranet';
-  $view->description = 'Atrium > Intranet';
+  $view->name = 'activity_listing';
+  $view->description = 'Atrium > Activity listing';
   $view->tag = 'atrium';
   $view->view_php = '';
   $view->base_table = 'node';
@@ -398,7 +398,7 @@ function _atrium_views_default_views() {
   ));
   $handler->override_option('block_description', 'Latest files');
   $handler->override_option('block_caching', -1);
-  $translatables['atrium_intranet'] = array(
+  $translatables['activity_listing'] = array(
     t('Defaults'),
     t('Files'),
     t('Latest files'),
@@ -409,10 +409,10 @@ function _atrium_views_default_views() {
 
   $views[$view->name] = $view;
 
-  // Exported view: atrium_search
+  // Exported view: search_listing
   $view = new view;
-  $view->name = 'atrium_search';
-  $view->description = 'Atrium > Search';
+  $view->name = 'search_listing';
+  $view->description = 'Atrium > Search listing';
   $view->tag = 'atrium';
   $view->view_php = '';
   $view->base_table = 'node';
@@ -778,7 +778,7 @@ function _atrium_views_default_views() {
     'description' => '',
     'weight' => 0,
   ));
-  $translatables['atrium_search'] = array(
+  $translatables['search_listing'] = array(
     t('Defaults'),
     t('Page'),
     t('Search'),
@@ -786,9 +786,9 @@ function _atrium_views_default_views() {
 
   $views[$view->name] = $view;
 
-  // Exported view: atrium_taxonomy
+  // Exported view: taxonomy_listing
   $view = new view;
-  $view->name = 'atrium_taxonomy';
+  $view->name = 'taxonomy_listing';
   $view->description = 'Atrium > Taxonomy term override';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -1245,7 +1245,7 @@ function _atrium_views_default_views() {
     'description' => '',
     'weight' => 0,
   ));
-  $translatables['atrium_taxonomy'] = array(
+  $translatables['taxonomy_term'] = array(
     t('Archive'),
     t('Archive block'),
     t('Defaults'),
