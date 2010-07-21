@@ -6,9 +6,9 @@
 function _atrium_profile_views_default_views() {
   $views = array();
 
-  // Exported view: atrium_profile_listing
+  // Exported view: profile_display
   $view = new view;
-  $view->name = 'atrium_profile_listing';
+  $view->name = 'profile_display';
   $view->description = 'Atrium > Profile';
   $view->tag = 'atrium';
   $view->view_php = '';
@@ -323,7 +323,7 @@ function _atrium_profile_views_default_views() {
     'default' => 'default',
     'page_1' => 'page_1',
   ));
-  $translatables['atrium_profile_listing'] = array(
+  $translatables['profile_display'] = array(
     t('Defaults'),
     t('Profile'),
     t('Profile fields'),

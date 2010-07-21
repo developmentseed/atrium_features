@@ -249,13 +249,13 @@ function _atrium_profile_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'profile_listing';
+  $context->name = 'profile_display';
   $context->description = '';
   $context->tag = 'Profile';
   $context->conditions = array(
     'views' => array(
       'values' => array(
-        'profile_listing' => 'profile_listing',
+        'profile_display' => 'profile_display',
       ),
     ),
   );
@@ -279,11 +279,11 @@ function _atrium_profile_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['profile_listing'] = array(
+  $translatables['profile_display'] = array(
     t('Profile'),
   );
 
-  $export['profile_listing'] = $context;
+  $export['profile_display'] = $context;
   return $export;
 }
 
