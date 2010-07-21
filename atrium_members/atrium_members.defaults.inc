@@ -185,15 +185,15 @@ function _atrium_members_spaces_presets() {
     'context' => array(
       'spaces_dashboard-custom-1:reaction:block' => array(
         'blocks' => array(
-          'views-atrium_intranet-block_1' => array(
+          'views-activity_listing-block_1' => array(
             'module' => 'views',
-            'delta' => 'atrium_intranet-block_1',
+            'delta' => 'activity_listing-block_1',
             'region' => 'content',
             'weight' => 0,
           ),
-          'views-atrium_blog_comments-block_1' => array(
+          'views-blog_comments-block_1' => array(
             'module' => 'views',
-            'delta' => 'atrium_blog_comments-block_1',
+            'delta' => 'blog_comments-block_1',
             'region' => 'right',
             'weight' => 0,
           ),

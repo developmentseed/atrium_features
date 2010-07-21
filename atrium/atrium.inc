@@ -175,7 +175,7 @@ function _atrium_form_node_type_form_alter(&$form, $form_state) {
 function _atrium_form_views_exposed_form_alter(&$form, $form_state) {
   // Quick check that this is the right view
   $view = views_get_current_view();
-  if ($view && $view->name === 'atrium_search' && !empty($form['created'])) {
+  if ($view && $view->name === 'search_listing' && !empty($form['created'])) {
     $options = array(
       '-14 days' => t('2 weeks ago'),
       '-30 days' => t('1 month ago'),

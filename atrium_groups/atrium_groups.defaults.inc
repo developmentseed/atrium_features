@@ -125,15 +125,15 @@ function _atrium_groups_spaces_presets() {
             'region' => 'content',
             'weight' => 0,
           ),
-          'views-atrium_intranet-block_1' => array(
+          'views-activity_listing-block_1' => array(
             'module' => 'views',
-            'delta' => 'atrium_intranet-block_1',
+            'delta' => 'activity_listing-block_1',
             'region' => 'content',
             'weight' => 1,
           ),
-          'views-atrium_blog_comments-block_1' => array(
+          'views-blog_comments-block_1' => array(
             'module' => 'views',
-            'delta' => 'atrium_blog_comments-block_1',
+            'delta' => 'blog_comments-block_1',
             'region' => 'right',
             'weight' => 0,
           ),
@@ -208,15 +208,15 @@ function _atrium_groups_spaces_presets() {
             'region' => 'content',
             'weight' => 0,
           ),
-          'views-atrium_intranet-block_1' => array(
+          'views-activity_listing-block_1' => array(
             'module' => 'views',
-            'delta' => 'atrium_intranet-block_1',
+            'delta' => 'activity_listing-block_1',
             'region' => 'content',
             'weight' => 1,
           ),
-          'views-atrium_blog_comments-block_1' => array(
+          'views-blog_comments-block_1' => array(
             'module' => 'views',
-            'delta' => 'atrium_blog_comments-block_1',
+            'delta' => 'blog_comments-block_1',
             'region' => 'right',
             'weight' => 0,
           ),
