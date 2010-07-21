@@ -537,7 +537,7 @@ function _atrium_members_views_default_views() {
     'title' => 'Members',
     'description' => '',
     'weight' => '0',
-    'name' => 'navigation',
+    'name' => 'features',
   ));
   $translatables['members_listing'] = array(
     t('Active users'),

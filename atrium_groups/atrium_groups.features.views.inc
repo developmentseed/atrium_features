@@ -560,7 +560,7 @@ function _atrium_groups_views_default_views() {
     'title' => 'Groups',
     'description' => '',
     'weight' => '0',
-    'name' => 'navigation',
+    'name' => 'features',
   ));
   $handler = $view->new_display('page', 'Page: Archived groups', 'page_3');
   $handler->override_option('fields', array(

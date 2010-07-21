@@ -548,7 +548,7 @@ function _atrium_casetracker_views_default_views() {
     'title' => 'Case Tracker',
     'description' => '',
     'weight' => '0',
-    'name' => 'navigation',
+    'name' => 'features',
   ));
   $handler = $view->new_display('page', 'My cases', 'page_2');
   $handler->override_option('filters', array(
