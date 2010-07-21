@@ -167,7 +167,7 @@ function atrium_casetracker_theme_registry_alter(&$theme_registry) {
  */
 function atrium_casetracker_preprocess_views_view(&$vars) {
   $view = $vars['view'];
-  if ($view->name == 'atrium_casetracker') {
+  if ($view->name == 'casetracker_cases') {
     // Whisk away exposed filter for display in a block
     _atrium_casetracker_block_filters($vars['exposed']);
     $vars['exposed'] = '';
@@ -179,7 +179,7 @@ function atrium_casetracker_preprocess_views_view(&$vars) {
  */
 function atrium_casetracker_preprocess_views_view_table(&$vars) {
   $view = $vars['view'];
-  if ($view->name == 'atrium_casetracker') {
+  if ($view->name == 'casetracker_cases') {
     $vars['class'] .= " cases";
 
     global $user;
