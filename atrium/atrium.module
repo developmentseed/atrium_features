@@ -466,7 +466,7 @@ function atrium_account_links() {
       );
     }
   }
-  drupal_alter('atrium_account_links', $links, $space);
+  drupal_alter('atrium_account_links', $links);
   return $links;
 }
 

@@ -167,6 +167,20 @@ function _atrium_members_spaces_presets() {
         'custom-1' => 'Dashboard',
       ),
       'spaces_setting_home' => 'profile',
+      'spaces_dashboard_blocks' => array(
+        'atrium-welcome_admin' => 1,
+        'atrium-welcome_member' => 1,
+        'atrium_calendar-mini' => 1,
+        'views-2806ea1d75b0ffa45a7eaa780e276615' => 1,
+        'views-3de5a072e9754aa7bce60e3f05d1538e' => 1,
+        'views-atrium_blog-block_2' => 1,
+        'views-atrium_blog_comments-block_1' => 1,
+        'views-atrium_casetracker-block_3' => 1,
+        'views-atrium_casetracker-block_4' => 1,
+        'views-atrium_groups-block_1' => 1,
+        'views-atrium_intranet-block_1' => 1,
+        'views-atrium_intranet-block_2' => 1,
+      ),
     ),
     'context' => array(
       'spaces_dashboard-custom-1:reaction:block' => array(
