@@ -237,12 +237,87 @@ function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
   // If there is no processing semaphore for user permissions or it is stale
   // go ahead with a forced rebuild.
   if (!$semaphore || (time() - $semaphore) >= FEATURES_SEMAPHORE_TIMEOUT) {
-    context_set('atrium', 'access_perms', TRUE);
     features_rebuild(array('atrium' => array('user')));
-    context_set('atrium', 'access_perms', FALSE);
   }
   else {
     drupal_set_message(t('Your changes could not be saved because user permissions are currently being rebuilt. Please try again in a few minutes.'), 'error');
+  }
+}
+
+/**
+ * Implementation of hook_user_default_permissions_alter().
+ */
+function atrium_user_default_permissions_alter(&$perms) {
+  if (isset($perms['access administration pages'])) {
+    global $profile;
+    if (!variable_get('user_register', FALSE)) {
+      $perms['access user profiles'] = array(
+        'name' => 'access user profiles',
+        'roles' => array('authenticated user'),
+      );
+      $perms['access content'] = array(
+        'name' => 'access content',
+        'roles' => array('authenticated user'),
+      );
+      $perms['access comments'] = array(
+        'name' => 'access comments',
+        'roles' => array('authenticated user'),
+      );
+      $perms['view revisions'] = array(
+        'name' => 'view revisions',
+        'roles' => array('authenticated user'),
+      );
+    }
+    else {
+      $perms['access user profiles'] = array(
+        'name' => 'access user profiles',
+        'roles' => array('anonymous user', 'authenticated user'),
+      );
+      $perms['access content'] = array(
+        'name' => 'access content',
+        'roles' => array('anonymous user', 'authenticated user'),
+      );
+      $perms['access comments'] = array(
+        'name' => 'access comments',
+        'roles' => array('anonymous user', 'authenticated user'),
+      );
+      $perms['view revisions'] = array(
+        'name' => 'view revisions',
+        'roles' => array('anonymous user', 'authenticated user'),
+      );
+    }
+    switch (variable_get('atrium_members', ATRIUM_MEMBERS_GROUP)) {
+      case ATRIUM_MEMBERS_ALL:
+        $perms['view users outside groups'] = array(
+          'name' => 'view users outside groups',
+          'roles' => array('anonymous user', 'authenticated user', 'manager', 'admin'),
+        );
+        break;
+      case ATRIUM_MEMBERS_GROUP:
+        $perms['view users outside groups'] = array(
+          'name' => 'view users outside groups',
+          'roles' => array('manager', 'admin'),
+        );
+        break;
+    }
+    switch (variable_get('atrium_notifications', ATRIUM_NOTIFICATIONS_TEAM)) {
+      case ATRIUM_NOTIFICATIONS_TEAM:
+        if (empty($profile)) {
+          !module_exists('notifications_team') ? drupal_install_modules(array('notifications_team')) : TRUE;
+          module_exists('notifications_ui') ? module_disable(array('notifications_ui')) : TRUE;
+        }
+        $perms['subscribe other users'] = array(
+          'name' => 'subscribe other users',
+          'roles' => array('authenticated user', 'manager', 'admin'),
+        );
+        break;
+      case ATRIUM_NOTIFICATIONS_SUBSCRIBE:
+        if (empty($profile)) {
+          module_exists('notifications_team') ? module_disable(array('notifications_team')) : TRUE;
+          !module_exists('notifications_ui') ? drupal_install_modules(array('notifications_ui')) : TRUE;
+        }
+        break;
+    }
   }
 }
 
