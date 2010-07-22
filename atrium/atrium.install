@@ -283,5 +283,35 @@ function atrium_update_6013() {
   atrium_kit_comply_overrides($components);
   atrium_kit_comply_contexts($components);
 
-  return array(array('success' => true, 'query' => 'Atrium updated for Kit compliance.'));
+  return array(array('success' => TRUE, 'query' => 'Atrium updated for Kit compliance.'));
+}
+
+/**
+ * 6014: Migrate the old Keywords vocabulary to have a proper machine name.
+ */
+function atrium_update_6014() {
+  if (function_exists('taxonomy_get_vocabularies')) {
+    $vocabs = taxonomy_get_vocabularies();
+    $legacy = $machine = NULL;
+
+    // Find the legacy vocabulary and the new features-provided vocabulary if
+    // it exists.
+    foreach ($vocabs as $vocab) {
+      if ($vocab->module === 'event' && $vocab->name === 'Keywords') {
+        $legacy = $vocab;
+      }
+      elseif ($vocab->module === 'features_keywords') {
+        $machine = $vocab;
+      }
+    }
+    if (isset($legacy)) {
+      if (isset($machine)) {
+        taxonomy_del_vocabulary($machine->vid);
+      }
+      $legacy->module = 'features_keywords';
+      $legacy = (array) $legacy; // Gross.
+      taxonomy_save_vocabulary($legacy);
+      return array(array('success' => TRUE, 'query' => 'Keywords vocabulary updated for Features management.'));
+    }
+  }
 }
