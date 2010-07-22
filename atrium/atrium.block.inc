@@ -103,7 +103,7 @@ function _atrium_block_account() {
     $block['content'] .= "</div>";
 
     // My groups
-    if ($view = views_get_view('atrium_groups')) {
+    if ($view = views_get_view('groups_listing')) {
       $block['content'] .= "<div class='pane-right'>";
       $block['content'] .= "<h3>". t('My groups') ."</h3>" . $view->execute_display('default');
       $block['content'] .= "</div>";
