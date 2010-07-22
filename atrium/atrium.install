@@ -265,7 +265,7 @@ function atrium_update_6013() {
         ),
       ),
       'atrium_taxonomy' => array(
-        'taxonomy_term' => array(
+        'taxonomy_listing' => array(
           'block_1' => array(
             'module' => 'views',
             'delta' => 'block_1',
@@ -275,7 +275,7 @@ function atrium_update_6013() {
     ),
     'contexts' => array(
       'atrium-intranet-global' => 'global',
-      'atrium-section-taxonomy' => 'taxonomy_term',
+      'atrium-section-taxonomy' => 'taxonomy_listing',
     ),
   );
 

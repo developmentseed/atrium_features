@@ -1245,7 +1245,7 @@ function _atrium_views_default_views() {
     'description' => '',
     'weight' => 0,
   ));
-  $translatables['taxonomy_term'] = array(
+  $translatables['taxonomy_listing'] = array(
     t('Archive'),
     t('Archive block'),
     t('Defaults'),

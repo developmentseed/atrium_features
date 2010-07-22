@@ -88,22 +88,22 @@ function _atrium_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'taxonomy_term';
+  $context->name = 'taxonomy_listing';
   $context->description = '';
   $context->tag = 'Intranet';
   $context->conditions = array(
     'views' => array(
       'values' => array(
-        'taxonomy_term' => 'taxonomy_term',
+        'taxonomy_listing' => 'taxonomy_listing',
       ),
     ),
   );
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-taxonomy_term-block_1' => array(
+        'views-taxonomy_listing-block_1' => array(
           'module' => 'views',
-          'delta' => 'taxonomy_term-block_1',
+          'delta' => 'taxonomy_listing-block_1',
           'region' => 'right',
           'weight' => 0,
         ),
@@ -112,11 +112,11 @@ function _atrium_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['taxonomy_term'] = array(
+  $translatables['taxonomy_listing'] = array(
     t('Intranet'),
   );
 
-  $export['taxonomy_term'] = $context;
+  $export['taxonomy_listing'] = $context;
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
