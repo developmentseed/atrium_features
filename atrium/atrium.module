@@ -381,12 +381,14 @@ function atrium_context_default_contexts_alter(&$contexts) {
 /**
  * Implementation of hook_views_api().
  */
+/*
 function atrium_views_api() {
   return array(
     'api' => 2,
     'path' => drupal_get_path('module', 'atrium') .'/includes',
   );
 }
+*/
 
 /**
  * Preprocessor for theme('atrium_welcome').

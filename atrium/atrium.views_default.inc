@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Helper to implementation of hook_views_default_views().
+ * Implementation of hook_views_default_views().
  */
-function _atrium_views_default_views() {
+function atrium_views_default_views() {
   $views = array();
 
   // Exported view: activity_listing
@@ -704,6 +704,7 @@ function _atrium_views_default_views() {
     'title' => 'Search',
     'description' => '',
     'weight' => '0',
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'Page', 'page_2');
   $handler->override_option('relationships', array(
@@ -777,6 +778,7 @@ function _atrium_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
   $translatables['search_listing'] = array(
     t('Defaults'),
@@ -1056,6 +1058,7 @@ function _atrium_views_default_views() {
     'title' => 'Tags',
     'description' => '',
     'weight' => '0',
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('block', 'Archive block', 'block_1');
   $handler->override_option('arguments', array(
@@ -1244,6 +1247,7 @@ function _atrium_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
   $translatables['taxonomy_listing'] = array(
     t('Archive'),
