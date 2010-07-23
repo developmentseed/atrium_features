@@ -185,10 +185,6 @@ function atrium_views_data_alter(&$cache) {
   $cache['og_ancestry']['group_nid']['field']['handler'] = 'atrium_handler_field_og_group_nids';
   $cache['og_ancestry']['group_nid']['filter']['handler'] = 'atrium_handler_filter_og_group_nid';
   $cache['og']['post_count_new']['field']['handler'] = 'atrium_handler_field_og_post_count_new';
-  
-  // Add a sort by user access history
-  $cache['history_user']['timestamp']['sort']['handler'] = 'views_handler_sort';
-  $cache['history_user']['timestamp']['sort']['help'] = t('Sort items by current user\'s latest access time');
 
   // Alias -- copy of created_fulldate but with simpler formatting
   $cache['node']['created_shortdate'] = array(
@@ -199,7 +195,6 @@ function atrium_views_data_alter(&$cache) {
       'handler' => 'atrium_handler_argument_node_created_shortdate',
     ),
   );
-
   // Update type filter
   $cache['node']['update_type'] = array(
     'real field' => 'type',
