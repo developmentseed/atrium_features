@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Helper to implementation of hook_views_default_views().
+ * Implementation of hook_views_default_views().
  */
-function _atrium_calendar_views_default_views() {
+function atrium_calendar_views_default_views() {
   $views = array();
 
   // Exported view: calendar_feed_items
