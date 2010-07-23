@@ -304,6 +304,8 @@ function atrium_user_default_permissions_alter(&$perms) {
       case ATRIUM_NOTIFICATIONS_TEAM:
         !module_exists('notifications_team') ? drupal_install_modules(array('notifications_team')) : TRUE;
         module_exists('notifications_ui') ? module_disable(array('notifications_ui')) : TRUE;
+        // Change affects a context_defaults_alter(). Clear cache.
+        context_invalidate_cache();
         $perms['subscribe other users'] = array(
           'name' => 'subscribe other users',
           'roles' => array('authenticated user', 'manager', 'admin'),
@@ -312,6 +314,8 @@ function atrium_user_default_permissions_alter(&$perms) {
       case ATRIUM_NOTIFICATIONS_SUBSCRIBE:
         module_exists('notifications_team') ? module_disable(array('notifications_team')) : TRUE;
         !module_exists('notifications_ui') ? drupal_install_modules(array('notifications_ui')) : TRUE;
+        // Change affects a context_defaults_alter(). Clear cache.
+        context_invalidate_cache();
         break;
     }
   }
