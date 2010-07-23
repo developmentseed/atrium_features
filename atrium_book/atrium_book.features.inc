@@ -1,64 +1,43 @@
 <?php
 
 /**
- * Implementation of hook_context_default_contexts().
- */
-function atrium_book_context_default_contexts() {
-  module_load_include('inc', 'atrium_book', 'atrium_book.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_book_context_default_contexts', $args);
-}
-
-/**
  * Implementation of hook_ctools_plugin_api().
  */
 function atrium_book_ctools_plugin_api() {
-  module_load_include('inc', 'atrium_book', 'atrium_book.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_book_ctools_plugin_api', $args);
-}
-
-/**
- * Implementation of hook_menu_default_items().
- */
-function atrium_book_menu_default_items() {
-  module_load_include('inc', 'atrium_book', 'atrium_book.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_book_menu_default_items', $args);
+  list($module, $api) = func_get_args();
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
+  elseif ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => 1);
+  }
 }
 
 /**
  * Implementation of hook_node_info().
  */
 function atrium_book_node_info() {
-  module_load_include('inc', 'atrium_book', 'atrium_book.features.node');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_book_node_info', $args);
+  $items = array(
+    'book' => array(
+      'name' => t('Book page'),
+      'module' => 'features',
+      'description' => t('A <em>book page</em> is a page of content, organized into a collection of related entries collectively known as a <em>book</em>. A <em>book page</em> automatically displays links to adjacent pages, providing a simple navigation system for organizing and reviewing structured content.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'has_body' => '1',
+      'body_label' => t('Body'),
+      'min_word_count' => '0',
+      'help' => '',
+    ),
+  );
+  return $items;
 }
 
 /**
- * Implementation of hook_user_default_permissions().
+ * Implementation of hook_views_api().
  */
-function atrium_book_user_default_permissions() {
-  module_load_include('inc', 'atrium_book', 'atrium_book.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_book_user_default_permissions', $args);
-}
-
-/**
- * Implementation of hook_strongarm().
- */
-function atrium_book_strongarm() {
-  module_load_include('inc', 'atrium_book', 'atrium_book.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_book_strongarm', $args);
-}
-
-/**
- * Implementation of hook_views_default_views().
- */
-function atrium_book_views_default_views() {
-  module_load_include('inc', 'atrium_book', 'atrium_book.features.views');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_book_views_default_views', $args);
+function atrium_book_views_api() {
+  return array(
+    'api' => '2',
+  );
 }
