@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Helper to implementation of hook_views_default_views().
+ * Implementation of hook_views_default_views().
  */
-function _atrium_casetracker_views_default_views() {
+function atrium_casetracker_views_default_views() {
   $views = array();
 
   // Exported view: casetracker_cases
@@ -1767,7 +1767,7 @@ function _atrium_casetracker_views_default_views() {
   ));
   $handler->override_option('block_description', 'User cases');
   $handler->override_option('block_caching', -1);
-  $translatables['atrium_casetracker'] = array(
+  $translatables['casetracker_cases'] = array(
     t('All cases'),
     t('Defaults'),
     t('Latest cases'),

@@ -146,16 +146,6 @@ function atrium_casetracker_block($op = 'list', $delta = 0) {
 }
 
 /**
- * Implementation of hook_views_api().
- */
-function atrium_casetracker_views_api() {
-  return array(
-    'api' => 2,
-    'path' => drupal_get_path('module', 'atrium_casetracker') .'/includes',
-  );
-}
-
-/**
  * Implementation of hook_theme_registry_alter().
  */
 function atrium_casetracker_theme_registry_alter(&$theme_registry) {
