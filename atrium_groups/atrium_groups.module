@@ -13,13 +13,6 @@ function atrium_groups_enable() {
 }
 
 /**
- * Implementation of hook_views_api().
- */
-function atrium_groups_views_api() {
-  return array('api' => 2);
-}
-
-/**
  * Implementation of hook_menu_alter().
  */
 function atrium_groups_menu_alter(&$items) {
