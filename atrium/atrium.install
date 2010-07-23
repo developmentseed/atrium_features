@@ -279,6 +279,7 @@ function atrium_update_6013() {
     ),
   );
 
+  module_load_include('inc', 'atrium', 'includes/atrium_update_kit');
   atrium_kit_comply_presets($components);
   atrium_kit_comply_overrides($components);
   atrium_kit_comply_contexts($components);

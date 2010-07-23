@@ -30,14 +30,15 @@ function atrium_book_update_6001() {
       'spaces-feature-book' => 'book_listing',
     ),
   );
-  
+
+  module_load_include('inc', 'atrium', 'includes/atrium_update_kit');
   atrium_kit_comply_presets($components); 
   atrium_kit_comply_overrides($components);
   atrium_kit_comply_contexts($components);
-  
+
   atrium_kit_comply_presets($components, 'blocks'); 
   atrium_kit_comply_overrides($components, 'blocks');
   atrium_kit_comply_contexts($components, 'blocks');
-  
+
   return array(array('success' => true, 'query' => 'Atrium Notebook updated for Kit compliance.'));
 }
