@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Helper to implementation of hook_views_default_views().
+ * Implementation of hook_views_default_views().
  */
-function _atrium_groups_views_default_views() {
+function atrium_groups_views_default_views() {
   $views = array();
 
   // Exported view: groups_listing
@@ -914,7 +914,7 @@ function _atrium_groups_views_default_views() {
   ));
   $handler->override_option('block_description', 'User groups');
   $handler->override_option('block_caching', -1);
-  $translatables['atrium_groups'] = array(
+  $translatables['groups_listing'] = array(
     t('Archived groups'),
     t('Block: My groups (sidebar)'),
     t('Block: User groups'),
