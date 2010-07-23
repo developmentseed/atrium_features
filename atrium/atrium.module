@@ -302,20 +302,16 @@ function atrium_user_default_permissions_alter(&$perms) {
     }
     switch (variable_get('atrium_notifications', ATRIUM_NOTIFICATIONS_TEAM)) {
       case ATRIUM_NOTIFICATIONS_TEAM:
-        if (empty($profile)) {
-          !module_exists('notifications_team') ? drupal_install_modules(array('notifications_team')) : TRUE;
-          module_exists('notifications_ui') ? module_disable(array('notifications_ui')) : TRUE;
-        }
+        !module_exists('notifications_team') ? drupal_install_modules(array('notifications_team')) : TRUE;
+        module_exists('notifications_ui') ? module_disable(array('notifications_ui')) : TRUE;
         $perms['subscribe other users'] = array(
           'name' => 'subscribe other users',
           'roles' => array('authenticated user', 'manager', 'admin'),
         );
         break;
       case ATRIUM_NOTIFICATIONS_SUBSCRIBE:
-        if (empty($profile)) {
-          module_exists('notifications_team') ? module_disable(array('notifications_team')) : TRUE;
-          !module_exists('notifications_ui') ? drupal_install_modules(array('notifications_ui')) : TRUE;
-        }
+        module_exists('notifications_team') ? module_disable(array('notifications_team')) : TRUE;
+        !module_exists('notifications_ui') ? drupal_install_modules(array('notifications_ui')) : TRUE;
         break;
     }
   }
@@ -443,8 +439,8 @@ function atrium_context_links_alter(&$links) {
  */
 function atrium_context_default_contexts_alter(&$contexts) {
   // Conditionally add the notifications UI subscription block.
-  if (module_exists('notifications_ui') && !empty($contexts['atrium-intranet-global'])) {
-    $contexts['atrium-intranet-global']->reactions['block']['blocks']['notifications_ui_0'] = array(
+  if (module_exists('notifications_ui') && !empty($contexts['global'])) {
+    $contexts['global']->reactions['block']['blocks']['notifications_ui-0'] = array(
       'module' => 'notifications_ui',
       'delta' => '0',
       'weight' => 48,

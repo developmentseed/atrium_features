@@ -170,6 +170,7 @@ function atrium_strongarm() {
   $strongarm->name = 'notifications_ui_account_options';
   $strongarm->value = array(
     'block' => 'block',
+    'links' => 0,
   );
 
   $export['notifications_ui_account_options'] = $strongarm;
@@ -185,8 +186,22 @@ function atrium_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'notifications_ui_node_options';
+  $strongarm->value = array(
+    'block' => 'block',
+    'form' => 0,
+    'comment' => 0,
+    'links' => 0,
+    'teaserlinks' => 0,
+    'subform' => 0,
+  );
+
+  $export['notifications_ui_node_options'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'notifications_ui_per_type';
-  $strongarm->value = 0;
+  $strongarm->value = '0';
 
   $export['notifications_ui_per_type'] = $strongarm;
   $strongarm = new stdClass;
