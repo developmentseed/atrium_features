@@ -1,73 +1,43 @@
 <?php
 
 /**
- * Implementation of hook_content_default_fields().
- */
-function atrium_blog_content_default_fields() {
-  module_load_include('inc', 'atrium_blog', 'atrium_blog.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_blog_content_default_fields', $args);
-}
-
-/**
- * Implementation of hook_context_default_contexts().
- */
-function atrium_blog_context_default_contexts() {
-  module_load_include('inc', 'atrium_blog', 'atrium_blog.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_blog_context_default_contexts', $args);
-}
-
-/**
  * Implementation of hook_ctools_plugin_api().
  */
 function atrium_blog_ctools_plugin_api() {
-  module_load_include('inc', 'atrium_blog', 'atrium_blog.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_blog_ctools_plugin_api', $args);
-}
-
-/**
- * Implementation of hook_menu_default_items().
- */
-function atrium_blog_menu_default_items() {
-  module_load_include('inc', 'atrium_blog', 'atrium_blog.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_blog_menu_default_items', $args);
+  list($module, $api) = func_get_args();
+  if ($module == "context" && $api == "context") {
+    return array("version" => 3);
+  }
+  elseif ($module == "strongarm" && $api == "strongarm") {
+    return array("version" => 1);
+  }
 }
 
 /**
  * Implementation of hook_node_info().
  */
 function atrium_blog_node_info() {
-  module_load_include('inc', 'atrium_blog', 'atrium_blog.features.node');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_blog_node_info', $args);
+  $items = array(
+    'blog' => array(
+      'name' => t('Blog entry'),
+      'module' => 'features',
+      'description' => t('A blog is a regularly updated journal or diary made up of individual posts shown in reversed chronological order. Each member of the site may create and maintain a blog.'),
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'has_body' => '1',
+      'body_label' => t('Body'),
+      'min_word_count' => '0',
+      'help' => '',
+    ),
+  );
+  return $items;
 }
 
 /**
- * Implementation of hook_user_default_permissions().
+ * Implementation of hook_views_api().
  */
-function atrium_blog_user_default_permissions() {
-  module_load_include('inc', 'atrium_blog', 'atrium_blog.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_blog_user_default_permissions', $args);
-}
-
-/**
- * Implementation of hook_strongarm().
- */
-function atrium_blog_strongarm() {
-  module_load_include('inc', 'atrium_blog', 'atrium_blog.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_blog_strongarm', $args);
-}
-
-/**
- * Implementation of hook_views_default_views().
- */
-function atrium_blog_views_default_views() {
-  module_load_include('inc', 'atrium_blog', 'atrium_blog.features.views');
-  $args = func_get_args();
-  return call_user_func_array('_atrium_blog_views_default_views', $args);
+function atrium_blog_views_api() {
+  return array(
+    'api' => '2',
+  );
 }
