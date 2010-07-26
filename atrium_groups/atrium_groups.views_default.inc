@@ -543,7 +543,6 @@ function atrium_groups_views_default_views() {
   $handler->override_option('row_options', array(
     'inline' => array(
       'title' => 'title',
-      'post_count_new' => 'post_count_new',
     ),
     'separator' => '',
   ));

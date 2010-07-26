@@ -67,21 +67,9 @@ function atrium_views_handlers() {
       ),
       'atrium_handler_field_ncs_last_updated' => array(
         'parent' => 'seed_handler_field_date',
-       ),
+      ),
       'atrium_handler_field_og_group_nids' => array(
         'parent' => 'views_handler_field',
-       ),
-      'atrium_handler_filter_og_group_nid' => array(
-        'parent' => 'views_handler_filter_equality',
-       ),
-      'atrium_handler_field_og_post_count_new' => array(
-        'parent' => 'views_handler_field_numeric',
-       ),
-      'atrium_handler_filter_user_list' => array(
-        'parent' => 'views_handler_filter_in_operator',
-      ),
-      'atrium_handler_argument_node_created_shortdate' => array(
-        'parent' => 'views_handler_argument_date',
       ),
     ),
   );
@@ -119,13 +107,20 @@ function atrium_views_data() {
     'field' => array('handler' => 'atrium_handler_field_group'),
   );
 
-  // UID
-  $data['users']['uid_list'] = array(
-    'real field' => 'uid',
-    'title' => t('Include/exclude UIDs'),
-    'help' => t('Filter the view to include or exclude by UID.'),
-    'filter' => array(
-      'handler' => 'atrium_handler_filter_user_list',
+  // A second entry for og_ancestry, to add an optional group display handler.
+  $data['atrium_og_ancestry']['table']['group']  = t('Organic groups');
+  $data['atrium_og_ancestry']['table']['join'] = array(
+    'node' => array(
+      'table' => 'og_ancestry',
+      'left_field' => 'nid',
+      'field' => 'nid',
+    ),
+  );
+  $data['atrium_og_ancestry']['group_nid'] = array(
+    'title' => t('Groups (color-coded)'),
+    'help' => t('The groups for a post.'),
+    'field' => array(
+      'handler' => 'atrium_handler_field_og_group_nids',
     ),
   );
 
@@ -181,20 +176,6 @@ function atrium_views_data_alter(&$cache) {
     }
   }
 
-  // Search & destroy operations
-  $cache['og_ancestry']['group_nid']['field']['handler'] = 'atrium_handler_field_og_group_nids';
-  $cache['og_ancestry']['group_nid']['filter']['handler'] = 'atrium_handler_filter_og_group_nid';
-  $cache['og']['post_count_new']['field']['handler'] = 'atrium_handler_field_og_post_count_new';
-
-  // Alias -- copy of created_fulldate but with simpler formatting
-  $cache['node']['created_shortdate'] = array(
-    'title' => t('Created date (short)'),
-    'help' => t('In the form of CCYYMMDD.'),
-    'argument' => array(
-      'field' => 'created',
-      'handler' => 'atrium_handler_argument_node_created_shortdate',
-    ),
-  );
   // Update type filter
   $cache['node']['update_type'] = array(
     'real field' => 'type',
