@@ -239,8 +239,8 @@ function atrium_groups_views_default_views() {
     ),
   ));
   $handler->override_option('access', array(
-    'type' => 'atrium_feature',
-    'spaces_feature' => 'atrium_groups',
+    'type' => 'spaces_feature',
+    'spaces_feature' => '0',
     'perm' => 'subscribe to content',
   ));
   $handler->override_option('use_ajax', FALSE);
@@ -753,7 +753,7 @@ function atrium_groups_views_default_views() {
     ),
   ));
   $handler->override_option('access', array(
-    'type' => 'atrium_feature',
+    'type' => 'spaces_feature',
     'spaces_feature' => 'atrium_groups',
     'perm' => 'administer nodes',
   ));
