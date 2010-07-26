@@ -321,7 +321,7 @@ function atrium_shoutbox_views_default_views() {
     ),
   ));
   $handler->override_option('access', array(
-    'type' => 'atrium_feature',
+    'type' => 'spaces_feature',
     'spaces_feature' => '0',
     'perm' => 'access content',
   ));
