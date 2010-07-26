@@ -37,14 +37,14 @@ function atrium_casetracker_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'casetracker_view_assignee_options';
-  $strongarm->value = 'atrium_ct_assignee_options';
+  $strongarm->value = 'casetracker_override_assignee_options';
 
   $export['casetracker_view_assignee_options'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'casetracker_view_project_options';
-  $strongarm->value = 'atrium_ct_project_options';
+  $strongarm->value = 'casetracker_override_project_options';
 
   $export['casetracker_view_project_options'] = $strongarm;
   $strongarm = new stdClass;
