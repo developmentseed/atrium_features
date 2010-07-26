@@ -26,12 +26,20 @@ function atrium_profile_menu_alter(&$items) {
  * Implementation of hook_views_pre_view().
  */
 function atrium_profile_views_pre_build(&$view) {
-  // Remove email display if site is in public mode.
-  if ($view->name == 'profile_listing' && variable_get('user_register', 0)) {
-    $fields = $view->display_handler->get_option('fields');
-    if (isset($fields['mail'])) {
-      unset($fields['mail']);
-      $view->display_handler->set_option('fields', $fields);
+  if ($view->name == 'profile_display') {
+    // Forcefully set the user page context condition.
+    // @TODO: Try to refactor this as to not require this hack.
+    if ($view->current_display === 'page_1' && isset($view->args[0]) && $account = user_load($view->args[0])) {
+      $edit = array();
+      context_user('view', $edit, $account);
+    }
+    // Remove email display if site is in public mode.
+    if (variable_get('user_register', 0)) {
+      $fields = $view->display_handler->get_option('fields');
+      if (isset($fields['mail'])) {
+        unset($fields['mail']);
+        $view->display_handler->set_option('fields', $fields);
+      }
     }
   }
 }

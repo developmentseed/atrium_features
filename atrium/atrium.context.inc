@@ -139,6 +139,41 @@ function atrium_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
+  $context->name = 'profile_activity';
+  $context->description = '';
+  $context->tag = 'Profile';
+  $context->conditions = array(
+    'user_page' => array(
+      'values' => array(
+        'view' => 'view',
+      ),
+      'options' => array(
+        'mode' => 'all',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-activity_listing-block_3' => array(
+          'module' => 'views',
+          'delta' => 'activity_listing-block_3',
+          'region' => 'content',
+          'weight' => 0,
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  $translatables['profile_activity'] = array(
+    t('Profile'),
+  );
+
+  $export['profile_activity'] = $context;
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
   $context->name = 'spaces_dashboard-custom-1';
   $context->description = 'Dashboard';
   $context->tag = 'Dashboard';
