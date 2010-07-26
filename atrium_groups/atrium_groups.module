@@ -87,3 +87,36 @@ function atrium_groups_context_links_alter(&$links) {
     }
   }
 }
+
+/**
+ * Implementation of hook_views_pre_view().
+ * Add group management fields to members listing view.
+ */
+function atrium_groups_views_pre_build(&$view) {
+  if ($view->name == 'members_listing') {
+    $fields = $view->display_handler->get_option('fields');
+    $fields['is_admin'] = array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => '<small class=\'label\'>[is_admin]</small>',
+      ),
+      'id' => 'is_admin',
+      'table' => 'og_uid',
+      'field' => 'is_admin',
+      'relationship' => 'none',
+    );
+    $fields['managelink'] = array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => '<small class=\'label\'>[managelink]</small>',
+      ),
+      'id' => 'managelink',
+      'table' => 'og_uid',
+      'field' => 'managelink',
+      'relationship' => 'none',
+    );
+    $fields = $view->display_handler->set_option('fields', $fields);
+  }
+}
