@@ -17,6 +17,38 @@ function atrium_shoutbox_views_default_views() {
   $view->api_version = 2;
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
+  $handler->override_option('fields', array(
+    'nid' => array(
+      'label' => 'Nid',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 0,
+      'exclude' => 0,
+      'id' => 'nid',
+      'table' => 'node',
+      'field' => 'nid',
+      'relationship' => 'none',
+    ),
+  ));
   $handler->override_option('filters', array(
     'status' => array(
       'operator' => '=',
@@ -70,12 +102,6 @@ function atrium_shoutbox_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('items_per_page', 0);
-  $handler->override_option('row_plugin', 'node');
-  $handler->override_option('row_options', array(
-    'teaser' => 0,
-    'links' => 0,
-    'comments' => 0,
-  ));
   $translatables['shoutbox_shoutboxes'] = array(
     t('Defaults'),
   );
@@ -330,7 +356,7 @@ function atrium_shoutbox_views_default_views() {
   ));
   $handler->override_option('use_ajax', TRUE);
   $handler->override_option('items_per_page', 5);
-  $handler->override_option('use_pager', 'mini');
+  $handler->override_option('use_pager', '0');
   $handler->override_option('style_plugin', 'list');
   $handler->override_option('exposed_block', TRUE);
   $handler = $view->new_display('page', 'Shoutbox', 'page_1');
