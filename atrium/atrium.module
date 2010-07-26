@@ -626,14 +626,6 @@ function atrium_update_types($reset = FALSE) {
 }
 
 /**
- * Wrapper access callback to provide access check against both a spaces
- * feature and an access perm.
- */
-function atrium_feature_access($feature, $perm = 'access content') {
-  return spaces_access_feature('view', $feature) && user_access($perm);
-}
-
-/**
  * Access callback for archive actions.
  */
 function atrium_archive_access($action = 'archive', $node) {

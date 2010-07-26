@@ -17,25 +17,6 @@ function atrium_views_pre_build(&$view) {
 }
 
 /**
- * Implementation of hook_views_plugins().
- */
-function atrium_views_plugins() {
-  return array(
-    'module' => 'atrium',
-    'access' => array(
-      'atrium_feature' => array(
-        'title' => t('Atrium feature (advanced)'),
-        'help' => t('Extends Spaces feature access control for additional custom access checks.'),
-        'handler' => 'atrium_plugin_access_atrium_feature',
-        'path' => drupal_get_path('module', 'atrium') .'/includes',
-        'uses options' => TRUE,
-        'parent' => 'spaces_feature',
-      ),
-    ),
-  );
-}
-
-/**
  * Implementation of hook_views_handlers().
  */
 function atrium_views_handlers() {
