@@ -140,7 +140,8 @@ function atrium_members_views_default_views() {
     ),
   ));
   $handler->override_option('access', array(
-    'type' => 'perm',
+    'type' => 'spaces_feature',
+    'spaces_feature' => 'atrium_members',
     'perm' => 'create users',
   ));
   $handler->override_option('cache', array(
@@ -329,7 +330,7 @@ function atrium_members_views_default_views() {
     ),
   ));
   $handler->override_option('access', array(
-    'type' => 'atrium_feature',
+    'type' => 'spaces_feature',
     'spaces_feature' => 'atrium_members',
     'perm' => 'access content',
   ));
