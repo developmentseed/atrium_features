@@ -4,11 +4,12 @@
  * Update feature components for Kit compliance
  *
  * @param array $type
- *   The type of component.  Accepted types are 'views' and 'context'
+ *   The type of component.  Possible values are 'views' or 'blocks.  Use 
+ *   'blocks' if renaming blocks implemented by hook_block which may be stored
+ *   in an override in the database using their old name.
  * @param array $info
- *
- *
- * Component array should look something like:
+ *   Array of component information.  Component $info array should look
+ *   similar to:
  *
  *
  * $components = array(
@@ -24,7 +25,28 @@
  *     'spaces-feature-blog' => 'blog_listing',
  *   ),
  * );
+ * 
+ * In this example array, the 'views' and 'contexts' keys indicate the type of
+ * component.  In the 'views' array, the next key down the array is the name of
+ * an existing view, followed by an array keyed by the new name of that existing
+ * view and the blocks which that view contains.  In this example, the existing 
+ * view name is "atrium_blog" which will be renamed to "atrium_blog_listing" and
+ * the view implements "block_1" and "block_2" blocks.  References to this view
+ * name and block names will be rewritten in overridden settings stored in the
+ * database.
+ * 
+ * In the case of 'contexts', the key of the child array 'spaces-feature-blog'
+ * is the name of an existing context, which should get renamed to the value
+ * 'blog_listing'.
  *
+ */
+
+
+/**
+ * @param $info
+ *   Array of components.  See @file for detailed explanation.
+ * @param $type
+ *   Type of component.  See @file for detailed explanation.
  */
 function atrium_kit_comply_presets($info, $type = 'views') {
   $type == 'views' ? $views = $info['views'] : $views = $info['blocks'];
@@ -32,14 +54,28 @@ function atrium_kit_comply_presets($info, $type = 'views') {
     $view = views_get_view($old_view_name);
     // Proceed if view is not overridden.
     if ($view->type != 'Overriden' || $type == 'blocks') {
-      // Go block by block and update spaces_dashboards, spaces_presets, and context.
+      // For each existing view, look through each of its blocks, pull up from
+      // the database all the stored spaces_presets, then look in each context
+      // in the stored presets and rename the references to that block so that
+      // it uses the new name of the block.  In the case of views blocks, the
+      // name of the block changes because it's based on the name of the view
+      // that implements that block.  In the case of blocks implemented by 
+      // hook_block whose names actually do change (you're using $type = 'blocks'
+      // these will also get renamed.
       foreach ($new_view as $new_view_name => $blocks) {
         foreach ($blocks as $block) {
           $query = db_query("SELECT * FROM {spaces_presets}");
           while ($result = db_fetch_object($query)) {
             $value = unserialize($result->value);
+            // Possible values are 'variable' or 'context'
             foreach ($value as $key => $settings) {
               if ($key == 'context') {
+                // There is a context for each custom dashboard.  The key is
+                // like 'spaces_dashboard-custom-1:reaction:block' and consists
+                // of a 'blocks' key which is an array of blocks keyed by
+                // the name of the block, with values of module, delta, region,
+                // and weight, and a 'layout' key whose value is the name (string) 
+                // of the layout for that dashboard.
                 foreach ($settings as $name => $def) {
                   // Call api function to replace keys and values.
                   $value[$key][$name] = _atrium_kit_comply_rename($def, $type, $old_view_name, $new_view_name, $block);
@@ -158,8 +194,15 @@ function atrium_kit_comply_spaces_presets($info, $type = 'views') {
   }
 }
 
-/*
- * $source should always be an array to operate on, not serialized data.
+/**
+ * Renames values in stored data.
+ * 
+ * @param $block
+ *   The delta of the existing block
+ * @param $source
+ *   The source to operate on and manipulate.  This should be an array that
+ *   contains a 'blocks' key.  The 'blocks' key should be keyed with the name
+ *   of the block, and contains values like module, delta, region, and weight.
  */
 function _atrium_kit_comply_rename($source, $type, $old_view_name, $new_view_name, $block) {
   $block_name = $block['delta'];
