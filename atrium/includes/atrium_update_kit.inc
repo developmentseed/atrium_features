@@ -43,6 +43,9 @@
 
 
 /**
+ * Rewrites names of views blocks and blocks stored as overrides in the
+ * spaces_presets table.
+ * 
  * @param $info
  *   Array of components.  See @file for detailed explanation.
  * @param $type
@@ -93,13 +96,34 @@ function atrium_kit_comply_presets($info, $type = 'views') {
   }
 }
 
+/**
+ * Rewrites views blocks and blocks stored as overrides in the spaces_overrides
+ * table.
+ * 
+ * For each old view, go through the new view array which contains block names
+ * that need to be overwritten.  For each of those blocks, select all of the
+ * rows stored in spaces_overrides and go through each one and run the value
+ * through the renaming callback (_atrium_kit_comply_rename()) and save it back
+ * to the database.
+ * 
+ * The spaces_overrides contains a value column which has either a 'blocks', 
+ * 'layout', or both of these keys.  The blocks key contains an array of arrays 
+ * of blocks values.  Each blocks values array is keyed by the block name, and 
+ * contains an associative array for values for module, delta, region, and 
+ * weight.  The 'layout' key contains a string name of the layout for the given 
+ * dashboard.
+ * 
+ * @param $info
+ *   Array of components.  See @file for detailed explanation.
+ * @param $type
+ *   Type of component.  See @file for detailed explanation.
+ */
 function atrium_kit_comply_overrides($info, $type = 'views') {
   $type == 'views' ? $views = $info['views'] : $views = $info['blocks'];
   foreach ($views as $old_view_name => $new_view) {
     $view = views_get_view($old_view_name);
     // Proceed if view is not overridden.
     if ($view->type != 'Overriden' || $type == 'blocks') {
-      // Go block by block and update spaces_dashboards, spaces_presets, and context.
       foreach ($new_view as $new_view_name => $blocks) {
         foreach ($blocks as $block) {
           // Replace block names in spaces_dashboard
