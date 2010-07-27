@@ -45,6 +45,23 @@
 /**
  * Rewrites names of views blocks and blocks stored as overrides in the
  * spaces_presets table.
+ *
+ * For each existing view, look through each of its blocks, pull up from
+ * the database all the stored spaces_presets, then look in each context
+ * in the stored presets and rename the references to that block so that
+ * it uses the new name of the block.  In the case of views blocks, the
+ * name of the block changes because it's based on the name of the view
+ * that implements that block.  In the case of blocks implemented by
+ * hook_block whose names actually do change (you're using $type = 'blocks'
+ * these will also get renamed.
+ * 
+ * 
+ * There is a context for each custom dashboard.  The key is
+ * like 'spaces_dashboard-custom-1:reaction:block' and consists
+ * of a 'blocks' key which is an array of blocks keyed by
+ * the name of the block, with values of module, delta, region,
+ * and weight, and a 'layout' key whose value is the name (string) 
+ * of the layout for that dashboard.
  * 
  * @param $info
  *   Array of components.  See @file for detailed explanation.
@@ -57,14 +74,6 @@ function atrium_kit_comply_presets($info, $type = 'views') {
     $view = views_get_view($old_view_name);
     // Proceed if view is not overridden.
     if ($view->type != 'Overriden' || $type == 'blocks') {
-      // For each existing view, look through each of its blocks, pull up from
-      // the database all the stored spaces_presets, then look in each context
-      // in the stored presets and rename the references to that block so that
-      // it uses the new name of the block.  In the case of views blocks, the
-      // name of the block changes because it's based on the name of the view
-      // that implements that block.  In the case of blocks implemented by 
-      // hook_block whose names actually do change (you're using $type = 'blocks'
-      // these will also get renamed.
       foreach ($new_view as $new_view_name => $blocks) {
         foreach ($blocks as $block) {
           $query = db_query("SELECT * FROM {spaces_presets}");
@@ -73,12 +82,6 @@ function atrium_kit_comply_presets($info, $type = 'views') {
             // Possible values are 'variable' or 'context'
             foreach ($value as $key => $settings) {
               if ($key == 'context') {
-                // There is a context for each custom dashboard.  The key is
-                // like 'spaces_dashboard-custom-1:reaction:block' and consists
-                // of a 'blocks' key which is an array of blocks keyed by
-                // the name of the block, with values of module, delta, region,
-                // and weight, and a 'layout' key whose value is the name (string) 
-                // of the layout for that dashboard.
                 foreach ($settings as $name => $def) {
                   // Call api function to replace keys and values.
                   $value[$key][$name] = _atrium_kit_comply_rename($def, $type, $old_view_name, $new_view_name, $block);
@@ -218,6 +221,15 @@ function atrium_kit_comply_contexts($info, $type = 'views') {
   }
 }
 
+/**
+ * Updates actual names of spaces presets stored in the spaces_presets and
+ * spaces_overrides tables.
+ * 
+ * @param $info
+ *   Array of components.  See @file for detailed explanation.
+ * @param $type
+ *   Type of component.  See @file for detailed explanation.
+ */
 function atrium_kit_comply_spaces_presets($info, $type = 'views') {
   // Replace 'name' value in the spaces_presets table.
   // Replace 'value' value in the spaces_overrides table where object_type = 'variable'
@@ -250,14 +262,25 @@ function atrium_kit_comply_spaces_presets($info, $type = 'views') {
 }
 
 /**
- * Renames values in stored data.
+ * Takes an array and does string replacement on it based on parameters.
  * 
- * @param $block
- *   The delta of the existing block
  * @param $source
  *   The source to operate on and manipulate.  This should be an array that
  *   contains a 'blocks' key.  The 'blocks' key should be keyed with the name
  *   of the block, and contains values like module, delta, region, and weight.
+ * @param $type
+ *   The type of blocks on which to operate, whether 'views' or 'block' blocks.
+ *   This has to do with how the block is named and whether to use the 'views'
+ *   prefix in the block name when renaming.
+ * @param $old_view_name
+ *   The name of the old view which will be searched in order to do replacement
+ * @param $new_view_name
+ *   The name of the new view name which will be used when renaming blocks
+ * @param $block
+ *   the delta of the existing block on which we're operating.
+ *   
+ * @return
+ *   Array with renamed components.
  */
 function _atrium_kit_comply_rename($source, $type, $old_view_name, $new_view_name, $block) {
   $block_name = $block['delta'];
