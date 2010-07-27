@@ -190,12 +190,14 @@ function atrium_kit_comply_contexts($info, $type = 'views') {
           while ($result = db_fetch_object($query)) {
             // Update views names in conditions.
             $conditions = unserialize($result->conditions);
-            foreach ($conditions as $condition => $values) {
-              if ($condition == 'views') {
-                foreach ($values['values'] as $vname => $value) {
-                  if ($vname == $old_view_name) {
-                    $conditions[$condition]['values'][$new_view_name] = $new_view_name;
-                    unset($conditions[$condition]['values'][$old_view_name]);
+            if (is_array($conditions)) {
+              foreach ($conditions as $condition => $values) {
+                if ($condition == 'views') {
+                  foreach ($values['values'] as $vname => $value) {
+                    if ($vname == $old_view_name) {
+                      $conditions[$condition]['values'][$new_view_name] = $new_view_name;
+                      unset($conditions[$condition]['values'][$old_view_name]);
+                    }
                   }
                 }
               }
@@ -286,30 +288,33 @@ function _atrium_kit_comply_rename($source, $type, $old_view_name, $new_view_nam
   $block_name = $block['delta'];
   $module = $block['module'];
   $current_blocks = $source['blocks'];
-  if ($type == 'views') {
-    // Replace key name
-    if (array_key_exists("views-$old_view_name-$block_name", $current_blocks)) {
-      $current_blocks["views-$new_view_name-$block_name"] = $current_blocks["views-$old_view_name-$block_name"];
-      unset($current_blocks["views-$old_view_name-$block_name"]);
+  // Some overridden values may not actually contain a 'blocks' array
+  if (is_array($current_blocks)) {
+    if ($type == 'views') {
+      // Replace key name
+      if (array_key_exists("views-$old_view_name-$block_name", $current_blocks)) {
+        $current_blocks["views-$new_view_name-$block_name"] = $current_blocks["views-$old_view_name-$block_name"];
+        unset($current_blocks["views-$old_view_name-$block_name"]);
+      }
+      // Rename values
+      foreach ($current_blocks as $key => $current_block) {
+        $current_block = str_replace("$old_view_name-$block_name", "$new_view_name-$block_name", $current_block);
+        $current_blocks[$key] = $current_block;
+      }
     }
-    // Rename values
-    foreach ($current_blocks as $key => $current_block) {
-      $current_block = str_replace("$old_view_name-$block_name", "$new_view_name-$block_name", $current_block);
-      $current_blocks[$key] = $current_block;
-    }
-  }
-  else {
-    // Blocks provided by modules do not use "views" prefix.
-    // Replace key name
-    if (array_key_exists("$old_view_name-$block_name", $current_blocks)) {
-      $current_blocks["$new_view_name-$block_name"] = $current_blocks["$old_view_name-$block_name"];
-      $current_blocks["$new_view_name-$block_name"]['module'] = $module;
-      unset($current_blocks["$old_view_name-$block_name"]);
-    }
-    // Rename values
-    foreach ($current_blocks as $key => $current_block) {
-      $current_block = str_replace("$old_view_name-$block_name", "$new_view_name-$block_name", $current_block);
-      $current_blocks[$key] = $current_block;
+    else {
+      // Blocks provided by modules do not use "views" prefix.
+      // Replace key name
+      if (array_key_exists("$old_view_name-$block_name", $current_blocks)) {
+        $current_blocks["$new_view_name-$block_name"] = $current_blocks["$old_view_name-$block_name"];
+        $current_blocks["$new_view_name-$block_name"]['module'] = $module;
+        unset($current_blocks["$old_view_name-$block_name"]);
+      }
+      // Rename values
+      foreach ($current_blocks as $key => $current_block) {
+        $current_block = str_replace("$old_view_name-$block_name", "$new_view_name-$block_name", $current_block);
+        $current_blocks[$key] = $current_block;
+      }
     }
   }
   $source['blocks'] = $current_blocks;
