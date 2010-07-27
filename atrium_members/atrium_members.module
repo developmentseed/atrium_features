@@ -129,7 +129,7 @@ function atrium_members_addform_access() {
  * Implementation of hook_context_links_alter().
  */
 function atrium_members_context_links_alter(&$links) {
-  if (context_get('context', 'members_section') && module_exists('ucreate') && user_access('create users')) {
+  if (context_get('context', 'members_directory') && module_exists('ucreate') && user_access('create users')) {
     $item = menu_get_item('members/add');
     if ($item['access']) {
       $links['atrium_users'] = array(
