@@ -142,6 +142,37 @@ function atrium_kit_comply_overrides($info, $type = 'views') {
   }
 }
 
+/**
+ * Rewrite component names stored in overridden contexts.
+ * 
+ * Views names and the names of blocks provided by views or by hook_block must
+ * be rewritten in contexts stored in the database.  The stored context contains
+ * a 'conditions' and a 'reactions column.  In the 'conditions' column the actual
+ * view name must be rewritten for affected views.  In the 'reactions' column
+ * views-provided blocks and blocks provided by hook_block must be renamed.
+ * 
+ * In the 'conditions' column, the column holds a serialized array which is keyed
+ * on the condition type.  Views are in the 'views' key which stores an
+ * associative array of values where both the key and value of the array of
+ * arrays are the view name.
+ * 
+ * The 'reactions' column stores its value as seriaized data keyed by the reaction
+ * type.  The 'block' keu contains an array whose key is 'blocks' which itself
+ * contains an array of arrays where the key is the block name and the values are
+ * module, delta, region, and weight.  For example:
+ * 
+ * 'reactions' => 
+ *   'block' => array(
+ *     'blocks => array(
+ *       'block-name' => array(
+ *         'module' => 'module-name', 
+ *         'delta' => 'delta-name',
+ * 
+ * @param $info
+ *   Array of components.  See @file for detailed explanation.
+ * @param $type
+ *   Type of component.  See @file for detailed explanation.
+ */
 function atrium_kit_comply_contexts($info, $type = 'views') {
   // Update components in contexts.
   $type == 'views' ? $views = $info['views'] : $views = $info['blocks'];
