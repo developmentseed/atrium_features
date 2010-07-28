@@ -426,7 +426,7 @@ function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
  * Implementation of hook_context_links_alter();
  */
 function atrium_context_links_alter(&$links) {
-  if (context_get('spaces', 'dashboard') && spaces_access_admin()) {
+  if (context_get('spaces', 'dashboard') && spaces_dashboard_access('admin')) {
     $links['spaces-dashboard'] = array(
       'title' => t('Customize dashboard'),
       'href' => $_GET['q'],
