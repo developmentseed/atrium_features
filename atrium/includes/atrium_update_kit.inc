@@ -73,7 +73,7 @@ function atrium_kit_comply_presets($info, $type = 'views') {
   foreach ($views as $old_view_name => $new_view) {
     $view = views_get_view($old_view_name);
     // Proceed if view is not overridden.
-    if ($view->type != 'Overriden' || $type == 'blocks') {
+    if ($view->type != 'Overridden' || $type == 'blocks') {
       foreach ($new_view as $new_view_name => $blocks) {
         foreach ($blocks as $block) {
           $query = db_query("SELECT * FROM {spaces_presets}");
@@ -126,7 +126,7 @@ function atrium_kit_comply_overrides($info, $type = 'views') {
   foreach ($views as $old_view_name => $new_view) {
     $view = views_get_view($old_view_name);
     // Proceed if view is not overridden.
-    if ($view->type != 'Overriden' || $type == 'blocks') {
+    if ($view->type != 'Overridden' || $type == 'blocks') {
       foreach ($new_view as $new_view_name => $blocks) {
         foreach ($blocks as $block) {
           // Replace block names in spaces_dashboard
@@ -182,7 +182,7 @@ function atrium_kit_comply_contexts($info, $type = 'views') {
   foreach ($views as $old_view_name => $new_view) {
     $view = views_get_view($old_view_name);
     // Proceed if view is not overridden.
-    if ($view->type != 'Overriden' || $type == 'blocks') {
+    if ($view->type != 'Overridden' || $type == 'blocks') {
       // Go block by block and update contexts.
       foreach ($new_view as $new_view_name => $blocks) {
         foreach ($blocks as $block) {
