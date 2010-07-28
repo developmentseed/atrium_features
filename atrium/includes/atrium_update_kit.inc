@@ -291,14 +291,20 @@ function _atrium_kit_comply_rename($source, $type, $old_view_name, $new_view_nam
   // Some overridden values may not actually contain a 'blocks' array
   if (is_array($current_blocks)) {
     if ($type == 'views') {
+      // Handle case where views provided blocks' deltas are turned into md5 hashes
+      // if the delta is longer than 32 characters.
+      $old_block_name = $old_view_name .'-'. $block_name;
+      $new_block_name = $new_view_name .'-'. $block_name;
+      $old_block_name = (strlen($old_block_name) >= 32 ? md5($old_block_name) : $old_block_name);
+      $new_block_name = (strlen($new_block_name) >= 32 ? md5($new_block_name) : $new_block_name);
       // Replace key name
-      if (array_key_exists("views-$old_view_name-$block_name", $current_blocks)) {
-        $current_blocks["views-$new_view_name-$block_name"] = $current_blocks["views-$old_view_name-$block_name"];
-        unset($current_blocks["views-$old_view_name-$block_name"]);
+      if (array_key_exists("views-$old_block_name", $current_blocks)) {
+        $current_blocks["views-$new_view_name-$block_name"] = $current_blocks["views-$old_block_name"];
+        unset($current_blocks["views-$old_block_name"]);
       }
       // Rename values
       foreach ($current_blocks as $key => $current_block) {
-        $current_block = str_replace("$old_view_name-$block_name", "$new_view_name-$block_name", $current_block);
+        $current_block = str_replace("$old_block_name", "$new_block_name", $current_block);
         $current_blocks[$key] = $current_block;
       }
     }
