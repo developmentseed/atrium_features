@@ -117,7 +117,7 @@ function _atrium_calendar_block_mini($op, $edit) {
     else {
       $args = format_date(time(), 'custom', 'Y') . '-' . format_date(time(), 'custom', 'm');
     }
-    $block['content'] = views_embed_view('atrium_calendar', 'block_1', $args);
+    $block['content'] = views_embed_view('calendar_listing', 'block_1', $args);
   }
   return $block;
 }
