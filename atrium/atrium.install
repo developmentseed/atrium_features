@@ -314,5 +314,7 @@ function atrium_update_6014() {
       taxonomy_save_vocabulary($legacy);
       return array(array('success' => TRUE, 'query' => 'Keywords vocabulary updated for Features management.'));
     }
+    return array(array('success' => TRUE, 'query' => 'No vocabularies were updated for Features management.  Default Open Atrium vocabulary could not be found.'));
   }
+  return array(array('success' => TRUE, 'query' => 'No vocabularies were updated for Features management.  Taxonomy module is not enabled.'));
 }

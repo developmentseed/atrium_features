@@ -30,7 +30,6 @@ function atrium_profile_update_6001() {
   module_load_include('inc', 'atrium', 'includes/atrium_update_kit');
   atrium_kit_comply_presets($components); 
   atrium_kit_comply_overrides($components); 
-  atrium_kit_comply_contexts($components);
 
   return array(array('success' => true, 'query' => 'Atrium Profile updated for Kit compliance.'));
 }
