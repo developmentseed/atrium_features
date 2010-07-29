@@ -10,7 +10,7 @@ function atrium_groups_user_default_permissions() {
   $permissions['create group content'] = array(
     'name' => 'create group content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'manager',
     ),
   );
@@ -19,7 +19,7 @@ function atrium_groups_user_default_permissions() {
   $permissions['delete own group content'] = array(
     'name' => 'delete own group content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'manager',
     ),
   );
@@ -28,7 +28,7 @@ function atrium_groups_user_default_permissions() {
   $permissions['edit own group content'] = array(
     'name' => 'edit own group content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'manager',
     ),
   );
