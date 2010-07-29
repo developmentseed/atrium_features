@@ -17,10 +17,10 @@ function atrium_activity_views_handlers() {
         'parent' => 'views_handler_field',
       ),
       'atrium_activity_handler_field_activity_timestamp' => array(
-        'parent' => 'atrium_handler_field_activity',
+        'parent' => 'atrium_activity_handler_field_activity',
       ),
       'atrium_activity_handler_field_activity_upload' => array(
-        'parent' => 'atrium_handler_field_activity',
+        'parent' => 'atrium_activity_handler_field_activity',
       ),
     ),
   );
@@ -35,19 +35,19 @@ function atrium_activity_views_data() {
     'real field' => 'cid',
     'title' => t('Activity'),
     'help' => t("Poor man's activity field."),
-    'field' => array('handler' => 'atrium_handler_field_activity'),
+    'field' => array('handler' => 'atrium_activity_handler_field_activity'),
   );
   $data['comments']['atrium_activity_timestamp'] = array(
     'real field' => 'cid',
     'title' => t('Activity timestamp'),
     'help' => t("Timestamp for poor man's activity field."),
-    'field' => array('handler' => 'atrium_handler_field_activity_timestamp'),
+    'field' => array('handler' => 'atrium_activity_handler_field_activity_timestamp'),
   );
   $data['comments']['atrium_activity_upload'] = array(
     'real field' => 'cid',
     'title' => t('Activity upload'),
     'help' => t("Upload for poor man's activity field."),
-    'field' => array('handler' => 'atrium_handler_field_activity_upload'),
+    'field' => array('handler' => 'atrium_activity_handler_field_activity_upload'),
   );
   return $data;
 }
@@ -62,7 +62,7 @@ function atrium_activity_views_data_alter(&$cache) {
     'title' => t('Atrium update types'),
     'help' => t('Affects only content types designated as update types.'),
     'filter' => array(
-      'handler' => 'atrium_handler_filter_update_types',
+      'handler' => 'atrium_activity_handler_filter_update_types',
     ),
   );
 }
