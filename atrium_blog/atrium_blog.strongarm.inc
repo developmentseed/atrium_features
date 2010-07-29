@@ -8,10 +8,10 @@ function atrium_blog_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'atrium_update_type_blog';
+  $strongarm->name = 'atrium_activity_update_type_blog';
   $strongarm->value = TRUE;
 
-  $export['atrium_update_type_blog'] = $strongarm;
+  $export['atrium_activity_update_type_blog'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
