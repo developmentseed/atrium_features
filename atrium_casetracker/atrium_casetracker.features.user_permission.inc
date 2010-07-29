@@ -10,7 +10,7 @@ function atrium_casetracker_user_default_permissions() {
   $permissions['assign cases'] = array(
     'name' => 'assign cases',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -20,7 +20,7 @@ function atrium_casetracker_user_default_permissions() {
   $permissions['create casetracker_basic_case content'] = array(
     'name' => 'create casetracker_basic_case content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -30,7 +30,7 @@ function atrium_casetracker_user_default_permissions() {
   $permissions['create casetracker_basic_project content'] = array(
     'name' => 'create casetracker_basic_project content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'manager',
     ),
   );
@@ -39,7 +39,7 @@ function atrium_casetracker_user_default_permissions() {
   $permissions['edit own casetracker_basic_case content'] = array(
     'name' => 'edit own casetracker_basic_case content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -49,7 +49,7 @@ function atrium_casetracker_user_default_permissions() {
   $permissions['edit own casetracker_basic_project content'] = array(
     'name' => 'edit own casetracker_basic_project content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'manager',
     ),
   );
