@@ -75,7 +75,8 @@ function atrium_kit_comply_presets($info, $type = 'views') {
     // Proceed if view is not overridden.
     if ($view->type != 'Overridden' || $type == 'blocks') {
       foreach ($new_view as $new_view_name => $blocks) {
-        foreach ($blocks as $block) {
+        foreach ($blocks as $old_delta => $block) {
+          $block['old_delta'] = $old_delta;
           $query = db_query("SELECT * FROM {spaces_presets}");
           while ($result = db_fetch_object($query)) {
             $value = unserialize($result->value);
@@ -128,7 +129,8 @@ function atrium_kit_comply_overrides($info, $type = 'views') {
     // Proceed if view is not overridden.
     if ($view->type != 'Overridden' || $type == 'blocks') {
       foreach ($new_view as $new_view_name => $blocks) {
-        foreach ($blocks as $block) {
+        foreach ($blocks as $old_delta => $block) {
+          $block['old_delta'] = $old_delta;
           // Replace block names in spaces_dashboard
           $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'context' AND object_id LIKE 'spaces_dashboard%%'");
           while ($result = db_fetch_object($query)) {
@@ -185,7 +187,8 @@ function atrium_kit_comply_contexts($info, $type = 'views') {
     if ($view->type != 'Overridden' || $type == 'blocks') {
       // Go block by block and update contexts.
       foreach ($new_view as $new_view_name => $blocks) {
-        foreach ($blocks as $block) {
+        foreach ($blocks as $old_delta => $block) {
+          $block['old_delta'] = $old_delta;
           $query = db_query("SELECT * FROM {context}");
           while ($result = db_fetch_object($query)) {
             // Update views names in conditions.
@@ -285,7 +288,8 @@ function atrium_kit_comply_spaces_presets($info, $type = 'views') {
  *   Array with renamed components.
  */
 function _atrium_kit_comply_rename($source, $type, $old_view_name, $new_view_name, $block) {
-  $block_name = $block['delta'];
+  $old_delta = $block['old_delta'];
+  $new_delta = $block['delta'];
   $module = $block['module'];
   $current_blocks = $source['blocks'];
   // Some overridden values may not actually contain a 'blocks' array
@@ -293,13 +297,13 @@ function _atrium_kit_comply_rename($source, $type, $old_view_name, $new_view_nam
     if ($type == 'views') {
       // Handle case where views provided blocks' deltas are turned into md5 hashes
       // if the delta is longer than 32 characters.
-      $old_block_name = $old_view_name .'-'. $block_name;
-      $new_block_name = $new_view_name .'-'. $block_name;
+      $old_block_name = $old_view_name .'-'. $old_delta;
+      $new_block_name = $new_view_name .'-'. $new_delta;
       $old_block_name = (strlen($old_block_name) >= 32 ? md5($old_block_name) : $old_block_name);
       $new_block_name = (strlen($new_block_name) >= 32 ? md5($new_block_name) : $new_block_name);
       // Replace key name
       if (array_key_exists("views-$old_block_name", $current_blocks)) {
-        $current_blocks["views-$new_view_name-$block_name"] = $current_blocks["views-$old_block_name"];
+        $current_blocks["views-$new_block_name"] = $current_blocks["views-$old_block_name"];
         unset($current_blocks["views-$old_block_name"]);
       }
       // Rename values
@@ -311,14 +315,14 @@ function _atrium_kit_comply_rename($source, $type, $old_view_name, $new_view_nam
     else {
       // Blocks provided by modules do not use "views" prefix.
       // Replace key name
-      if (array_key_exists("$old_view_name-$block_name", $current_blocks)) {
-        $current_blocks["$new_view_name-$block_name"] = $current_blocks["$old_view_name-$block_name"];
-        $current_blocks["$new_view_name-$block_name"]['module'] = $module;
-        unset($current_blocks["$old_view_name-$block_name"]);
+      if (array_key_exists("$old_view_name-$old_delta", $current_blocks)) {
+        $current_blocks["$new_view_name-$new_delta"] = $current_blocks["$old_view_name-$old_delta"];
+        $current_blocks["$new_view_name-$new_delta"]['module'] = $module;
+        unset($current_blocks["$old_view_name-$old_delta"]);
       }
       // Rename values
       foreach ($current_blocks as $key => $current_block) {
-        $current_block = str_replace("$old_view_name-$block_name", "$new_view_name-$block_name", $current_block);
+        $current_block = str_replace("$old_view_name-$old_delta", "$new_view_name-$new_delta", $current_block);
         $current_blocks[$key] = $current_block;
       }
     }
