@@ -10,7 +10,7 @@ function atrium_shoutbox_user_default_permissions() {
   $permissions['create shoutbox content'] = array(
     'name' => 'create shoutbox content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -20,7 +20,7 @@ function atrium_shoutbox_user_default_permissions() {
   $permissions['delete own shoutbox content'] = array(
     'name' => 'delete own shoutbox content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -30,7 +30,7 @@ function atrium_shoutbox_user_default_permissions() {
   $permissions['edit own shoutbox content'] = array(
     'name' => 'edit own shoutbox content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
