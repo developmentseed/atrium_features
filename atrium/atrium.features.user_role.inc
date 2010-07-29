@@ -6,9 +6,9 @@
 function atrium_user_default_roles() {
   $roles = array();
 
-  // Exported role: admin
-  $roles['admin'] = array(
-    'name' => 'admin',
+  // Exported role: administrator
+  $roles['administrator'] = array(
+    'name' => 'administrator',
   );
 
   // Exported role: anonymous user

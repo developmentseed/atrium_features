@@ -10,7 +10,7 @@ function atrium_filter_default_formats() {
   $formats['Full HTML'] = array(
     'name' => 'Full HTML',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'manager',
     ),
     'filters' => array(
@@ -61,7 +61,7 @@ function atrium_filter_default_formats() {
     'roles' => array(
       '0' => 'anonymous user',
       '1' => 'authenticated user',
-      '2' => 'admin',
+      '2' => 'administrator',
       '3' => 'manager',
     ),
     'filters' => array(

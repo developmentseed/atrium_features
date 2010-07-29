@@ -245,6 +245,7 @@ function atrium_update_6012() {
  * 6013: Update for Kit compliance
  */
 function atrium_update_6013() {
+  $return = array();
   $components = array(
     'views' => array(
       'atrium_intranet' => array(
@@ -283,8 +284,16 @@ function atrium_update_6013() {
   atrium_kit_comply_presets($components);
   atrium_kit_comply_overrides($components);
   atrium_kit_comply_contexts($components);
+  
+  // Change role 'admin' to 'administrator'
+  if ($rid = db_result(db_query("SELECT rid FROM {role} WHERE name = '%s'", 'admin'))) {
+    if (db_query("UPDATE {role} SET name = 'administrator' WHERE rid = %d", $rid)) {
+      $return[] = array('success' => TRUE, 'query' => '"admin" role changed to "administrator".');
+    }
+  }
 
-  return array(array('success' => TRUE, 'query' => 'Atrium updated for Kit compliance.'));
+  $return[] = array('success' => TRUE, 'query' => 'Atrium updated for Kit compliance.');
+  return $return;
 }
 
 /**

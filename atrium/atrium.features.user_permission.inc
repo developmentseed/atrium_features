@@ -10,7 +10,7 @@ function atrium_user_default_permissions() {
   $permissions['access administration pages'] = array(
     'name' => 'access administration pages',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -18,7 +18,7 @@ function atrium_user_default_permissions() {
   $permissions['administer comments'] = array(
     'name' => 'administer comments',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'manager',
     ),
   );
@@ -27,7 +27,7 @@ function atrium_user_default_permissions() {
   $permissions['administer filters'] = array(
     'name' => 'administer filters',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -35,7 +35,7 @@ function atrium_user_default_permissions() {
   $permissions['administer messaging'] = array(
     'name' => 'administer messaging',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -43,7 +43,7 @@ function atrium_user_default_permissions() {
   $permissions['administer nodes'] = array(
     'name' => 'administer nodes',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -51,7 +51,7 @@ function atrium_user_default_permissions() {
   $permissions['administer notifications'] = array(
     'name' => 'administer notifications',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -59,7 +59,7 @@ function atrium_user_default_permissions() {
   $permissions['administer permissions'] = array(
     'name' => 'administer permissions',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -67,7 +67,7 @@ function atrium_user_default_permissions() {
   $permissions['administer search'] = array(
     'name' => 'administer search',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -75,7 +75,7 @@ function atrium_user_default_permissions() {
   $permissions['administer site configuration'] = array(
     'name' => 'administer site configuration',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -83,7 +83,7 @@ function atrium_user_default_permissions() {
   $permissions['administer spaces'] = array(
     'name' => 'administer spaces',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -91,7 +91,7 @@ function atrium_user_default_permissions() {
   $permissions['administer taxonomy'] = array(
     'name' => 'administer taxonomy',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -99,7 +99,7 @@ function atrium_user_default_permissions() {
   $permissions['post comments'] = array(
     'name' => 'post comments',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -109,7 +109,7 @@ function atrium_user_default_permissions() {
   $permissions['post comments without approval'] = array(
     'name' => 'post comments without approval',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -119,7 +119,7 @@ function atrium_user_default_permissions() {
   $permissions['revert revisions'] = array(
     'name' => 'revert revisions',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'manager',
     ),
   );
@@ -128,7 +128,7 @@ function atrium_user_default_permissions() {
   $permissions['search content'] = array(
     'name' => 'search content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -138,7 +138,7 @@ function atrium_user_default_permissions() {
   $permissions['select different theme'] = array(
     'name' => 'select different theme',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -148,7 +148,7 @@ function atrium_user_default_permissions() {
   $permissions['skip notifications'] = array(
     'name' => 'skip notifications',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -158,7 +158,7 @@ function atrium_user_default_permissions() {
   $permissions['subscribe to author'] = array(
     'name' => 'subscribe to author',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -168,7 +168,7 @@ function atrium_user_default_permissions() {
   $permissions['subscribe to content'] = array(
     'name' => 'subscribe to content',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -178,7 +178,7 @@ function atrium_user_default_permissions() {
   $permissions['upload files'] = array(
     'name' => 'upload files',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -188,7 +188,7 @@ function atrium_user_default_permissions() {
   $permissions['upload files to comments'] = array(
     'name' => 'upload files to comments',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -198,7 +198,7 @@ function atrium_user_default_permissions() {
   $permissions['use advanced search'] = array(
     'name' => 'use advanced search',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -208,7 +208,7 @@ function atrium_user_default_permissions() {
   $permissions['view files uploaded to comments'] = array(
     'name' => 'view files uploaded to comments',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -218,7 +218,7 @@ function atrium_user_default_permissions() {
   $permissions['view imagecache fileview'] = array(
     'name' => 'view imagecache fileview',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -228,7 +228,7 @@ function atrium_user_default_permissions() {
   $permissions['view uploaded files'] = array(
     'name' => 'view uploaded files',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
