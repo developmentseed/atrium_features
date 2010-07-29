@@ -10,7 +10,7 @@ function atrium_members_user_default_permissions() {
   $permissions['administer users'] = array(
     'name' => 'administer users',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -18,7 +18,7 @@ function atrium_members_user_default_permissions() {
   $permissions['block users'] = array(
     'name' => 'block users',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'manager',
     ),
   );
@@ -27,7 +27,7 @@ function atrium_members_user_default_permissions() {
   $permissions['change own username'] = array(
     'name' => 'change own username',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
     ),
   );
 
@@ -35,7 +35,7 @@ function atrium_members_user_default_permissions() {
   $permissions['create users'] = array(
     'name' => 'create users',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'manager',
     ),
   );
@@ -44,7 +44,7 @@ function atrium_members_user_default_permissions() {
   $permissions['view imagecache user-m'] = array(
     'name' => 'view imagecache user-m',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
@@ -54,7 +54,7 @@ function atrium_members_user_default_permissions() {
   $permissions['view imagecache user-s'] = array(
     'name' => 'view imagecache user-s',
     'roles' => array(
-      '0' => 'admin',
+      '0' => 'administrator',
       '1' => 'authenticated user',
       '2' => 'manager',
     ),
