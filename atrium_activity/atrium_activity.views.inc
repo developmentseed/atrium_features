@@ -10,16 +10,16 @@ function atrium_activity_views_handlers() {
       'path' => drupal_get_path('module', 'atrium_activity') .'/includes',
     ),
     'handlers' => array(
-      'atrium_handler_filter_update_types' => array(
+      'atrium_activity_handler_filter_update_types' => array(
         'parent' => 'views_handler_filter',
       ),
-      'atrium_handler_field_activity' => array(
+      'atrium_activity_handler_field_activity' => array(
         'parent' => 'views_handler_field',
       ),
-      'atrium_handler_field_activity_timestamp' => array(
+      'atrium_activity_handler_field_activity_timestamp' => array(
         'parent' => 'atrium_handler_field_activity',
       ),
-      'atrium_handler_field_activity_upload' => array(
+      'atrium_activity_handler_field_activity_upload' => array(
         'parent' => 'atrium_handler_field_activity',
       ),
     ),
