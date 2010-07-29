@@ -8,24 +8,24 @@ function atrium_calendar_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'atrium_update_type_event';
+  $strongarm->name = 'atrium_activity_update_type_event';
   $strongarm->value = 1;
 
-  $export['atrium_update_type_event'] = $strongarm;
+  $export['atrium_activity_update_type_event'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'atrium_update_type_feed_ical';
+  $strongarm->name = 'atrium_activity_update_type_feed_ical';
   $strongarm->value = 0;
 
-  $export['atrium_update_type_feed_ical'] = $strongarm;
+  $export['atrium_activity_update_type_feed_ical'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'atrium_update_type_feed_ical_item';
+  $strongarm->name = 'atrium_activity_update_type_feed_ical_item';
   $strongarm->value = 0;
 
-  $export['atrium_update_type_feed_ical_item'] = $strongarm;
+  $export['atrium_activity_update_type_feed_ical_item'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
