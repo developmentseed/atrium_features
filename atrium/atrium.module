@@ -290,13 +290,13 @@ function atrium_user_default_permissions_alter(&$perms) {
       case ATRIUM_MEMBERS_ALL:
         $perms['view users outside groups'] = array(
           'name' => 'view users outside groups',
-          'roles' => array('anonymous user', 'authenticated user', 'manager', 'admin'),
+          'roles' => array('anonymous user', 'authenticated user', 'manager', 'administrator'),
         );
         break;
       case ATRIUM_MEMBERS_GROUP:
         $perms['view users outside groups'] = array(
           'name' => 'view users outside groups',
-          'roles' => array('manager', 'admin'),
+          'roles' => array('manager', 'administrator'),
         );
         break;
     }
@@ -308,7 +308,7 @@ function atrium_user_default_permissions_alter(&$perms) {
         context_invalidate_cache();
         $perms['subscribe other users'] = array(
           'name' => 'subscribe other users',
-          'roles' => array('authenticated user', 'manager', 'admin'),
+          'roles' => array('authenticated user', 'manager', 'administrator'),
         );
         break;
       case ATRIUM_NOTIFICATIONS_SUBSCRIBE:
