@@ -1,6 +1,6 @@
 <?php
 
-class atrium_handler_field_activity extends views_handler_field {
+class atrium_activity_handler_field_activity extends views_handler_field {
   /**
    * Add the time_horizon option.
    */

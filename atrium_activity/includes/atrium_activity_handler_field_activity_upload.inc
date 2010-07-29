@@ -1,6 +1,6 @@
 <?php
 
-class atrium_handler_field_activity_upload extends atrium_handler_field_activity {
+class atrium_activity_handler_field_activity_upload extends atrium_activity_handler_field_activity {
   /**
    * Constructor. Add additional fields.
    */

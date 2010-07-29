@@ -4,7 +4,7 @@
 /**
  * Filter by node types included in 'update types'.
  */
-class atrium_handler_filter_update_types extends views_handler_filter {
+class atrium_activity_handler_filter_update_types extends views_handler_filter {
   function query() {
     $types = atrium_update_types();
 
