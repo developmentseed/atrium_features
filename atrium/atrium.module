@@ -610,22 +610,6 @@ function atrium_user_links($space = NULL) {
 }
 
 /**
- * Abstracts the node types provided in update streams/feed views.
- */
-function atrium_update_types($reset = FALSE) {
-  static $types;
-  if (!isset($types) || $reset) {
-    $types = array();
-    foreach (array_keys(node_get_types()) as $type) {
-      if (variable_get('atrium_update_type_'. $type, TRUE)) {
-        $types[] = $type;
-      }
-    }
-  }
-  return $types;
-}
-
-/**
  * Access callback for archive actions.
  */
 function atrium_archive_access($action = 'archive', $node) {

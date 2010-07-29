@@ -1,0 +1,40 @@
+<?php
+
+include_once('atrium_activity.features.inc');
+
+/**
+ *  Implementation of hook_form_alter for node_type_form.
+ */
+function atrium_activity_form_node_type_form_alter(&$form, $form_state) {
+  if (isset($form['identity']['type'])) {
+    $form['atrium'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Atrium'),
+      '#tree' => FALSE,
+      '#collapsible' => FALSE,
+      '#collapsed' => FALSE,
+    );
+    $form['atrium']['atrium_update_type'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show in recent activity views'),
+      '#description' => t('Show this content type in activity streams, update lists, etc.'),
+      '#default_value' => variable_get('atrium_update_type_'. $form['#node_type']->type, TRUE),
+    );
+  }
+}
+
+/**
+ * Abstracts the node types provided in update streams/feed views.
+ */
+function atrium_activity_update_types($reset = FALSE) {
+  static $types;
+  if (!isset($types) || $reset) {
+    $types = array();
+    foreach (array_keys(node_get_types()) as $type) {
+      if (variable_get('atrium_update_type_'. $type, TRUE)) {
+        $types[] = $type;
+      }
+    }
+  }
+  return $types;
+}

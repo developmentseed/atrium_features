@@ -149,27 +149,6 @@ function _atrium_form_user_login_alter(&$form, $form_state) {
 }
 
 /**
- *  Implementation of hook_form_alter for node_type_form.
- */
-function _atrium_form_node_type_form_alter(&$form, $form_state) {
-  if (isset($form['identity']['type'])) {
-    $form['atrium'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Atrium'),
-      '#tree' => FALSE,
-      '#collapsible' => FALSE,
-      '#collapsed' => FALSE,
-    );
-    $form['atrium']['atrium_update_type'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Show in recent activity views'),
-      '#description' => t('Show this content type in activity streams, update lists, etc.'),
-      '#default_value' => variable_get('atrium_update_type_'. $form['#node_type']->type, TRUE),
-    );
-  }
-}
-
-/**
  * Form alter for views exposed forms.
  */
 function _atrium_form_views_exposed_form_alter(&$form, $form_state) {

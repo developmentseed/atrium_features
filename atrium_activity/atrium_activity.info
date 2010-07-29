@@ -1,0 +1,6 @@
+name = "Atrium Activity"
+description = "Atrium Activity views"
+core = "6.x"
+package = "Features"
+features[views][] = "activity_listing"
+features[views_api][] = "api:2"
