@@ -14,7 +14,7 @@ function atrium_activity_form_node_type_form_alter(&$form, $form_state) {
       '#collapsible' => FALSE,
       '#collapsed' => FALSE,
     );
-    $form['atrium']['atrium_update_type'] = array(
+    $form['atrium']['atrium_activity_update_type'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show in recent activity views'),
       '#description' => t('Show this content type in activity streams, update lists, etc.'),
