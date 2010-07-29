@@ -6,7 +6,7 @@
  */
 class atrium_activity_handler_filter_update_types extends views_handler_filter {
   function query() {
-    $types = atrium_update_types();
+    $types = atrium_activity_update_types();
 
     $this->ensure_my_table();
     $placeholder = "'%s'";
