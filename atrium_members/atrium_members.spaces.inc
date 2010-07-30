@@ -27,7 +27,7 @@ function atrium_members_spaces_presets() {
         'atrium_calendar-mini' => 1,
         'views-calendar_upcoming-block_1' => 1,
         'views-casetracker_projects-block_1' => 1,
-        'views-blog-block_2' => 1,
+        'views-blog_listing-block_2' => 1,
         'views-blog_comments-block_1' => 1,
         'views-casetracker_cases-block_3' => 1,
         'views-casetracker_cases-block_4' => 1,
