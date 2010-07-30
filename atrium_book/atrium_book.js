@@ -4,9 +4,10 @@ Drupal.behaviors.atrium = function(context) {
     $('div.page-region div.block-atrium_book:has(ul.menu):not(.atrium_book-processed)')
       .addClass('atrium_book-processed')
       .each(function() {
+        $(this).addClass('drilldown');
         var menu = $(this);
         var trail = '#' + $(this).attr('id') + ' span.trail';
-        $(this).drilldown('init', {'activePath': Drupal.settings.atriumBookPath, 'trail': trail});
+        $('ul.menu:first', this).parent().drilldown('init', {'activePath': Drupal.settings.atriumBookPath, 'trail': trail});
     });
   }
 }
