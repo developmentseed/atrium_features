@@ -137,6 +137,13 @@ function atrium_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'menu_secondary_links_source';
+  $strongarm->value = '';
+
+  $export['menu_secondary_links_source'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'messaging_default_method';
   $strongarm->value = 'mail';
 
