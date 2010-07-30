@@ -467,14 +467,17 @@ function atrium_preprocess_atrium_welcome($vars) {
  */
 function atrium_preprocess_views_view(&$vars) {
   $view = $vars['view'];
-  $map = spaces_features_map();
-  $feature = isset($map['views'][$view->name]) ? $map['views'][$view->name] : NULL;
-  if ($feature && strpos($view->current_display, 'page') !== FALSE && empty($view->result) && empty($vars['empty'])) {
-    if ($type = array_search($feature, $map['node'])) {
-      $item = menu_get_item('node/add/'. strtr($type, array('_' => '-')));
-      if ($item && $item['access']) {
-        $output = t('Please add your first @type to get started.', array('@type' => node_get_types('name', $type)));
-        $output .= "<div class='buttons'>". theme('links', context_links()) ."</div>";
+  if ($view->base_table === 'node' && strpos($view->current_display, 'page') !== FALSE && empty($view->result) && empty($vars['empty'])) {
+    foreach ($view->filter as $handler) {
+      if ($handler->table === 'node' && $handler->field === 'type' && !empty($handler->options['value'])) {
+        foreach (array_filter($handler->options['value']) as $type) {
+          $item = menu_get_item('node/add/'. strtr($type, array('_' => '-')));
+          if ($item && $item['access']) {
+            $output = t('Please add your first @type to get started.', array('@type' => node_get_types('name', $type)));
+            $output .= "<div class='buttons'>". theme('links', context_links()) ."</div>";
+          }
+        }
+        break;
       }
     }
     $vars['empty'] = !empty($output) ? $output : t('There is currently no content to view in this section.');
@@ -509,18 +512,11 @@ function atrium_account_links() {
   // as of now we'd have a copy hand paste hack job of menu_local_tasks()...
   $paths = array(
     "user/{$user->uid}" => t('Profile'),
+    "user/{$user->uid}/dashboard" => '',
     "user/{$user->uid}/edit" => '',
     "user/{$user->uid}/notifications" => '',
     'logout' => '',
   );
-
-  if ($user_space = spaces_load('user', $user->uid)) {
-    $user_features = $user_space->controllers->variable->get('spaces_features');
-    if ($user_features['spaces_dashboard']) {
-      $paths = array_merge(array("user/{$user->uid}/dashboard" => ''), $paths);
-    }
-  }
-
   foreach ($paths as $path => $title) {
     $item = menu_get_item($path);
     if ($item && $item['access']) {

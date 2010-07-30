@@ -67,12 +67,12 @@ function _atrium_block_welcome_member() {
 
     // Build links.
     $links = array();
-    $feature_map = spaces_features_map('node');
+    $feature_map = features_get_component_map('node');
     foreach (system_admin_menu_block(menu_get_item('node/add')) as $menu_item) {
       $args = explode('/', $menu_item['href']);
       $type = str_replace('-', '_', array_pop($args));
-      if (isset($feature_map[$type])) {
-        $feature = $feature_map[$type];
+      if (!empty($feature_map[$type])) {
+        $feature = reset($feature_map[$type]);
         $menu_item['title'] = t('Add @type', array('@type' => $menu_item['title']));
         $menu_item['title'] = "<span class='spaces-feature feature-{$feature}'></span>{$menu_item['title']}";
         $links[] = $menu_item;
@@ -133,14 +133,14 @@ function _atrium_block_admin_links() {
  * Content creation block.
  */
 function _atrium_block_create() {
-  $feature_map = spaces_features_map('node');
+  $feature_map = features_get_component_map('node');
   $item = menu_get_item('node/add');
   $links = array();
   foreach (system_admin_menu_block($item) as $menu_item) {
     $args = explode('/', $menu_item['href']);
     $type = str_replace('-', '_', array_pop($args));
-    if (isset($feature_map[$type])) {
-      $feature = $feature_map[$type];
+    if (!empty($feature_map[$type])) {
+      $feature = reset($feature_map[$type]);
       $menu_item['title'] = "<span class='spaces-feature feature-{$feature}'></span>{$menu_item['title']}";
       $menu_item['html'] = TRUE;
       $links["$feature-{$type}"] = $menu_item;
