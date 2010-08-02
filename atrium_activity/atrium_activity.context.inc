@@ -8,7 +8,7 @@ function atrium_activity_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'profile_activity';
+  $context->name = 'activity_profile';
   $context->description = '';
   $context->tag = 'Profile';
   $context->conditions = array(
@@ -35,11 +35,10 @@ function atrium_activity_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['profile_activity'] = array(
+  $translatables['activity_profile'] = array(
     t('Profile'),
   );
 
-  $export['profile_activity'] = $context;
-
+  $export['activity_profile'] = $context;
   return $export;
 }
