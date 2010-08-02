@@ -187,12 +187,6 @@ function atrium_context_default_contexts() {
           'region' => 'content',
           'weight' => 0,
         ),
-        'views-activity_listing-block_1' => array(
-          'module' => 'views',
-          'delta' => 'activity_listing-block_1',
-          'region' => 'content',
-          'weight' => 1,
-        ),
       ),
     ),
   );

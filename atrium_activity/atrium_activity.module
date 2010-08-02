@@ -38,3 +38,18 @@ function atrium_activity_update_types($reset = FALSE) {
   }
   return $types;
 }
+
+/**
+ * Implementation of hook_context_default_contexts_alter().
+ */
+function atrium_activity_context_default_contexts_alter(&$contexts) {
+  // Conditionally add the "Recent Activity" block to the spaces_dashboard-custom-1 context.
+  if (module_exists('atrium') && !empty($contexts['spaces_dashboard-custom-1'])) {
+    $contexts['spaces_dashboard-custom-1']->reactions['block']['blocks']['views-activity_listing-block_1'] = array(
+      'module' => 'views', 
+      'delta' => 'activity_listing-block_1',
+      'region' => 'content', 
+      'weight' => 1,
+    );
+  }
+}
