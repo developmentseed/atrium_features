@@ -13,7 +13,6 @@ function atrium_profile_update_6001() {
         'activity_listing' => array(
           'block_1' => array(
             'module' => 'views',
-            // @TODO check whether renaming the delta actually works.
             'delta' => 'block_3',
           ),
         ),
