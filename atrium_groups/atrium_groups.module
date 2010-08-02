@@ -120,3 +120,19 @@ function atrium_groups_views_pre_build(&$view) {
     $fields = $view->display_handler->set_option('fields', $fields);
   }
 }
+
+/**
+ * Implementation of hook_context_default_contexts_alter().
+ */
+function atrium_groups_context_default_contexts_alter(&$contexts) {
+  // Conditionally add the "My Groups" block to the spaces_dashboard-custom-1 context.
+  if (module_exists('atrium') && !empty($contexts['spaces_dashboard-custom-1'])) {
+    $contexts['spaces_dashboard-custom-1']->reactions['block']['blocks']['views-groups_listing-block_2'] = array(
+      'module' => 'views', 
+      'delta' => 'groups_listing-block_2',
+      'region' => 'right', 
+      'weight' => 0,
+    );
+  }
+}
+
