@@ -121,7 +121,7 @@ function atrium_casetracker_update_6004() {
       ),
     ),
     'contexts' => array(
-      'atrium-casetracker-book' => 'casetracker_book',
+      'atrium-casetracker-book' => 'book_casetracker',
       'atrium-casetracker-project' => 'casetracker_project',
       'spaces-feature-casetracker' => 'casetracker_listing',
     ),
