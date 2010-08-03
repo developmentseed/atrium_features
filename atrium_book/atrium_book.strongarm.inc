@@ -8,6 +8,13 @@ function atrium_book_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'atrium_activity_update_type_book';
+  $strongarm->value = 1;
+
+  $export['atrium_activity_update_type_book'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'atrium_archivable_book';
   $strongarm->value = TRUE;
 
@@ -15,10 +22,13 @@ function atrium_book_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'atrium_activity_update_type_book';
-  $strongarm->value = 1;
+  $strongarm->name = 'book_allowed_types';
+  $strongarm->value = array(
+    '0' => 'book',
+    '1' => 'casetracker_basic_project',
+  );
 
-  $export['atrium_activity_update_type_book'] = $strongarm;
+  $export['book_allowed_types'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
@@ -75,15 +85,5 @@ function atrium_book_strongarm() {
   $strongarm->value = '1';
 
   $export['upload_book'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'book_allowed_types';
-  $strongarm->value = array(
-    '0' => 'book',
-    '1' => 'casetracker_basic_project',
-  );
-
-  $export['book_allowed_types'] = $strongarm;
   return $export;
 }
