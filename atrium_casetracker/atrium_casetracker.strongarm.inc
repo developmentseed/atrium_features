@@ -8,13 +8,6 @@ function atrium_casetracker_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'atrium_archivable_casetracker_basic_project';
-  $strongarm->value = TRUE;
-
-  $export['atrium_archivable_casetracker_basic_project'] = $strongarm;
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'atrium_activity_update_type_casetracker_basic_case';
   $strongarm->value = 1;
 
@@ -26,6 +19,13 @@ function atrium_casetracker_strongarm() {
   $strongarm->value = 1;
 
   $export['atrium_activity_update_type_casetracker_basic_project'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'atrium_archivable_casetracker_basic_project';
+  $strongarm->value = TRUE;
+
+  $export['atrium_archivable_casetracker_basic_project'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
