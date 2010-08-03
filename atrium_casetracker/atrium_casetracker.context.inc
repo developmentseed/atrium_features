@@ -8,48 +8,6 @@ function atrium_casetracker_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'casetracker_book';
-  $context->description = '';
-  $context->tag = 'Casetracker';
-  $context->conditions = array(
-    'bookroot' => array(
-      'values' => array(
-        'casetracker_basic_project' => 'casetracker_basic_project',
-      ),
-      'options' => array(
-        'node_form' => 1,
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'diff-inline' => array(
-          'module' => 'diff',
-          'delta' => 'inline',
-          'region' => 'right',
-          'weight' => 0,
-        ),
-        'atrium_book-book' => array(
-          'module' => 'atrium_book',
-          'delta' => 'book',
-          'region' => 'right',
-          'weight' => 1,
-        ),
-      ),
-    ),
-    'menu' => 'casetracker',
-  );
-  $context->condition_mode = 0;
-
-  $translatables['casetracker_book'] = array(
-    t('Casetracker'),
-  );
-
-  $export['casetracker_book'] = $context;
-  $context = new stdClass;
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
   $context->name = 'casetracker_listing';
   $context->description = '';
   $context->tag = 'Casetracker';
