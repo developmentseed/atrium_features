@@ -1,5 +1,4 @@
 core = "6.x"
-dependencies[] = "atrium_groups"
 dependencies[] = "book"
 dependencies[] = "codefilter"
 dependencies[] = "comment"
