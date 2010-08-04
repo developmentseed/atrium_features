@@ -243,7 +243,7 @@ function atrium_kit_comply_spaces_presets($info, $type = 'views') {
     db_query("UPDATE {spaces_presets} SET name = '%s' WHERE name = '%s'", $new_preset, $old_preset);
     $query = db_query("SELECT * FROM {spaces_overrides} WHERE object_type = 'variable' AND value LIKE '%\%s%'", $old_preset);
     while ($result = db_fetch_object($query)) {
-      db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d AND object_id = '%s'", $new_preset, $result->type, $result->id, $result->object_id);
+      db_query("UPDATE {spaces_overrides} SET value = '%s' WHERE type = '%s' AND id = %d AND object_id = '%s'", serialize($new_preset), $result->type, $result->id, $result->object_id);
     }
     // Replace 'value' in spaces_presets in the 'variable' key
     $query = db_query("SELECT * FROM {spaces_presets}");
