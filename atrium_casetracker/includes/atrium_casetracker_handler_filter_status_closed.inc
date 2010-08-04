@@ -1,6 +1,7 @@
 <?php
 class atrium_casetracker_handler_filter_status_closed extends views_handler_filter {
   function construct() {
+    parent::construct();
     $this->value_value = t('Show closed cases');
     if (isset($this->definition['label'])) {
       $this->value_value = $this->definition['label'];
@@ -14,7 +15,7 @@ class atrium_casetracker_handler_filter_status_closed extends views_handler_filt
     return t('No');
   }
 
-  function operator_form() { }
+  function operator_form(&$form, &$form_state) { }
 
   function value_form(&$form, &$form_state) {
     $form['value'] = array(
