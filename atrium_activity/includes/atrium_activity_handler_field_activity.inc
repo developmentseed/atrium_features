@@ -13,7 +13,7 @@ class atrium_activity_handler_field_activity extends views_handler_field {
   /**
    * Add the time_horizon element.
    */
-  function options_form(&$form, $form_state) {
+  function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['time_horizon'] = array(
       '#type' => 'select',
