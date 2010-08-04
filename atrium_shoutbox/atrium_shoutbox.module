@@ -365,7 +365,7 @@ function theme_atrium_shoutbox_shoutform($form) {
   drupal_add_js(drupal_get_path('module', 'atrium_shoutbox') .'/atrium_shoutbox.js');
 
   $input = drupal_render($form['shout']) . drupal_render($form['shoutbox_submit']);
-  $output .= "<div class='shoutbox-input clear-block'>{$input}</div>";
+  $output = "<div class='shoutbox-input clear-block'>{$input}</div>";
   $output .= drupal_render($form);
   return $output;
 }
