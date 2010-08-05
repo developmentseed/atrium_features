@@ -486,6 +486,25 @@ function atrium_groups_views_default_views() {
       'field' => 'status',
       'relationship' => 'none',
     ),
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'group' => 'group',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
   ));
   $handler->override_option('title', 'Directory');
   $handler->override_option('empty', '');
