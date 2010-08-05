@@ -283,6 +283,8 @@ function atrium_shoutbox_shout($nid, $shout) {
   }
   drupal_write_record('comments', $comment);
 
+  // Invoke hooks.
+  comment_invoke_comment($comment, 'insert');
 }
 
 /**
