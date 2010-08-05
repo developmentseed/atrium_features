@@ -43,9 +43,9 @@ function atrium_casetracker_context_default_contexts() {
           'region' => 'right',
           'weight' => 3,
         ),
-        'views-3de5a072e9754aa7bce60e3f05d1538e' => array(
+        'views-casetracker_projects-block_1' => array(
           'module' => 'views',
-          'delta' => '3de5a072e9754aa7bce60e3f05d1538e',
+          'delta' => 'casetracker_projects-block_1',
           'region' => 'page_tools',
           'weight' => 0,
         ),

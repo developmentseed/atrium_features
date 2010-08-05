@@ -21,9 +21,9 @@ function atrium_shoutbox_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-468d4512633362842c0ff768ac59efad' => array(
+        'views--exp-shoutbox_shouts-page_1' => array(
           'module' => 'views',
-          'delta' => '468d4512633362842c0ff768ac59efad',
+          'delta' => '-exp-shoutbox_shouts-page_1',
           'region' => 'right',
           'weight' => 0,
         ),
