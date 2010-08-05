@@ -75,6 +75,13 @@ function atrium_activity_views_query_alter(&$view, &$query) {
     // Skip Views' query execution - we will do it ourselves.
     $view->executed = TRUE;
 
+    // Check for already-cached results.
+    $cache = !empty($view->live_preview) ? FALSE : $view->display_handler->get_cache_plugin();
+    if ($cache && $cache->cache_get('results')) {
+      vpr('Used cached results');
+      return;
+    }
+
     $main = drupal_clone($query);
     $subquery = drupal_clone($query);
     $args = $query->get_where_args();
@@ -161,6 +168,11 @@ function atrium_activity_views_query_alter(&$view, &$query) {
     $result = pager_query($main, $view->pager['items_per_page'], 0, $count_query, array_merge($args, $args));
     while ($row = db_fetch_object($result)) {
       $view->result[] = $row;
+    }
+
+    // Set cache if exists.
+    if ($cache) {
+      $cache->cache_set('results');
     }
   }
 }
