@@ -229,7 +229,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
    * names given on the privileges page.
    *
    * @param $role
-   *   Role for the user: admin, manager, user
+   *   Role for the user: administrator, manager, user
    * @param $groups
    *   Optional: An array of group nids or group node objects to which the newly
    *   created account should be a member of.

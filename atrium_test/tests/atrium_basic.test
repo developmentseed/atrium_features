@@ -30,7 +30,7 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
 
   function testWelcomePage() {
     // Create and login admin user
-    $admin_user = $this->atriumCreateUser('admin');
+    $admin_user = $this->atriumCreateUser('administrator');
     $this->drupalLogin($admin_user);
 
     // Check initial texts
