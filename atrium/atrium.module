@@ -526,8 +526,7 @@ function atrium_account_links() {
   foreach ($paths as $path => $title) {
     $item = menu_get_item($path);
     if ($item && $item['access']) {
-      $class = seed_id_safe($item['href']);
-      $links[$class] = array(
+      $links[] = array(
         'title' => !empty($title) ? $title : $item['title'],
         'href' => $item['href'],
       );
