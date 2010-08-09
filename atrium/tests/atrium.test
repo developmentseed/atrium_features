@@ -35,7 +35,7 @@ class AtriumTest extends AtriumWebTestCase {
     $this->assertField('edit-comment-toggle', t('Comment toggler form found.'));
 
     // Admin should have access as well.
-    $this->drupalLogin($this->atriumUsers['admin']);
+    $this->drupalLogin($this->atriumUsers['administrator']);
     $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
     $this->assertField('edit-comment-toggle', t('Comment toggler form found.'));
 
@@ -55,7 +55,7 @@ class AtriumTest extends AtriumWebTestCase {
     $this->drupalPost("{$this->atriumGroups['public']->path}/node/{$node->nid}", array(), t('Reopen comment thread'));
 
     // Admin should be able to turn them back on.
-    $this->drupalLogin($this->atriumUsers['admin']);
+    $this->drupalLogin($this->atriumUsers['administrator']);
     $this->drupalGet("{$this->atriumGroups['public']->path}/node/{$node->nid}");
     $this->assertField('edit-comment-toggle', t('Comment toggler form found.'));
 
@@ -91,7 +91,7 @@ class AtriumTest extends AtriumWebTestCase {
    * Test archiving.
    */
   function testArchive() {
-    $this->drupalLogin($this->atriumCreateUser('admin'));
+    $this->drupalLogin($this->atriumCreateUser('administrator'));
     $group = $this->atriumCreateGroup();
     $post = $this->atriumCreateGroupContent($group, 'blog');
 
