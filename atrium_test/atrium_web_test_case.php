@@ -88,9 +88,6 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       // [patch_here] to Views, as new modules have been included and
       // default views need to be re-detected.
       module_exists('views') ? views_get_all_views(TRUE) : TRUE;
-
-      // Fluch ctools object static caches.
-      ctools_export_load_object_reset();      
       menu_rebuild();
     }
     
@@ -165,11 +162,11 @@ class AtriumWebTestCase extends DrupalWebTestCase {
    */
   function atriumBasic() {
     // Create public and private groups.
-    $this->drupalLogin($this->atriumCreateUser('admin'));
+    $this->drupalLogin($this->atriumCreateUser('administrator'));
     $this->atriumGroups = array();
     $group_types = array(
-      'public' => 'atrium_og_public',
-      'private' => 'atrium_og_private',
+      'public' => 'atrium_groups_public',
+      'private' => 'atrium_groups_private',
     );
     foreach ($group_types as $key => $preset) {
       $this->atriumGroups[$key] = $this->atriumCreateGroup($preset);
@@ -177,7 +174,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
 
     // Create a user for each role.
     $this->atriumUsers = array();
-    $user_roles = array('user', 'manager', 'admin');
+    $user_roles = array('user', 'manager', 'administrator');
     foreach ($user_roles as $role) {
       $this->atriumUsers[$role] = $this->atriumCreateUser($role, $this->atriumGroups);
     }

@@ -75,6 +75,7 @@ class AtriumBasicTestCase extends AtriumWebTestCase {
     foreach (array('edit', 'edit/profile', 'edit/picture', 'dashboard', 'notifications', 'openid', 'features') as $page) {
       $this->drupalGet("$path/$page");
     }
+
     // Create public and private group using the form
     foreach (array('atrium_groups_private', 'atrium_groups_public') as $preset) {
       $group = $this->atriumCreateGroup($preset);
