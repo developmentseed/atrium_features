@@ -88,6 +88,9 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       // [patch_here] to Views, as new modules have been included and
       // default views need to be re-detected.
       module_exists('views') ? views_get_all_views(TRUE) : TRUE;
+
+      // Fluch ctools object static caches.
+      ctools_export_load_object_reset();      
       menu_rebuild();
     }
     
@@ -183,7 +186,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
   /**
    * Create a group with the given preset
    */
-  function atriumCreateGroup($preset = 'atrium_og_private') {
+  function atriumCreateGroup($preset = 'atrium_groups_private') {
     $group = new stdClass();
     $group->type = 'group';
     $group->title = $this->randomName(8);
