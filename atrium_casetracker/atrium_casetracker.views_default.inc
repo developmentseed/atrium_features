@@ -274,7 +274,7 @@ function atrium_casetracker_views_default_views() {
         'remember' => 0,
       ),
       'id' => 'case_status_closed',
-      'table' => 'casetracker_case2',
+      'table' => 'casetracker_case',
       'field' => 'case_status_closed',
       'relationship' => 'none',
     ),
@@ -530,7 +530,7 @@ function atrium_casetracker_views_default_views() {
         'remember' => 0,
       ),
       'id' => 'case_status_closed',
-      'table' => 'casetracker_case2',
+      'table' => 'casetracker_case',
       'field' => 'case_status_closed',
       'relationship' => 'none',
     ),
@@ -737,7 +737,7 @@ function atrium_casetracker_views_default_views() {
         'remember' => 0,
       ),
       'id' => 'case_status_closed',
-      'table' => 'casetracker_case2',
+      'table' => 'casetracker_case',
       'field' => 'case_status_closed',
       'relationship' => 'none',
     ),
@@ -961,7 +961,7 @@ function atrium_casetracker_views_default_views() {
         'remember' => 0,
       ),
       'id' => 'case_status_closed',
-      'table' => 'casetracker_case2',
+      'table' => 'casetracker_case',
       'field' => 'case_status_closed',
       'relationship' => 'none',
     ),
@@ -1105,7 +1105,7 @@ function atrium_casetracker_views_default_views() {
     ),
     'case_status_closed' => array(
       'id' => 'case_status_closed',
-      'table' => 'casetracker_case2',
+      'table' => 'casetracker_case',
       'field' => 'case_status_closed',
       'override' => array(
         'button' => 'Use default',
@@ -1251,7 +1251,7 @@ function atrium_casetracker_views_default_views() {
     ),
     'case_status_closed' => array(
       'id' => 'case_status_closed',
-      'table' => 'casetracker_case2',
+      'table' => 'casetracker_case',
       'field' => 'case_status_closed',
       'override' => array(
         'button' => 'Use default',
@@ -1492,7 +1492,7 @@ function atrium_casetracker_views_default_views() {
     ),
     'case_status_closed' => array(
       'id' => 'case_status_closed',
-      'table' => 'casetracker_case2',
+      'table' => 'casetracker_case',
       'field' => 'case_status_closed',
       'override' => array(
         'button' => 'Use default',
@@ -1738,7 +1738,7 @@ function atrium_casetracker_views_default_views() {
         'remember' => 0,
       ),
       'id' => 'case_status_closed',
-      'table' => 'casetracker_case2',
+      'table' => 'casetracker_case',
       'field' => 'case_status_closed',
       'relationship' => 'none',
     ),
