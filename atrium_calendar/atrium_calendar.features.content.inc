@@ -46,17 +46,17 @@ function atrium_calendar_content_default_fields() {
     'default_format' => 'long',
     'widget' => array(
       'default_value' => 'blank',
-      'default_value_code' => '',
+      'default_value_custom' => '',
       'default_value2' => 'same',
-      'default_value_code2' => '',
+      'default_value_custom2' => '',
       'input_format' => 'm/d/Y - g:ia',
       'input_format_custom' => '',
       'increment' => '1',
       'text_parts' => array(),
       'year_range' => '-3:+3',
+      'default_value_code' => '',
+      'default_value_code2' => '',
       'label_position' => 'above',
-      'default_value_custom' => '',
-      'default_value_custom2' => '',
       'label' => 'Date',
       'weight' => '-3',
       'description' => '',
@@ -125,9 +125,8 @@ function atrium_calendar_content_default_fields() {
   );
 
   // Translatables
-  array(
-    t('Date'),
-  );
+  // Included for use with string extractors like potx.
+  t('Date');
 
   return $fields;
 }

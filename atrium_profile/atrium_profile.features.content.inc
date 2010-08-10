@@ -231,12 +231,11 @@ function atrium_profile_content_default_fields() {
   );
 
   // Translatables
-  array(
-    t('Address'),
-    t('Organization'),
-    t('Telephone'),
-    t('URL'),
-  );
+  // Included for use with string extractors like potx.
+  t('Address');
+  t('Organization');
+  t('Telephone');
+  t('URL');
 
   return $fields;
 }

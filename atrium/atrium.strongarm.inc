@@ -235,12 +235,12 @@ function atrium_strongarm() {
   $strongarm->name = 'og_notifications_content_types';
   $strongarm->value = array(
     'blog' => 'blog',
-    '0' => 'book',
-    '1' => 'event',
-    '2' => 'feed_ical',
-    '3' => 'feed_ical_item',
-    '4' => 'casetracker_basic_case',
-    '5' => 'casetracker_basic_project',
+    0 => 'book',
+    1 => 'event',
+    2 => 'feed_ical',
+    3 => 'feed_ical_item',
+    4 => 'casetracker_basic_case',
+    5 => 'casetracker_basic_project',
   );
 
   $export['og_notifications_content_types'] = $strongarm;
@@ -424,7 +424,7 @@ function atrium_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'views_no_hover_links';
-  $strongarm->value = TRUE;
+  $strongarm->value = 1;
 
   $export['views_no_hover_links'] = $strongarm;
   return $export;

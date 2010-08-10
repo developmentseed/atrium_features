@@ -38,9 +38,9 @@ function atrium_shoutbox_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['shoutbox_og'] = array(
-    t('Shoutbox'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Shoutbox');
 
   $export['shoutbox_og'] = $context;
   $context = new stdClass;
@@ -52,7 +52,7 @@ function atrium_shoutbox_context_default_contexts() {
   $context->conditions = array(
     'sitewide' => array(
       'values' => array(
-        '1' => 1,
+        1 => 1,
       ),
     ),
   );
@@ -70,9 +70,9 @@ function atrium_shoutbox_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['shoutbox_sitewide'] = array(
-    t('Shoutbox'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Shoutbox');
 
   $export['shoutbox_sitewide'] = $context;
   return $export;

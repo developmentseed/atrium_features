@@ -50,8 +50,6 @@ function atrium_blog_content_default_fields() {
     'advanced_view' => '--',
     'advanced_view_args' => '',
     'widget' => array(
-      'autocomplete_match' => 'contains',
-      'size' => NULL,
       'default_value' => array(
         '0' => array(
           'nid' => NULL,
@@ -59,6 +57,8 @@ function atrium_blog_content_default_fields() {
         ),
       ),
       'default_value_php' => NULL,
+      'autocomplete_match' => 'contains',
+      'size' => NULL,
       'label' => 'Referenced Page',
       'weight' => 0,
       'description' => 'Type in the title of another post to add a reference.',
@@ -68,9 +68,8 @@ function atrium_blog_content_default_fields() {
   );
 
   // Translatables
-  array(
-    t('Referenced Page'),
-  );
+  // Included for use with string extractors like potx.
+  t('Referenced Page');
 
   return $fields;
 }

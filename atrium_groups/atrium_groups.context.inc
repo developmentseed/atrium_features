@@ -23,9 +23,9 @@ function atrium_groups_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['groups_listing'] = array(
-    t('Groups'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Groups');
 
   $export['groups_listing'] = $context;
   $context = new stdClass;
@@ -58,9 +58,9 @@ function atrium_groups_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['profile_groups'] = array(
-    t('Profile'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Profile');
 
   $export['profile_groups'] = $context;
   return $export;

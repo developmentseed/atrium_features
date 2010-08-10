@@ -46,9 +46,9 @@ function atrium_calendar_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['calendar_calendar'] = array(
-    t('Calendar'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Calendar');
 
   $export['calendar_calendar'] = $context;
   $context = new stdClass;
@@ -81,9 +81,9 @@ function atrium_calendar_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['calendar_event'] = array(
-    t('Calendar'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Calendar');
 
   $export['calendar_event'] = $context;
   return $export;

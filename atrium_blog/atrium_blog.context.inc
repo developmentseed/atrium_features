@@ -41,9 +41,9 @@ function atrium_blog_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['blog_listing'] = array(
-    t('Blog'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Blog');
 
   $export['blog_listing'] = $context;
   return $export;

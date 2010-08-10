@@ -42,9 +42,9 @@ function atrium_book_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['book_casetracker'] = array(
-    t('Casetracker'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Casetracker');
 
   $export['book_casetracker'] = $context;
   $context = new stdClass;
@@ -89,9 +89,9 @@ function atrium_book_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['book_listing'] = array(
-    t('Book'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Book');
 
   $export['book_listing'] = $context;
   return $export;

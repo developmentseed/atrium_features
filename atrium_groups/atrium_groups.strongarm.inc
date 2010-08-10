@@ -31,7 +31,7 @@ function atrium_groups_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'node_options_group';
   $strongarm->value = array(
-    '0' => 'status',
+    0 => 'status',
   );
 
   $export['node_options_group'] = $strongarm;

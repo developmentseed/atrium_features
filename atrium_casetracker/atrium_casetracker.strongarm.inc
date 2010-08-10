@@ -122,8 +122,8 @@ function atrium_casetracker_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'node_options_casetracker_basic_case';
   $strongarm->value = array(
-    '0' => 'status',
-    '1' => 'revision',
+    0 => 'status',
+    1 => 'revision',
   );
 
   $export['node_options_casetracker_basic_case'] = $strongarm;
@@ -132,8 +132,8 @@ function atrium_casetracker_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'node_options_casetracker_basic_project';
   $strongarm->value = array(
-    '0' => 'status',
-    '1' => 'revision',
+    0 => 'status',
+    1 => 'revision',
   );
 
   $export['node_options_casetracker_basic_project'] = $strongarm;
@@ -142,9 +142,9 @@ function atrium_casetracker_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'notifications_content_type_casetracker_basic_case';
   $strongarm->value = array(
-    '0' => 'thread',
-    '1' => 'nodetype',
-    '2' => 'author',
+    0 => 'thread',
+    1 => 'nodetype',
+    2 => 'author',
   );
 
   $export['notifications_content_type_casetracker_basic_case'] = $strongarm;
@@ -153,9 +153,9 @@ function atrium_casetracker_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'notifications_content_type_casetracker_basic_project';
   $strongarm->value = array(
-    '0' => 'thread',
-    '1' => 'nodetype',
-    '2' => 'author',
+    0 => 'thread',
+    1 => 'nodetype',
+    2 => 'author',
   );
 
   $export['notifications_content_type_casetracker_basic_project'] = $strongarm;

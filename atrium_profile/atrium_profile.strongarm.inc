@@ -38,7 +38,7 @@ function atrium_profile_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'node_options_profile';
   $strongarm->value = array(
-    '0' => 'status',
+    0 => 'status',
   );
 
   $export['node_options_profile'] = $strongarm;
