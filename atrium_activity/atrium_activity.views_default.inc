@@ -346,8 +346,9 @@ function atrium_activity_views_default_views() {
         'button' => 'Use default',
       ),
       'relationship' => 'none',
-      'date_format' => 'reldate',
+      'date_format' => 'small',
       'custom_date_format' => '',
+      'reldate' => 'reldate',
     ),
     'atrium_activity_upload' => array(
       'label' => '',
@@ -520,8 +521,9 @@ function atrium_activity_views_default_views() {
         'button' => 'Use default',
       ),
       'relationship' => 'none',
-      'date_format' => 'reldate',
+      'date_format' => 'small',
       'custom_date_format' => '',
+      'reldate' => 'reldate',
     ),
     'atrium_activity' => array(
       'label' => '',
