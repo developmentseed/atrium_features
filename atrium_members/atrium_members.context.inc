@@ -32,9 +32,9 @@ function atrium_members_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['members_directory'] = array(
-    t('Members'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Members');
 
   $export['members_directory'] = $context;
   $context = new stdClass;
@@ -61,9 +61,9 @@ function atrium_members_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['members_section'] = array(
-    t('Members'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Members');
 
   $export['members_section'] = $context;
   return $export;

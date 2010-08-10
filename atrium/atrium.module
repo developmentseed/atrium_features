@@ -39,6 +39,22 @@ function atrium_init() {
  */
 function atrium_menu() {
   $items = array();
+  $items['access-denied'] = array(
+    'title' => 'Access denied',
+    'page callback' => 'atrium_403',
+    'page arguments' => array(),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'atrium.inc',
+  );
+  $items['not-found'] = array(
+    'title' => 'Page not found',
+    'page callback' => 'atrium_404',
+    'page arguments' => array(),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'atrium.inc',
+  );
   $items['help'] = array(
     'title' => 'Help',
     'description' => 'Information and help about using the site.',
@@ -109,11 +125,6 @@ function atrium_menu_alter(&$items) {
       unset($items[$path]);
     }
   }
-
-  // Replace default 403
-  $items['access-denied']['page callback'] = 'atrium_403';
-  $items['access-denied']['module'] = 'atrium';
-  $items['access-denied']['file'] = 'atrium.inc';
 }
 
 /**

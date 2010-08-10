@@ -224,6 +224,26 @@ function atrium_user_default_permissions() {
     ),
   );
 
+  // Exported permission: view imagecache user-m
+  $permissions['view imagecache user-m'] = array(
+    'name' => 'view imagecache user-m',
+    'roles' => array(
+      '0' => 'administrator',
+      '1' => 'authenticated user',
+      '2' => 'manager',
+    ),
+  );
+
+  // Exported permission: view imagecache user-s
+  $permissions['view imagecache user-s'] = array(
+    'name' => 'view imagecache user-s',
+    'roles' => array(
+      '0' => 'administrator',
+      '1' => 'authenticated user',
+      '2' => 'manager',
+    ),
+  );
+
   // Exported permission: view uploaded files
   $permissions['view uploaded files'] = array(
     'name' => 'view uploaded files',

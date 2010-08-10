@@ -14,7 +14,7 @@ function atrium_context_default_contexts() {
   $context->conditions = array(
     'sitewide' => array(
       'values' => array(
-        '1' => 1,
+        1 => 1,
       ),
     ),
   );
@@ -80,9 +80,9 @@ function atrium_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['global'] = array(
-    t('Intranet'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Intranet');
 
   $export['global'] = $context;
   $context = new stdClass;
@@ -100,9 +100,9 @@ function atrium_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['layout_login'] = array(
-    t('Theme'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Theme');
 
   $export['layout_login'] = $context;
   $context = new stdClass;
@@ -131,9 +131,9 @@ function atrium_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['layout_wide'] = array(
-    t('Theme'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Theme');
 
   $export['layout_wide'] = $context;
   $context = new stdClass;
@@ -157,9 +157,9 @@ function atrium_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['spaces_dashboard-custom-1'] = array(
-    t('Dashboard'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Dashboard');
 
   $export['spaces_dashboard-custom-1'] = $context;
   $context = new stdClass;
@@ -189,9 +189,9 @@ function atrium_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['taxonomy_listing'] = array(
-    t('Intranet'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Intranet');
 
   $export['taxonomy_listing'] = $context;
   return $export;

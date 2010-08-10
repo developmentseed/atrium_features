@@ -55,9 +55,9 @@ function atrium_casetracker_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['casetracker_listing'] = array(
-    t('Casetracker'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Casetracker');
 
   $export['casetracker_listing'] = $context;
   $context = new stdClass;
@@ -90,9 +90,9 @@ function atrium_casetracker_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['casetracker_project'] = array(
-    t('Casetracker'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Casetracker');
 
   $export['casetracker_project'] = $context;
   return $export;

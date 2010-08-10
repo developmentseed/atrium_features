@@ -38,7 +38,7 @@ class atrium_activity_handler_field_activity_upload extends atrium_activity_hand
     $filename = truncate_utf8($value->{$this->aliases['filename']}, 25, FALSE, TRUE);
     // Has comments
     if (!empty($value->{$this->field_alias})) {
-      $account = user_load($value->{$this->aliases['comment_uid']});
+      $account = $this->user_load($value->{$this->aliases['comment_uid']});
       $tokens = array(
         '!user' => theme('username', $account),
         '!title' => l($filename, "node/{$value->{$this->aliases['nid']}}", array('fragment' => "comment-{$value->{$this->field_alias}}")),
@@ -46,7 +46,7 @@ class atrium_activity_handler_field_activity_upload extends atrium_activity_hand
     }
     // No comments
     else {
-      $account = user_load($value->{$this->aliases['node_uid']});
+      $account = $this->user_load($value->{$this->aliases['node_uid']});
       $tokens = array(
         '!user' => theme('username', $account),
         '!title' => l($filename, "node/{$value->{$this->aliases['nid']}}"),

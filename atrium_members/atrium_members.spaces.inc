@@ -68,10 +68,10 @@ function atrium_members_spaces_presets() {
     ),
   );
 
-  $translatables['atrium_members_simple'] = array(
-    t('A simple profile with a blog, calendar and dashboard.'),
-    t('Simple profile'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('A simple profile with a blog, calendar and dashboard.');
+  t('Simple profile');
 
   $export['atrium_members_simple'] = $spaces_presets;
   return $export;

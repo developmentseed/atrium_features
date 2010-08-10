@@ -29,27 +29,27 @@ function atrium_calendar_feeds_importer_default() {
         'update_existing' => 1,
         'expire' => '-1',
         'mappings' => array(
-          '0' => array(
+          0 => array(
             'source' => 'ical_date',
             'target' => 'field_date:start',
             'unique' => FALSE,
           ),
-          '1' => array(
+          1 => array(
             'source' => 'ical_date',
             'target' => 'field_date:end',
             'unique' => FALSE,
           ),
-          '2' => array(
+          2 => array(
             'source' => 'title',
             'target' => 'title',
             'unique' => FALSE,
           ),
-          '3' => array(
+          3 => array(
             'source' => 'description',
             'target' => 'body',
             'unique' => FALSE,
           ),
-          '4' => array(
+          4 => array(
             'source' => 'timestamp',
             'target' => 'created',
             'unique' => FALSE,

@@ -35,9 +35,9 @@ function atrium_activity_context_default_contexts() {
   );
   $context->condition_mode = 0;
 
-  $translatables['activity_profile'] = array(
-    t('Profile'),
-  );
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Profile');
 
   $export['activity_profile'] = $context;
   return $export;

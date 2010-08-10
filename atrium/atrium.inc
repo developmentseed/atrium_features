@@ -281,3 +281,10 @@ function atrium_403() {
   }
   return "<div class='access-denied'>". t('You are not authorized to access this page.') ."</div>";
 }
+
+/**
+ * 404 page.
+ */
+function atrium_404() {
+  return "<div class='not-found'>". t('The requested page could not be found.') ."</div>";
+}
