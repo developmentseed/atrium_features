@@ -31,9 +31,6 @@ function atrium_views_handlers() {
       'atrium_handler_field_file' => array(
         'parent' => 'views_handler_field_file',
        ),
-      'atrium_handler_field_ncs_last_updated' => array(
-        'parent' => 'seed_handler_field_date',
-      ),
     ),
   );
 }
@@ -52,9 +49,6 @@ function atrium_views_data_alter(&$cache) {
           switch ($c['handler']) {
             case 'views_handler_field_file':
               $cache[$module][$column][$property]['handler'] = 'atrium_handler_field_file';
-              break;
-            case 'views_handler_field_ncs_last_updated':
-              $cache[$module][$column][$property]['handler'] = 'atrium_handler_field_ncs_last_updated';
               break;
           }
         }
