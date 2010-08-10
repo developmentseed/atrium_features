@@ -12,10 +12,10 @@ class AtriumWebTestCase extends DrupalWebTestCase {
   var $install_locale = 'en';
   // And we may want to try more install profiles
   var $install_profile = 'openatrium';
-  
+
   /**
    * Installs Atrium instead of Drupal
-   * 
+   *
    * Generates a random database prefix, runs the install scripts on the
    * prefixed database and enable the specified modules. After installation
    * many caches are flushed and the internal browser is setup so that the
@@ -27,7 +27,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
    */
   protected function setUp() {
     global $db_prefix, $user, $language, $profile, $install_locale; // $language (Drupal 6).
-    
+
     // Store necessary current values before switching to prefixed database.
     $this->originalPrefix = $db_prefix;
     $this->originalLanguage = clone $language;
@@ -44,7 +44,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
     $db_prefix = 'simpletest' . mt_rand(1000, 1000000);
     $install_locale = $this->install_locale;
     $profile = $this->install_profile;
-    
+
 //    include_once DRUPAL_ROOT . '/includes/install.inc';
     include_once './includes/install.inc';
     drupal_install_system();
@@ -52,9 +52,9 @@ class AtriumWebTestCase extends DrupalWebTestCase {
 //    $this->preloadRegistry();
     // Set up theme system for the maintenance page.
     // Otherwise we have trouble: https://ds.openatrium.com/dsi/node/18426#comment-38118
-    // @todo simpletest module patch 
+    // @todo simpletest module patch
     drupal_maintenance_theme();
-    
+
     // Add the specified modules to the list of modules in the default profile.
     $args = func_get_args();
 //    $modules = array_unique(array_merge(drupal_get_profile_modules('default', 'en'), $args));
@@ -68,7 +68,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
     // stale data for the previous run's database prefix and all
     // calls to it will fail.
     drupal_get_schema(NULL, TRUE);
-    
+
     if ($this->install_profile == 'openatrium') {
       // Download and import translation if needed
       if ($this->install_locale != 'en') {
@@ -77,7 +77,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       // Install more modules
       $modules = _openatrium_atrium_modules();
       drupal_install_modules($modules);
-      
+
       // Configure intranet
       // $profile_tasks = $this->install_profile . '_profile_tasks';
       _openatrium_intranet_configure();
@@ -90,7 +90,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       module_exists('views') ? views_get_all_views(TRUE) : TRUE;
       menu_rebuild();
     }
-    
+
     _drupal_flush_css_js();
     $this->refreshVariables();
     $this->checkPermissions(array(), TRUE);
@@ -140,7 +140,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
 
   /**
    * Adds a language
-   * 
+   *
    * @param $langcode
    * @param $default
    *   Whether this is the default language
@@ -297,7 +297,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       variable_set('spaces_features', $features);
     }
   }
-  
+
   /**
    * Rewrite assertText function so it prints page when fails
    */
@@ -319,7 +319,7 @@ class AtriumWebTestCase extends DrupalWebTestCase {
     }
     return $result;
   }
- 
+
   /**
    * Print out a variable for debugging
    */
@@ -331,12 +331,12 @@ class AtriumWebTestCase extends DrupalWebTestCase {
   }
   /**
    * Debug dump object with some formatting
-   */ 
+   */
   function printObject($object, $title = 'Object') {
     $output = $this->formatTable($object);
     $this->printDebug($output, $title);
   }
-  
+
   /**
    * Print out current HTML page
    */
@@ -360,16 +360,16 @@ class AtriumWebTestCase extends DrupalWebTestCase {
       return 'No properties';
     }
   }
-  
+
   /**
    * Reset original language
-   * 
+   *
    * If we don't do this after test tearDown, we get some errors when the system tries to translate
    * the test result messages, which is next step.
    */
   protected function tearDown() {
     global $language;
-      
+
     parent::tearDown();
     $language = $this->originalLanguage;
   }

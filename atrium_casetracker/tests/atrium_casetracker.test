@@ -58,6 +58,9 @@ class AtriumCaseTrackerTest extends AtriumWebTestCase {
    */
   function testProjectNode() {
     $this->drupalLogin($this->atriumUsers['private_user']);
+    //@TODO The value of this variable is still stored in the database at this point, despite the
+    // features_revert called during the parent::setUp();
+    variable_del('book_allowed_types');
     $node = $this->atriumCreateGroupContent($this->atriumGroups['private'], 'casetracker_basic_project');
     $this->drupalGet("node/{$node->nid}");
 
@@ -69,7 +72,7 @@ class AtriumCaseTrackerTest extends AtriumWebTestCase {
       'title' => $this->randomName(32),
       'body' => $this->randomName(32),
     );
-    $this->drupalPost("node/{$node->nid}/edit", $edit, t('Save'));   
+    $this->drupalPost("node/{$node->nid}/edit", $edit, t('Save'));
     $this->drupalGet("node/{$node->nid}");
     $this->assertText(t('Highlight changes'));
   }
