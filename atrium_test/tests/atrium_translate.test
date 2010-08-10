@@ -39,8 +39,8 @@ class AtriumTranslateTestCase extends AtriumWebTestCase {
     // Check translations have been added properly
     $count = db_result(db_query("SELECT COUNT(*) FROM {locales_target} WHERE language = '%s'", $this->install_locale));
     $this->assertTrue($count, "Translations have been loaded: $count strings.");
-    // Create and login admin user
-    $admin_user = $this->atriumCreateUser('admin');
+    // Create and login administrator user
+    $admin_user = $this->atriumCreateUser('administrator');
     $this->drupalLogin($admin_user);
     // Check initial texts
 
