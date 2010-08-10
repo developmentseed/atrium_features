@@ -353,6 +353,24 @@ function atrium_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'theme_settings';
+  $strongarm->value = array(
+    'toggle_logo' => 1,
+    'toggle_name' => 1,
+    'toggle_slogan' => 0,
+    'toggle_mission' => 1,
+    'toggle_node_user_picture' => 1,
+    'toggle_comment_user_picture' => 1,
+    'toggle_search' => 1,
+    'toggle_favicon' => 1,
+    'toggle_primary_links' => 1,
+    'toggle_secondary_links' => 1,
+  );
+
+  $export['theme_settings'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'upload_extensions_default';
   $strongarm->value = 'au avi bzip2 csv doc docx flv gif graffle gz htm html iso jpeg jpg kml kmz mov mp2 mp3 mp4 odp ods odt pages patch pdf png pps ppt pptx psd rar svg swf template tif tgz txt vsd wav wmv xls xlsx zip';
 
@@ -381,6 +399,13 @@ function atrium_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_default';
+  $strongarm->value = 'profiles/openatrium/themes/ginkgo/images/user.png';
+
+  $export['user_picture_default'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'user_picture_dimensions';
   $strongarm->value = '500x500';
 
@@ -392,6 +417,41 @@ function atrium_strongarm() {
   $strongarm->value = '500';
 
   $export['user_picture_file_size'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_imagecache_comments';
+  $strongarm->value = 'user-s';
+
+  $export['user_picture_imagecache_comments'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_imagecache_profiles';
+  $strongarm->value = 'user-s';
+
+  $export['user_picture_imagecache_profiles'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_imagecache_profiles_default';
+  $strongarm->value = 'user-s';
+
+  $export['user_picture_imagecache_profiles_default'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_imagecache_profiles_min_height';
+  $strongarm->value = '60';
+
+  $export['user_picture_imagecache_profiles_min_height'] = $strongarm;
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'user_picture_imagecache_profiles_min_width';
+  $strongarm->value = '60';
+
+  $export['user_picture_imagecache_profiles_min_width'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
