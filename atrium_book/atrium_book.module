@@ -105,6 +105,12 @@ function atrium_book_block($op = 'list', $delta = 0) {
  */
 function atrium_book_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
   switch ($op) {
+    case 'view':
+      // Hide book navigation in node body.
+      if (module_exists('book') && isset($node->content['book_navigation'])) {
+        $node->content['book_navigation']['#access'] = FALSE;
+      }
+      break;
     case 'insert':
     case 'update':
     case 'delete':
