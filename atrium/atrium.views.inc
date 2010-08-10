@@ -28,9 +28,6 @@ function atrium_views_handlers() {
       'atrium_handler_filter_book_types' => array(
         'parent' => 'views_handler_filter',
       ),
-      'atrium_handler_field_file' => array(
-        'parent' => 'views_handler_field_file',
-       ),
     ),
   );
 }
@@ -42,20 +39,6 @@ function atrium_views_handlers() {
  * date field formatters.
  */
 function atrium_views_data_alter(&$cache) {
-  foreach ($cache as $module => $a) {
-    foreach ($a as $column => $b) {
-      foreach ($b as $property => $c) {
-        if ($property == 'field' && !empty($c['handler'])) {
-          switch ($c['handler']) {
-            case 'views_handler_field_file':
-              $cache[$module][$column][$property]['handler'] = 'atrium_handler_field_file';
-              break;
-          }
-        }
-      }
-    }
-  }
-
   // Book enabled type filter
   $cache['node']['book_type'] = array(
     'real field' => 'type',
