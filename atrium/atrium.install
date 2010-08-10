@@ -302,7 +302,6 @@ function atrium_update_6013() {
   }
   // Enable the atrium_activity feature
   drupal_install_modules(array('atrium_activity'));
-   
 
   $return[] = array('success' => TRUE, 'query' => 'Atrium updated for Kit compliance.');
   return $return;
@@ -338,4 +337,12 @@ function atrium_update_6014() {
     return array(array('success' => TRUE, 'query' => 'No vocabularies were updated for Features management.  Default Open Atrium vocabulary could not be found.'));
   }
   return array(array('success' => TRUE, 'query' => 'No vocabularies were updated for Features management.  Taxonomy module is not enabled.'));
+}
+
+/**
+ * 6015: Install functional replacements for seed module.
+ */
+function atrium_update_6015() {
+  drupal_install_modules(array('crayon', 'imagecache_profiles', 'itweak_upload', 'nodeformcols', 'reldate'));
+  return array(array('success' => TRUE, 'query' => 'Modules enabled: crayon, imagecache_profiles, itweak_upload, nodeformcols, reldate.'));
 }
