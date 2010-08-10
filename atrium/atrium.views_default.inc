@@ -259,24 +259,16 @@ function atrium_views_default_views() {
     'sticky' => 1,
     'order' => 'asc',
     'columns' => array(
-      'feature' => 'feature',
-      'title' => 'title',
-      'body' => 'title',
-      'name' => 'name',
+      'filename' => 'filename',
+      'title' => 'filename',
       'last_updated' => 'last_updated',
     ),
     'info' => array(
-      'feature' => array(
-        'separator' => '',
+      'filename' => array(
+        'sortable' => 0,
+        'separator' => '<br />',
       ),
       'title' => array(
-        'sortable' => 0,
-        'separator' => '<br/>',
-      ),
-      'body' => array(
-        'separator' => '',
-      ),
-      'name' => array(
         'sortable' => 0,
         'separator' => '',
       ),
@@ -318,18 +310,6 @@ function atrium_views_default_views() {
     ),
   ));
   $handler->override_option('fields', array(
-    'filemime' => array(
-      'label' => 'Type',
-      'link_to_file' => 1,
-      'exclude' => 0,
-      'id' => 'filemime',
-      'table' => 'files',
-      'field' => 'filemime',
-      'relationship' => 'upload_fid',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-    ),
     'filename' => array(
       'label' => 'Filename',
       'link_to_file' => 1,
@@ -344,12 +324,40 @@ function atrium_views_default_views() {
     ),
     'title' => array(
       'label' => 'Title',
-      'link_to_node' => 1,
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => '<small>[title]</small>',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 0,
+      'spaces' => array(
+        'frontpage' => 0,
+        'type' => 'spaces_og',
+      ),
       'exclude' => 0,
       'id' => 'title',
       'table' => 'node',
       'field' => 'title',
       'relationship' => 'none',
+      'override' => array(
+        'button' => 'Use default',
+      ),
     ),
     'last_updated' => array(
       'label' => 'Last post',
