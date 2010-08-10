@@ -69,7 +69,7 @@ class atrium_activity_handler_field_activity extends views_handler_field {
   function render($value) {
     // Has comments
     if (!empty($value->{$this->field_alias})) {
-      $account = user_load($value->{$this->aliases['comment_uid']});
+      $account = $this->user_load($value->{$this->aliases['comment_uid']});
       $tokens = array(
         '!user' => theme('username', $account),
         '!title' => l($value->{$this->aliases['node_title']}, "node/{$value->{$this->aliases['nid']}}", array('fragment' => "comment-{$value->{$this->field_alias}}")),
@@ -77,7 +77,7 @@ class atrium_activity_handler_field_activity extends views_handler_field {
       return t('!user commented on !title', $tokens);
     }
     // No comments
-    $account = user_load($value->{$this->aliases['node_uid']});
+    $account = $this->user_load($value->{$this->aliases['node_uid']});
     $tokens = array(
       '!user' => theme('username', $account),
       '!title' => l($value->{$this->aliases['node_title']}, "node/{$value->{$this->aliases['nid']}}"),
@@ -86,5 +86,16 @@ class atrium_activity_handler_field_activity extends views_handler_field {
       return t('!user updated !title', $tokens);
     }
     return t('!user posted !title', $tokens);
+  }
+
+  /**
+   * Static cached user load.
+   */
+  protected function user_load($uid, $reset = FALSE) {
+    static $cache = array();
+    if (!isset($cache[$uid]) || $reset) {
+      $cache[$uid] = user_load($uid);
+    }
+    return $cache[$uid];
   }
 }
