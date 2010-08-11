@@ -193,20 +193,6 @@ function atrium_blog_views_default_views() {
       'field' => 'timestamp',
       'relationship' => 'none',
     ),
-    'status' => array(
-      'operator' => '=',
-      'value' => '0',
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'status',
-      'table' => 'comments',
-      'field' => 'status',
-      'relationship' => 'none',
-    ),
     'status_1' => array(
       'operator' => '=',
       'value' => '1',
@@ -456,20 +442,6 @@ function atrium_blog_views_default_views() {
   ));
   $handler->override_option('title', 'Blog');
   $handler->override_option('use_pager', '1');
-  $handler->override_option('style_plugin', 'litenode');
-  $handler->override_option('style_options', array(
-    'modules' => array(
-      'taxonomy' => 1,
-      'upload' => 1,
-      'atrium' => 1,
-      'node' => TRUE,
-      'user' => TRUE,
-      'comment' => TRUE,
-      'og' => TRUE,
-    ),
-    'teaser' => 1,
-    'cullen' => 0,
-  ));
   $handler->override_option('row_plugin', 'node');
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->override_option('path', 'blog');
