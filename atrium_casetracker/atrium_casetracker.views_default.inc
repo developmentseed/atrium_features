@@ -1682,7 +1682,7 @@ function atrium_casetracker_views_default_views() {
       'style_options' => array(),
       'wildcard' => 'all',
       'wildcard_substitution' => 'All',
-      'title' => '',
+      'title' => '%1\'s cases',
       'breadcrumb' => '',
       'default_argument_type' => 'user',
       'default_argument' => '',
