@@ -20,9 +20,14 @@ function atrium_requirements($phase) {
  * Implementation of hook_install().
  */
 function atrium_install() {
-  // Add index to comments table.
+  // Add timestamp index to comments table.
   if (db_table_exists('comments')) {
     db_query("ALTER TABLE {comments} ADD INDEX(timestamp)");
+  }
+  // Add type,nid index to node table. Allows for more efficient joins to
+  // og_ancestry when limiting a view by a certain node type.
+  if (db_table_exists('node')) {
+    db_query("ALTER TABLE {node} ADD KEY type_node (type, nid)");
   }
 }
 
@@ -345,4 +350,14 @@ function atrium_update_6014() {
 function atrium_update_6015() {
   drupal_install_modules(array('crayon', 'imagecache_profiles', 'itweak_upload', 'nodeformcols', 'reldate'));
   return array(array('success' => TRUE, 'query' => 'Modules enabled: crayon, imagecache_profiles, itweak_upload, nodeformcols, reldate.'));
+}
+
+/**
+ * 6016: Add type,nid index to node table.
+ */
+function atrium_update_6016() {
+  if (db_table_exists('node')) {
+    db_query("ALTER TABLE {node} ADD KEY type_node (type, nid)");
+  }
+  return array(array('success' => TRUE, 'query' => 'Index added to node table.'));
 }
