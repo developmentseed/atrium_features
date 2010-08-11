@@ -243,12 +243,12 @@ function atrium_site_frontpage_validate($element, &$form_state) {
 function atrium_form_spaces_features_form_submit(&$form, &$form_state) {
   module_load_include('inc', 'features', 'features.export');
   features_include();
-  $semaphore = features_semaphore('get', 'user');
+  $semaphore = features_semaphore('get', 'user_permission');
 
   // If there is no processing semaphore for user permissions or it is stale
   // go ahead with a forced rebuild.
   if (!$semaphore || (time() - $semaphore) >= FEATURES_SEMAPHORE_TIMEOUT) {
-    features_rebuild(array('atrium' => array('user')));
+    features_rebuild(array('atrium' => array('user_permission')));
   }
   else {
     drupal_set_message(t('Your changes could not be saved because user permissions are currently being rebuilt. Please try again in a few minutes.'), 'error');
