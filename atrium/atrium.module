@@ -387,43 +387,11 @@ function atrium_link_alter(&$links, $node) {
 }
 
 /**
- * Implementation of hook_litenode().
- */
-function atrium_litenode() {
-  $info = array();
-  $info['atrium'] = array();
-  $info['atrium']['module'] = t('Atrium');
-  $info['atrium']['map'] = array();
-  $info['atrium']['fields'] = array(
-    'timestamp_1' => array(
-      'id' => 'timestamp_1',
-      'table' => 'history_user',
-      'field' => 'timestamp',
-    ),
-  );
-  return $info;
-}
-
-/**
- * Implementation of hook_litenode_alter().
- */
-function atrium_litenode_alter(&$node, $row) {
-  $node->new = atrium_get_readstate($row->history_user_timestamp, $node->changed);
-}
-
-/**
  * Implemenation of hook_nodeapi().
  */
 function atrium_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
   switch ($op) {
     case 'view':
-      // Load the node's read state.
-      if (!isset($node->new)) {
-        global $user;
-        $readtime = db_result(db_query("SELECT timestamp FROM {history} WHERE uid = %d AND nid = %d", $user->uid, $node->nid));
-        $node->new = atrium_get_readstate($readtime, $node->changed);
-      }
-
       // Display a message for archived content
       // Test: AtriumTest->testArchive().
       if (menu_get_object() === $node && $op == 'view' && $node->status == 0) {
@@ -655,19 +623,6 @@ function atrium_archived_message($node) {
     $message .= ' '. t('To reactivate this !type, !link.', array('!type' => node_get_types('name', $node->type), '!link' => l(t('click here'), "node/{$node->nid}/reactivate")));
   }
   return $message;
-}
-
-/**
- * Helper function to deal with node read state logic.
- */
-function atrium_get_readstate($readtime, $nodetime) {
-  if ($readtime == 0 && $nodetime > NODE_NEW_LIMIT) {
-    return MARK_NEW;
-  }
-  elseif ($nodetime > $readtime && $nodetime > NODE_NEW_LIMIT) {
-    return MARK_UPDATED;
-  }
-  return MARK_READ;
 }
 
 /**
