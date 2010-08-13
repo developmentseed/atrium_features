@@ -83,7 +83,7 @@ function atrium_shoutbox_block($op = 'list', $delta = 0) {
           $space = spaces_get_space();
           if (($space && $space->type === 'og') || !module_exists('spaces_og')) {
             $link = l(t('Full view'), 'shoutbox');
-            $output = drupal_get_form('atrium_shoutbox_shoutform', $shoutbox['node'], $shoutbox['view']->name, 'default');
+            $output = drupal_get_form('atrium_shoutbox_shoutform', $shoutbox['node'], $shoutbox['view'], $shoutbox['rendered']);
             $output .= "<div class='more-link'>$link</div>";
             return array(
               'subject' => !empty($space->group) ? filter_xss_admin($space->group->title) : t('Shoutbox'),
@@ -135,7 +135,9 @@ function atrium_shoutbox_context_links_alter(&$links) {
 function atrium_shoutbox_page() {
   $shoutbox = atrium_shoutbox_get_shoutbox();
   if ($shoutbox && $shoutbox['node']) {
-    return drupal_get_form('atrium_shoutbox_shoutform', $shoutbox['node'], 'shoutbox_shouts', 'page_1');
+    $view = views_get_view('shoutbox_shouts');
+    $rendered = $view->execute_display('page_1');
+    return drupal_get_form('atrium_shoutbox_shoutform', $shoutbox['node'], $view, $rendered);
   }
   return $shoutbox ? $shoutbox['rendered'] : '';
 }
@@ -195,10 +197,11 @@ function atrium_shoutbox_get_shoutbox($reset = FALSE) {
       $shoutbox['view'] = $view;
     }
 
-    // Gather count of unread shouts for the current user..
+    // Execute/render shoutbox & count unread shouts for the current user.
     if (!empty($shoutbox)) {
       global $user;
       $shoutbox['count'] = 0;
+      $shoutbox['rendered'] = $shoutbox['view']->execute_display('default');
       if (!empty($shoutbox['view']->result) && !empty($_REQUEST['AtriumShoutbox'])) {
         $user_last_viewed = $_REQUEST['AtriumShoutbox'];
         foreach ($shoutbox['view']->result as $row) {
@@ -294,13 +297,12 @@ function atrium_shoutbox_shout($nid, $shout) {
  *   The FAPI form state array.
  * @param $shoutbox
  *   The shoutbox node object to which shouts will be related.
- * @param $view_name
- *   Optional: The view name for rendered shouts. Needed to AJAX update the view
- *   in question.
- * @param $view_display
- *   Optional: The view display for rendered shouts.
+ * @param $view
+ *   The view for rendered shouts. Needed to AJAX update the view in question.
+ * @param $rendered
+ *   A rendered list of shouts to display.
  */
-function atrium_shoutbox_shoutform($form_state, $shoutbox, $view_name = 'shoutbox_shouts', $view_display = 'default') {
+function atrium_shoutbox_shoutform($form_state, $shoutbox, $view, $rendered) {
   $wrapper = 'atrium-shoutbox-wrapper-'. $shoutbox->nid;
 
   $form = array(
@@ -313,7 +315,7 @@ function atrium_shoutbox_shoutform($form_state, $shoutbox, $view_name = 'shoutbo
   );
   $form['view'] = array(
     '#type' => 'hidden',
-    '#value' => "{$view_name}:{$view_display}",
+    '#value' => "{$view->name}:{$view->current_display}",
     '#attributes' => array('class' => 'atrium-shoutbox-shoutform-view')
   );
   $form['shout'] = array(
@@ -333,7 +335,6 @@ function atrium_shoutbox_shoutform($form_state, $shoutbox, $view_name = 'shoutbo
     ),
     '#access' => user_access('post comments'),
   );
-  $rendered = views_embed_view($view_name, $view_display);
   $form['wrapper'] = array(
     '#type' => 'markup',
     '#value' => "<div class='shoutbox-list' id='{$wrapper}'>{$rendered}</div>",
