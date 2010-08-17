@@ -23,6 +23,15 @@ function atrium_user_default_permissions() {
     ),
   );
 
+  // Exported permission: administer dashboards
+  $permissions['administer dashboards'] = array(
+    'name' => 'administer dashboards',
+    'roles' => array(
+      '0' => 'administrator',
+      '1' => 'manager',
+    ),
+  );
+
   // Exported permission: administer filters
   $permissions['administer filters'] = array(
     'name' => 'administer filters',
