@@ -22,6 +22,12 @@ function atrium_activity_views_handlers() {
       'atrium_activity_handler_field_activity_upload' => array(
         'parent' => 'atrium_activity_handler_field_activity',
       ),
+      'atrium_activity_handler_field_activity_path' => array(
+        'parent' => 'atrium_activity_handler_field_activity',
+      ),
+      'atrium_activity_handler_field_activity_user' => array(
+        'parent' => 'atrium_activity_handler_field_activity',
+      ),
     ),
   );
 }
@@ -48,6 +54,18 @@ function atrium_activity_views_data() {
     'title' => t('Activity upload'),
     'help' => t("Upload for poor man's activity field."),
     'field' => array('handler' => 'atrium_activity_handler_field_activity_upload'),
+  );
+  $data['comments']['atrium_activity_path'] = array(
+    'real field' => 'cid',
+    'title' => t('Activity path'),
+    'help' => t("Path for poor man's activity field."),
+    'field' => array('handler' => 'atrium_activity_handler_field_activity_path'),
+  );
+  $data['comments']['atrium_activity_user'] = array(
+    'real field' => 'cid',
+    'title' => t('Activity user'),
+    'help' => t("User for poor man's activity field."),
+    'field' => array('handler' => 'atrium_activity__handler_field_activity_user'),
   );
   return $data;
 }
