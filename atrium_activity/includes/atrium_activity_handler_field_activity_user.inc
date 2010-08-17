@@ -61,7 +61,7 @@ class atrium_activity_handler_field_activity_user extends atrium_activity_handle
         return theme('username', $account);
       }
       else {
-        return $account->name;
+        return check_plain($account->name);
       }
     }
     // No comments
@@ -70,7 +70,7 @@ class atrium_activity_handler_field_activity_user extends atrium_activity_handle
       return theme('username', $account);
     }
     else {
-      return $account->name;
+      return check_plain($account->name);
     }
   }
 }
