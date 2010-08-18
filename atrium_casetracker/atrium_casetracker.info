@@ -1,5 +1,4 @@
 core = "6.x"
-dependencies[] = "atrium_book"
 dependencies[] = "casetracker"
 dependencies[] = "comment"
 dependencies[] = "context"
