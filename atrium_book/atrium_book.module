@@ -116,9 +116,11 @@ function atrium_book_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
     case 'delete':
       // Wipe the atrium book tree cache for a space when a book is modified.
       if (!empty($node->book['bid'])) {
-        $space = spaces_get_space();
-        if ($space) {
+        if (module_exists('spaces') && $space = spaces_get_space()) {
           cache_clear_all("atrium_book:{$space->type}:{$space->id}", 'cache', TRUE);
+        }
+        else {
+          cache_clear_all("atrium_book", 'cache', TRUE);
         }
       }
       break;
@@ -172,7 +174,7 @@ function atrium_book_form_alter(&$form, &$form_state, $form_id) {
  * Implementation of hook_context_links_alter();
  */
 function atrium_book_context_links_alter(&$links) {
-  if (context_get('context', 'book_listing') && isset($links['book']) && $space = spaces_get_space()) {
+  if (context_get('context', 'book_listing') && isset($links['book']) && module_exists('spaces') && $space = spaces_get_space()) {
     $item = menu_get_item('node/add/book');
     $node = menu_get_object();
     if ($item['access'] && !empty($node->book['mlid'])) {
