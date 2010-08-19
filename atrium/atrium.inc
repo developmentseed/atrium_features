@@ -279,6 +279,15 @@ function atrium_403() {
     unset($_REQUEST['destination']);
     drupal_goto('user/login', 'destination='. $_REQUEST['q']);
   }
+  else {
+    // Logged in user requests path like 'user/login?destination=dashboard' which
+    // is a common case if user loses session but has 46 browser tabs open and
+    // refreshes one such tab.  This will redirect that request properly to
+    // avoid a 403.
+    if ($_REQUEST['q'] === 'user/login' && isset($_REQUEST['destination']) && $_REQUEST['destination'] !== 'user/login') {
+      drupal_goto($_REQUEST['q']);
+    }
+  }
   return "<div class='access-denied'>". t('You are not authorized to access this page.') ."</div>";
 }
 
