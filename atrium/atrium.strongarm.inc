@@ -57,10 +57,10 @@ function atrium_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'context_ui_show_empty_regions';
+  $strongarm->name = 'context_reaction_block_all_regions';
   $strongarm->value = 1;
 
-  $export['context_ui_show_empty_regions'] = $strongarm;
+  $export['context_reaction_block_all_regions'] = $strongarm;
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
