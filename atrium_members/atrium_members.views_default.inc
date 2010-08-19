@@ -196,6 +196,10 @@ function atrium_members_views_default_views() {
     'default' => '-1',
   ));
   $handler = $view->new_display('page', 'Active users', 'page_1');
+  $handler->override_option('access', array(
+    'type' => 'perm',
+    'perm' => 'create users',
+  ));
   $handler->override_option('path', 'members/all');
   $handler->override_option('menu', array(
     'type' => 'tab',
