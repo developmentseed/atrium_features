@@ -1,6 +1,8 @@
 core = "6.x"
 dependencies[] = "context"
 dependencies[] = "date"
+dependencies[] = "date_popup"
+dependencies[] = "jquery_ui"
 dependencies[] = "features"
 dependencies[] = "feeds"
 dependencies[] = "litecal"
