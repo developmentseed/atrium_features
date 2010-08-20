@@ -1,4 +1,5 @@
 core = "6.x"
+dependencies[] = "atrium_activity"
 dependencies[] = "book"
 dependencies[] = "comment"
 dependencies[] = "context"
