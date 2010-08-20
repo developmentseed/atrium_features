@@ -173,19 +173,15 @@ function atrium_casetracker_preprocess_views_view_table(&$vars) {
     $vars['class'] .= " cases";
 
     global $user;
-    $new_rows = array();
     $inactive_states = atrium_casetracker_get_inactive_states();
-    foreach ($vars['rows'] as $index => $row) {
-      $class = "row-$index";
-      if (!empty($view->result[$index]->casetracker_case_assign_to) && $view->result[$index]->casetracker_case_assign_to == $user->uid) {
-        $class .= ' mine';
+    foreach ($view->result as $index => $row) {
+      if (!empty($row->casetracker_case_assign_to) && $row->casetracker_case_assign_to == $user->uid) {
+        $vars['row_classes'][$index][] = 'mine';
       }
-      if (!empty($view->result[$index]->casetracker_case_case_status_id) && in_array($view->result[$index]->casetracker_case_case_status_id, $inactive_states)) {
-        $class .= ' status-inactive';
+      if (!empty($row->casetracker_case_case_status_id) && in_array($row->casetracker_case_case_status_id, $inactive_states)) {
+        $vars['row_classes'][$index][] = 'status-inactive';
       }
-      $new_rows[$class] = $row;
     }
-    $vars['rows'] = $new_rows;
   }
 }
 
