@@ -1,7 +1,6 @@
 core = "6.x"
 dependencies[] = "comment"
 dependencies[] = "context"
-dependencies[] = "date_api"
 dependencies[] = "strongarm"
 dependencies[] = "views"
 description = "The shoutbox provides a team microblog."
