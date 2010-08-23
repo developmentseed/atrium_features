@@ -2,10 +2,6 @@
 
 include_once('atrium_book.features.inc');
 
-function atrium_book_init() {
-  drupal_add_css(drupal_get_path('module', 'atrium_book') .'/atrium_book.css');
-}
-
 /**
  * Implementation of hook_help().
  */
