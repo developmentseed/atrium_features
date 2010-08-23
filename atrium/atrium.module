@@ -678,7 +678,9 @@ function atrium_search_form($form_state) {
     $default = urldecode($_GET['keys']);
   }
   $form = array();
+  $space = spaces_get_space();
   $form['search'] = array(
+    '#title' => ($space && $space->type === 'og') ? t('Search @space', array('@space' => $space->title())) : t('Search'),
     '#type' => 'textfield',
     '#size' => 30,
     '#required' => true,
