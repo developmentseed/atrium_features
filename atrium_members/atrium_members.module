@@ -121,7 +121,7 @@ function atrium_members_menu_alter(&$items) {
  * Access callback for using the members addform.
  */
 function atrium_members_addform_access() {
-  $space = spaces_get_space();
+  $space = module_exists('spaces') ? spaces_get_space() : FALSE;
   return user_access('create users') && $space && $space->type == 'og';
 }
 
@@ -145,8 +145,10 @@ function atrium_members_context_links_alter(&$links) {
  * Good occasion to set the breadcrumb.
  */
 function atrium_members_context_page_condition() {
-  $space = spaces_get_space();
-  if ($space && $space->type == 'user') {
+  $account = menu_get_object('user');
+  $account = $account ? $account : menu_get_object('user_uid_optional');
+  $account = $account ? $account : menu_get_object('user_category');
+  if ($account) {
     // Set the members context.
     context_set('context', 'members_section', context_load('members_section'));
 
@@ -155,9 +157,9 @@ function atrium_members_context_page_condition() {
     if ($item['access']) {
       $breadcrumb[] = l($item['title'], $item['href']);
     }
-    $item = menu_get_item("user/{$space->id}");
+    $item = menu_get_item("user/{$account->uid}");
     if ($item['access']) {
-      $breadcrumb[] = l($space->title(), $item['href']);
+      $breadcrumb[] = l($account->name, $item['href']);
     }
     drupal_set_breadcrumb($breadcrumb);
   }
