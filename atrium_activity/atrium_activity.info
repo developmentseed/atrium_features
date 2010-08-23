@@ -1,5 +1,4 @@
 core = "6.x"
-dependencies[] = "atrium"
 dependencies[] = "comment"
 dependencies[] = "context"
 dependencies[] = "og_views"
