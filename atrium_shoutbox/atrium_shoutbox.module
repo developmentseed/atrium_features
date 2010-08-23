@@ -28,8 +28,8 @@ function atrium_shoutbox_menu() {
     'title' => 'Shoutbox',
     'title callback' => 'atrium_shoutbox_title',
     'page callback' => 'atrium_shoutbox_page',
-    'access callback' => 'spaces_access_feature',
-    'access arguments' => array('view', 'atrium_shoutbox'),
+    'access callback' => module_exists('spaces') ? 'spaces_access_feature' : 'user_access',
+    'access arguments' => module_exists('spaces') ? array('view', 'atrium_shoutbox') : array('access comments'),
     'type' => MENU_NORMAL_ITEM,
     'menu_name' => 'features',
     'options' => array(
@@ -78,9 +78,10 @@ function atrium_shoutbox_block($op = 'list', $delta = 0) {
     case 'list':
       return array('shoutbox' => array('info' =>  t('Shoutbox')));
     case 'view':
-      if ($delta == 'shoutbox' && spaces_access_feature('view', 'atrium_shoutbox') && !context_isset('context', 'shoutbox_og')) {
+      $access = module_exists('spaces') ? spaces_access_feature('view', 'atrium_shoutbox') : user_access('access comments');
+      if ($delta == 'shoutbox' && $access && !context_isset('context', 'shoutbox_og')) {
         if ($shoutbox = atrium_shoutbox_get_shoutbox()) {
-          $space = spaces_get_space();
+          $space = module_exists('spaces') ? spaces_get_space() : FALSE;
           if (($space && $space->type === 'og') || !module_exists('spaces_og')) {
             $link = l(t('Full view'), 'shoutbox');
             $output = drupal_get_form('atrium_shoutbox_shoutform', $shoutbox['node'], $shoutbox['view'], $shoutbox['rendered']);
@@ -164,8 +165,8 @@ function atrium_shoutbox_get_shoutbox($reset = FALSE) {
     drupal_add_js(array('atrium_shoutbox' => array('timestamp' => time())), 'setting');
 
     $shoutbox = array();
-    $space = spaces_get_space();
-    if ($space->type === 'og' || !module_exists('spaces_og')) {
+    $space = module_exists('spaces') ? spaces_get_space() : FALSE;
+    if (($space && $space->type === 'og') || !module_exists('spaces_og')) {
       if ($view = views_get_view('shoutbox_shoutboxes')) {
         $view->execute_display('default');
         // Shoutboxes exist for our current request, use the first.
