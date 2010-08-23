@@ -111,13 +111,10 @@ function atrium_menu_alter(&$items) {
     }
   }
 
-  // Hijack the /node callback for use as our welcome page
-  $items['node']['page callback'] = 'drupal_goto';
-  $items['node']['page arguments'] = array('welcome');
-
   // Kill undesirable menu items
   $yank = array(
     'rss.xml',
+    'node',
     'node/%node/outline',
   );
   foreach ($yank as $path) {
@@ -211,19 +208,11 @@ function atrium_form_alter(&$form, &$form_state, $form_id) {
 
 /**
  * Implementation of hook_form_alter() for spaces_features_form.
- *
- * Does two things for the non-space form: 
- * - maps the 'welcome' callback to 'dashboard', which is where it redirect.
- *   users once the first group exists.
- * - Allows the user dashboards to be selected.
+ * Allows user dashboards to be selected as frontpage.
  */
 function atrium_form_spaces_features_form_alter(&$form, &$form_state) {
   if (!spaces_get_space()) {
-    $frontpage = variable_get('site_frontpage', 'node');
-    if ($frontpage == 'welcome') {
-      $form['site_frontpage']['#default_value'] = 'dashboard';
-    }
-    $form['site_frontpage']['#options']['my-dashboard'] = t('User dashboard');
+    $form['site_frontpage']['#options'] = array_merge(array('my-dashboard' => t('User dashboard')), $form['site_frontpage']['#options']);
     $form['site_frontpage']['#element_validate'] = array('atrium_site_frontpage_validate');
   }
 }
