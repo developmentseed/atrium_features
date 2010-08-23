@@ -48,14 +48,6 @@ function _atrium_form_node_form_alter(&$form, $form_state) {
   if (!atrium_archivable($node) && $space && $space->type === 'og' && !$space->group->status) {
     drupal_access_denied(); exit;
   }
-
-  // Even if you have the perms, we don't want you messing with this stuff
-  $disable = array('menu', 'comment_settings');
-  foreach ($disable as $key) {
-    if (!empty($form[$key])) {
-      $form[$key]['#access'] = FALSE;
-    }
-  }
 }
 
 /**
