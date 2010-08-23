@@ -1,7 +1,5 @@
 core = "6.x"
 dependencies[] = "context"
-dependencies[] = "date_api"
-dependencies[] = "node"
 dependencies[] = "og_views"
 dependencies[] = "spaces"
 dependencies[] = "spaces_og"
