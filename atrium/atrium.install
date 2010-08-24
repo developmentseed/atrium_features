@@ -302,7 +302,7 @@ function atrium_update_6013() {
   while ($result = db_fetch_object($query)) {
     $type = '';
     $type = str_replace('atrium_update_type_', '', $result->name);
-    db_query("UPDATE variable SET name = '%s' WHERE name = '%s'", 'atrium_activity_update_type_' . $type, $result->name);
+    db_query("UPDATE {variable} SET name = '%s' WHERE name = '%s'", 'atrium_activity_update_type_' . $type, $result->name);
     $return[] = array('success' => TRUE, 'query' => "Update atrium_update_type variable for node type $type");
   }
   // Enable the atrium_activity feature
