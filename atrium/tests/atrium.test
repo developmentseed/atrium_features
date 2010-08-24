@@ -77,7 +77,7 @@ class AtriumTest extends AtriumWebTestCase {
    */
   function test403() {
     $this->drupalLogout();
-    $this->drupalGet('node');
+    $this->drupalGet("node/{$this->atriumGroups['private']->nid}");
     $this->assertText(t('Username'));
     $this->assertText(t('Password'));
 
