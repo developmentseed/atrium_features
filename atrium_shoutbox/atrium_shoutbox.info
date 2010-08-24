@@ -28,3 +28,5 @@ features[views_api][] = "api:2"
 name = "Atrium Shoutbox"
 package = "Features"
 spaces[types][] = "og"
+
+; Autodetected dependencies that are omitted: spaces

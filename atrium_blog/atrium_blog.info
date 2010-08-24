@@ -38,3 +38,5 @@ features[views_api][] = "api:2"
 name = "Atrium Blog"
 package = "Features"
 spaces[types][] = "og"
+
+; Autodetected dependencies that are omitted: spaces

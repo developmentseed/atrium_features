@@ -23,3 +23,5 @@ name = "Atrium Members"
 package = "Atrium"
 spaces[types][] = "site"
 spaces[types][] = "og"
+
+; Autodetected dependencies that are omitted: spaces
