@@ -173,6 +173,7 @@ function atrium_members_context_page_condition() {
 
     // If not in a space, use wide layout.
     // @TODO: Reimplement user search filters/facets in the sidebar.
+    $space = module_exists('spaces') ? spaces_get_space() : FALSE;
     if (!$space) {
       context_set('context', 'layout_wide', context_load('layout_wide'));
     }
