@@ -140,7 +140,7 @@ function atrium_book_form_alter(&$form, &$form_state, $form_id) {
         // Remove "none" option -- do not allow book pages to be orphaned
         unset($form['book']['bid']['#options'][0]);
         // Filter book options by current space
-        if ($view = views_get_view('atrium_book_current')) {
+        if ($view = views_get_view('book_current')) {
           $view->set_display();
           $view->set_items_per_page(0);
           $view->execute();
