@@ -108,7 +108,9 @@ class AtriumWebTestCase extends DrupalWebTestCase {
     variable_set('install_task', 'profile-finished');
     variable_set('clean_url', $clean_url_original);
     variable_set('site_mail', 'simpletest@example.com');
-
+    // Use the test mail class instead of the default mail handler class.
+    // variable_set('mail_sending_system', array('default-system' => 'TestingMailSystem'));
+    variable_set('smtp_library', drupal_get_path('module', 'simpletest') . '/simpletest.mail.inc');
     // Use temporary files directory with the same prefix as database.
     $this->originalFileDirectory = file_directory_path();
     variable_set('file_directory_path', file_directory_path() . '/' . $db_prefix);
