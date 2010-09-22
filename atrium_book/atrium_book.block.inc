@@ -43,7 +43,9 @@ function _atrium_book_block_book() {
  * Feature-aware book block. Show all books that belong to the current feature.
  */
 function _atrium_book_block_book_all() {
-  $space = spaces_get_space();
+  if (module_exists('spaces')) {
+    $space = spaces_get_space();
+  }
   // Retrieve node type arguments from active context if necessary.
   $type = NULL;
   foreach (context_get('context') as $context) {

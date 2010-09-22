@@ -1,13 +1,13 @@
 core = "6.x"
-dependencies[] = "atrium"
 dependencies[] = "comment"
 dependencies[] = "context"
-dependencies[] = "og_views"
-dependencies[] = "spaces"
-description = "Atrium Activity views"
+description = "Activity streams for showing new posts, updates and comments."
 features[context][] = "activity_profile"
 features[ctools][] = "context:context:3"
 features[views][] = "activity_listing"
 features[views_api][] = "api:2"
+kitf = "1.0-draft"
 name = "Atrium Activity"
 package = "Features"
+
+; Autodetected dependencies that are omitted: og_views, spaces

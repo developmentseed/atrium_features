@@ -6,7 +6,7 @@ include_once('atrium_calendar.features.inc');
  * Implementation of hook_help().
  */
 function atrium_calendar_help($path, $arg) {
-  if (($path == 'help#atrium_calendar') || context_isset('context', 'spaces-feature-calendar')) {
+  if (($path == 'help#atrium_calendar') || context_isset('context', 'calendar_calendar')) {
     switch ($path) {
       case 'node/add/event':
       case 'node/add/feed-ical':

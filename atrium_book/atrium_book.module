@@ -2,10 +2,6 @@
 
 include_once('atrium_book.features.inc');
 
-function atrium_book_init() {
-  drupal_add_css(drupal_get_path('module', 'atrium_book') .'/atrium_book.css');
-}
-
 /**
  * Implementation of hook_help().
  */
@@ -49,8 +45,8 @@ function atrium_book_menu() {
     'title' => 'Notebook',
     'page callback' => 'atrium_book_overview',
     'page arguments' => array(),
-    'access callback' => 'spaces_access_feature',
-    'access arguments' => array('view', 'atrium_book'),
+    'access callback' => module_exists('spaces') ? 'spaces_access_feature': 'user_access',
+    'access arguments' => module_exists('spaces') ? array('view', 'atrium_book') : array('access content'),
     'type' => MENU_NORMAL_ITEM,
     'menu_name' => 'features',
     'file' => 'atrium_book.pages.inc',
@@ -59,8 +55,8 @@ function atrium_book_menu() {
     'title' => 'Overview',
     'page callback' => 'atrium_book_overview',
     'page arguments' => array(),
-    'access callback' => 'spaces_access_feature',
-    'access arguments' => array('view', 'atrium_book'),
+    'access callback' => module_exists('spaces') ? 'spaces_access_feature': 'user_access',
+    'access arguments' => module_exists('spaces') ? array('view', 'atrium_book') : array('access content'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
     'file' => 'atrium_book.pages.inc',
@@ -69,8 +65,8 @@ function atrium_book_menu() {
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('atrium_book_settings'),
-    'access callback' => 'spaces_access_admin',
-    'access arguments' => array(),
+    'access callback' => module_exists('spaces') ? 'spaces_access_admin' : 'user_access',
+    'access arguments' => module_exists('spaces') ? array() : array('administer site configuration'),
     'type' => MENU_CALLBACK,
     'file' => 'atrium_book.pages.inc',
   );
@@ -116,9 +112,11 @@ function atrium_book_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
     case 'delete':
       // Wipe the atrium book tree cache for a space when a book is modified.
       if (!empty($node->book['bid'])) {
-        $space = spaces_get_space();
-        if ($space) {
+        if (module_exists('spaces') && $space = spaces_get_space()) {
           cache_clear_all("atrium_book:{$space->type}:{$space->id}", 'cache', TRUE);
+        }
+        else {
+          cache_clear_all("atrium_book", 'cache', TRUE);
         }
       }
       break;
@@ -142,7 +140,7 @@ function atrium_book_form_alter(&$form, &$form_state, $form_id) {
         // Remove "none" option -- do not allow book pages to be orphaned
         unset($form['book']['bid']['#options'][0]);
         // Filter book options by current space
-        if ($view = views_get_view('atrium_book_current')) {
+        if ($view = views_get_view('book_current')) {
           $view->set_display();
           $view->set_items_per_page(0);
           $view->execute();
@@ -172,7 +170,7 @@ function atrium_book_form_alter(&$form, &$form_state, $form_id) {
  * Implementation of hook_context_links_alter();
  */
 function atrium_book_context_links_alter(&$links) {
-  if (context_get('context', 'book_listing') && isset($links['book']) && $space = spaces_get_space()) {
+  if (context_get('context', 'book_listing') && isset($links['book']) && module_exists('spaces') && $space = spaces_get_space()) {
     $item = menu_get_item('node/add/book');
     $node = menu_get_object();
     if ($item['access'] && !empty($node->book['mlid'])) {

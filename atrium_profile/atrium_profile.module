@@ -49,8 +49,8 @@ function atrium_profile_views_pre_build(&$view) {
  */
 function atrium_profile_context_links_alter(&$links) {
   global $user;
-  $space = spaces_get_space();
-  if ($space && $space->type == 'user' && $space->id == $user->uid && node_access('create', 'profile')) {
+  if (module_exists('spaces') && ($space = spaces_get_space()) 
+  && $space->type == 'user' && $space->id == $user->uid && node_access('create', 'profile')) {
     $prepend = array(
       'profile' => array(
         'title' => t('Edit my profile'),

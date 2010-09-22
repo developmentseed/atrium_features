@@ -48,14 +48,6 @@ function _atrium_form_node_form_alter(&$form, $form_state) {
   if (!atrium_archivable($node) && $space && $space->type === 'og' && !$space->group->status) {
     drupal_access_denied(); exit;
   }
-
-  // Even if you have the perms, we don't want you messing with this stuff
-  $disable = array('menu', 'comment_settings');
-  foreach ($disable as $key) {
-    if (!empty($form[$key])) {
-      $form[$key]['#access'] = FALSE;
-    }
-  }
 }
 
 /**
@@ -278,6 +270,15 @@ function atrium_403() {
     // prevent drupal_goto from behaving as expected. So we unset it.
     unset($_REQUEST['destination']);
     drupal_goto('user/login', 'destination='. $_REQUEST['q']);
+  }
+  else {
+    // Logged in user requests path like 'user/login?destination=dashboard' which
+    // is a common case if user loses session but has 46 browser tabs open and
+    // refreshes one such tab.  This will redirect that request properly to
+    // avoid a 403.
+    if ($_REQUEST['q'] === 'user/login' && isset($_REQUEST['destination']) && $_REQUEST['destination'] !== 'user/login') {
+      drupal_goto($_REQUEST['q']);
+    }
   }
   return "<div class='access-denied'>". t('You are not authorized to access this page.') ."</div>";
 }
