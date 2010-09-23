@@ -89,7 +89,7 @@ function _atrium_book_block_book_all() {
         foreach($view->result as $row) {
           $data = array_merge($data, menu_tree_all_data(book_menu_name($row->nid)));
         }
-        $data = array(array('link' => array('title' => 'Notebook', 'href' => 'notebook'), 'below' => $data));
+        $data = array(array('link' => array('title' => t('Notebook'), 'href' => 'notebook'), 'below' => $data));
         if ($output = menu_tree_output($data)) {
           cache_set($cid, $output);
           $block = array(
