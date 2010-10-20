@@ -87,7 +87,7 @@ function atrium_profile_views_default_views() {
       'style_options' => array(),
       'wildcard' => 'all',
       'wildcard_substitution' => 'All',
-      'title' => '',
+      'title' => '%1',
       'breadcrumb' => '',
       'default_argument_type' => 'user',
       'default_argument' => '',
