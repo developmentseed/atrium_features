@@ -99,7 +99,7 @@ function atrium_groups_views_pre_build(&$view) {
       'label' => '',
       'alter' => array(
         'alter_text' => 1,
-        'text' => '<small class=\'label\'>[is_admin]</small>',
+        'text' => '<div class=\'description\'>[is_admin]</div>',
       ),
       'id' => 'is_admin',
       'table' => 'og_uid',
@@ -110,7 +110,7 @@ function atrium_groups_views_pre_build(&$view) {
       'label' => '',
       'alter' => array(
         'alter_text' => 1,
-        'text' => '<small class=\'label\'>[managelink]</small>',
+        'text' => '<div class=\'description\'>[managelink]</div>',
       ),
       'id' => 'managelink',
       'table' => 'og_uid',
