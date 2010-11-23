@@ -21,6 +21,7 @@ function atrium_taxonomy_default_vocabularies() {
         'casetracker_basic_case' => 'casetracker_basic_case',
         'casetracker_basic_project' => 'casetracker_basic_project',
         'book' => 'book',
+        'blog' => 'blog',
       ),
     ),
   );
