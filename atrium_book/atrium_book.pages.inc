@@ -20,6 +20,16 @@ function atrium_book_overview() {
  */
 function atrium_book_settings() {
   $form = array();
+  $form['atrium_book_mode'] = array(
+    '#title' => t('Navigation mode'),
+    '#type' => 'select',
+    '#description' => t('Choose the navigation style for the book menu.'),
+    '#options' => array(
+        'tree' => t('Tree menu'),
+        'ajax' => t('AJAX with breadcrumb')
+    ),
+    '#default_value' => variable_get('atrium_book_mode', 'ajax'),
+  );
   $form['atrium_book'] = array(
     '#title' => t('Overview page'),
     '#type' => 'select',
