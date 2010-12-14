@@ -15,6 +15,9 @@ function atrium_casetracker_views_handlers() {
       'atrium_casetracker_handler_filter_status_closed' => array(
         'parent' => 'views_handler_filter_boolean_operator',
       ),
+      'atrium_casetracker_handler_sort_status_closed' => array(
+        'parent' => 'views_handler_sort',
+      ),
     ),
   );
 }
@@ -31,6 +34,17 @@ function atrium_casetracker_views_data_alter(&$data) {
         'field' => 'case_status_id',
         'handler' => 'atrium_casetracker_handler_filter_status_closed',
         'help' => t('Filter out closed cases.'),
+      ),
+    );
+  }
+  if (isset($data['casetracker_case_states'])) {
+    $data['casetracker_case_states']['case_status_closed'] = array(
+      'title' => t('Closed Case Status'),
+      'real field' => 'csid',
+      'sort' => array(
+        'field' => 'csid',
+        'handler' => 'atrium_casetracker_handler_sort_status_closed',
+        'help' => t('Sort by Case Active/Inactive status.'),
       ),
     );
   }
