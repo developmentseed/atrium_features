@@ -10,7 +10,7 @@ function _atrium_book_block_book() {
     $title = db_result(db_query(db_rewrite_sql('SELECT n.title FROM {node} n WHERE n.nid = %d'), $node->book['bid']));
     if ($title) {
       // Dynamic block
-      if (module_exists('admin')) {
+      if (module_exists('admin') && variable_get('atrium_book_mode', 'ajax') === 'ajax') {
         $data = array_shift(menu_tree_all_data($node->book['menu_name']));
         if ($data['below']) {
           drupal_add_css(drupal_get_path('module', 'admin') .'/includes/admin.menu.css');
@@ -30,7 +30,7 @@ function _atrium_book_block_book() {
         if ($data['below']) {
           $title = l($data['link']['title'], "node/{$node->book['bid']}", array('attributes' => array('class' => 'depth-0')));
           return array(
-            'subject' => "<span class='trail'>{$title}</span>",
+            'subject' => $title,
             'content' => menu_tree_output($data['below']),
           );
         }
@@ -56,7 +56,7 @@ function _atrium_book_block_book_all() {
   }
 
   // Dynamic block.
-  if (module_exists('admin')) {
+  if (module_exists('admin') && variable_get('atrium_book_mode', 'ajax') === 'ajax') {
     drupal_add_css(drupal_get_path('module', 'admin') .'/includes/admin.menu.css');
     drupal_add_js(drupal_get_path('module', 'admin') .'/includes/jquery.drilldown.js');
     drupal_add_js(drupal_get_path('module', 'atrium_book') .'/atrium_book.js');
@@ -89,7 +89,7 @@ function _atrium_book_block_book_all() {
         foreach($view->result as $row) {
           $data = array_merge($data, menu_tree_all_data(book_menu_name($row->nid)));
         }
-        $data = array(array('link' => array('title' => 'Notebook', 'href' => 'notebook'), 'below' => $data));
+        $data = array(array('link' => array('title' => t('Notebook'), 'href' => 'notebook'), 'below' => $data));
         if ($output = menu_tree_output($data)) {
           cache_set($cid, $output);
           $block = array(
@@ -115,7 +115,7 @@ function _atrium_book_block_book_all() {
     if ($output = menu_tree_output($data)) {
       $title = l(t('Notebook'), 'notebook', array('attributes' => array('class' => 'depth-0')));
       $block = array(
-        'subject' => "<span class='trail'>{$title}</span>",
+        'subject' => $title,
         'content' => $output,
       );
     }
