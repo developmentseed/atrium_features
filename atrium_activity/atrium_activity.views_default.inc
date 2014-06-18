@@ -287,6 +287,10 @@ function atrium_activity_views_default_views() {
       'empty_zero' => 0,
       'type' => 'separator',
       'separator' => ', ',
+      'crayon' => array(
+        'enabled' => 'enabled',
+        'acronym' => 'acronym',
+      ),
       'exclude' => 0,
       'id' => 'group_nid',
       'table' => 'og_ancestry',
