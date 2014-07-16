@@ -276,6 +276,7 @@ function atrium_casetracker_get_inactive_states() {
   if (!isset($inactive_states)) {
     $inactive_states = array();
     $search = array('closed', 'defer', 'duplicate', 'postponed', 'fixed', 'resolved');
+    drupal_alter('atrium_casetracker_inactive_states', $search);
     $states = casetracker_case_state_load(NULL, 'status');
     foreach ($states as $status_id => $state) {
       $state = strtolower($state);
